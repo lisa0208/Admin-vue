@@ -39,6 +39,12 @@ const tableRouter = {
       component: () => import('@/views/car/modelList'),
       name: 'carModel',
       meta: { title: '车辆型号管理' }
+    },
+    {
+      path: 'car-add/:id',
+      component: () => import('@/views/car/addCar'),
+      name: 'addCar',
+      meta: { title: '添加车辆' }
     }
   ]
 }

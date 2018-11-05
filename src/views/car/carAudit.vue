@@ -48,7 +48,7 @@
 
       <el-table-column :label="'车主姓名'" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.jfUser.nickname }}</span>
+          <span>{{ scope.row.jfUser.name }}</span>
         </template>
       </el-table-column>
 
@@ -214,6 +214,7 @@ export default {
         userStatus: undefined,
         userType: undefined
       }
+
     }
   },
 
@@ -249,10 +250,17 @@ export default {
     },
 
     handlePass(row, status) {
-      updateCarStatus({
-        'jfCar.carStatus': status
-      }).then(response => {
+
+      let fd = new FormData();
+      fd.append('jfCar.carStatus', status);
+      fd.append('jfCar.id', row.id);
+      fd.append('jfUser.id', row.jfUser.id);
+
+      updateCarStatus(fd).then(response => {
         this.getList();
+        if(status== 3){
+          window.location.hash = '/car/car-add/' + row.id
+        }
       })
 
     }
@@ -260,7 +268,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-range-editor--small .el-range-input {
   font-size: 13px;
   position: relative;

@@ -4,7 +4,7 @@
 
     <div class="filter-container">
 
-      <el-input :placeholder="'品牌'" v-model="listQuery.plateNo" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'品牌'" v-model="listQuery.plateNum" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleShowBrand">{{ $t('table.add') }}</el-button>
@@ -94,6 +94,7 @@ export default {
       listLoading: true,
 
       listQuery: {
+        plateNum: undefined,
         page: 1,
         brannd: undefined
       },
@@ -150,7 +151,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;

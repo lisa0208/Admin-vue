@@ -47,3 +47,11 @@ export function fetchBrandList(data) {
     data
   })
 }
+
+export function addCar(data) {
+  return request({
+    url: '/car/add',
+    method: 'post',
+    data
+  })
+}

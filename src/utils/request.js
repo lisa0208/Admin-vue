@@ -7,7 +7,7 @@ import env from '../../config/sit.env'
 // create an axios instance
 const service = axios.create({
   baseURL: env.BASE_API, // api 的 base_url
-  timeout: 5000 // request timeout
+  timeout: 5000, // request timeout
 })
 
 // request interceptor

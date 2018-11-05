@@ -1,10 +1,10 @@
 import Layout from '@/views/layout/Layout'
 
 const tableRouter = {
-  path: '/car',
+  path: '/order',
   component: Layout,
-  redirect: '/car/car-audit',
-  name: 'Car',
+  redirect: '/order/order-list',
+  name: 'Order',
   meta: {
     title: '订单管理',
     icon: 'shopping'

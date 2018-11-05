@@ -49,7 +49,7 @@
 
       <el-table-column :label="'车主姓名'" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.city }}</span>
+          <span>{{ scope.row.jfUser.name }}</span>
         </template>
       </el-table-column>
 
@@ -67,7 +67,7 @@
 
       <el-table-column :label="'型号'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.model }}</span>
         </template>
       </el-table-column>
 
@@ -214,7 +214,8 @@ export default {
         userOpenId: undefined,
         userStatus: undefined,
         userType: undefined
-      }
+      },
+
     }
   },
 
@@ -254,7 +255,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-range-editor--small .el-range-input {
   font-size: 13px;
   position: relative;
