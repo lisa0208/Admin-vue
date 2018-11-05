@@ -4,7 +4,11 @@
 
     <div class="filter-container">
 
-      <el-input :placeholder="'品牌'" v-model="listQuery.plateNo" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-select :value="carBrand" :placeholder="'品牌'" clearable style="width: 90px" class="filter-item">
+        <el-option v-for="item in brandList" :key="item.id" :value="item.brand"/>
+      </el-select>
+
+      <el-input :placeholder="'型号'" v-model="carModel" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleShowBrand">{{ $t('table.add') }}</el-button>
@@ -28,7 +32,25 @@
 
       <el-table-column :label="'品牌'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.brand }}</span>
+          <span>{{ scope.row.brandName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'型号'" width="130px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.model }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'创建时间'" width="130px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'更新时间'" width="130px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
 
@@ -77,7 +99,7 @@
 </template>
 
 <script>
-import { fetchBrandList } from '@/api/brand'
+import { fetchModelList, fetchBrandList } from '@/api/car'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import env from '../../../config/sit.env'
 
@@ -103,27 +125,45 @@ export default {
         brand: undefined,
         hotBrand: undefined,
         brandImg: undefined
-      }
+      },
+
+      carModel: undefined,
+      carBrand: undefined,
+      brandList: []
     }
   },
 
   created() {
-    this.getList()
+    this.getBrandList();
+    this.getList();
   },
 
   methods: {
+
     getList() {
       this.listLoading = true
-      fetchBrandList(this.listQuery).then(response => {
+      fetchModelList({
+        carBrand: this.carBrand,
+        carModel: this.carModel
+      }).then(response => {
         this.list = response.data.body
         this.total = response.data.body.length
         this.listLoading = false
       })
     },
 
+    getBrandList() {
+      fetchBrandList(this.listQuery).then(response => {
+        this.brandList = response.data.body;
+        console.log(this.brandList)
+      })
+    },
+
+
+
     handleFilter() {
       this.listQuery.page = 1
-      this.getList()
+      this.getList();
     },
 
     sortChange(data) {

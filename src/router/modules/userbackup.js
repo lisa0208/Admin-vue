@@ -3,8 +3,8 @@ import Layout from '@/views/layout/Layout'
 const tableRouter = {
   path: '/user',
   component: Layout,
-  redirect: '/car/car-list',
-  name: 'User',
+  redirect: '/user/user-list',
+  name: 'Table',
   meta: {
     title: '用户管理',
     icon: 'user'
@@ -12,7 +12,7 @@ const tableRouter = {
   children: [
     {
       path: 'user-list',
-      component: () => import('@/views/user/userList'),
+      component: () => import('@/views/table/complexTable'),
       name: 'userList',
       meta: { title: '用户列表' }
     }

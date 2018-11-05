@@ -2,22 +2,9 @@
   <div class="app-container">
 
     <div class="filter-container">
-      <el-date-picker
-        v-model="listQuery.date"
-        class="filter-item"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"/>
-
-      <el-input :placeholder="'车牌号'" v-model="listQuery.plateNum" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'型号'" v-model="listQuery.model" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'用户名'" v-model="listQuery.nickName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      
+      <el-input :placeholder="'姓名'" v-model="listQuery.username" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-input :placeholder="'手机号'" v-model="listQuery.mobilePhone" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-
-      <el-select v-model="listQuery.city" :placeholder="'城市'" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in cityOptions" :key="item.key" :label="item.label" :value="item.key"/>
-      </el-select>
 
       <el-select v-model="chekcValue" :placeholder="'状态(全部/未审核/已审核)'" clearable style="width: 220px" class="filter-item">
         <el-option v-for="item in checkOptions" :key="item.key" :label="item.label" :value="item.key"/>
@@ -28,6 +15,7 @@
       </el-select>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">{{ $t('table.add') }}</el-button>
 
     </div>
 
@@ -46,58 +34,34 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'车主姓名'" width="150px" align="center">
+      <el-table-column :label="'用户姓名'" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.jfUser.nickname }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'城市'" min-width="150px">
+      <el-table-column :label="'用户状态'" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.city }}</span>
+          <span>{{ scope.row.userStatus }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'品牌'" width="110px" align="center">
+      <el-table-column :label="'手机号'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.brand }}</span>
+          <span>{{ scope.row.mobile }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'型号'" width="110px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.model }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="'车牌号'" width="110px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.plateNumber }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="'颜色'" width="110px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.color }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="'申请时间'" width="110px" align="center">
+      <el-table-column :label="'注册时间'" width="110px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'车主信息'" width="110px" align="center">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleShowOwnerInfo(scope.row.jfUser)">查看</el-button>
-        </template>
-      </el-table-column>
-
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)">通过</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 4)">不通过</el-button>
+          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)">解禁</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">封禁</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -151,11 +115,11 @@
 </template>
 
 <script>
-import { fetchCarAudit, updateCarStatus } from '@/api/car'
+import { fetchUserList } from '@/api/user'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
-  name: 'CarAudit',
+  name: 'CarList',
   components: { Pagination },
 
   data() {
@@ -169,9 +133,9 @@ export default {
         limit: 10,
         date: undefined,
         city: '1',
-        plateNum: '',
+        plateNo: '',
         model: '',
-        nickName: '',
+        username: '',
         mobilePhone: ''
       },
 
@@ -224,7 +188,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchCarAudit(this.listQuery).then(response => {
+      fetchUserList(this.listQuery).then(response => {
         this.list = response.data.body.infos
         this.total = response.data.body.pageInfo.size
         this.listLoading = false
@@ -248,14 +212,7 @@ export default {
       this.ownerInfo = user
     },
 
-    handlePass(row, status) {
-      updateCarStatus({
-        'jfCar.carStatus': status
-      }).then(response => {
-        this.getList();
-      })
-
-    }
+    handlePass() {}
   }
 }
 </script>

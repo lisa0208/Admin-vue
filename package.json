@@ -13,8 +13,7 @@
     "precommit": "lint-staged",
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
-  "lint-staged": {
-  },
+  "lint-staged": {},
   "keywords": [
     "vue",
     "element-ui",

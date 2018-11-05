@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Layout from '@/views/layout/Layout'
 import carRouter from './modules/car'
 import userRouter from './modules/user'
+import orderRouter from './modules/order'
 
 Vue.use(Router)
 
@@ -40,6 +41,7 @@ export const asyncRouterMap = [
 
   carRouter,
   userRouter,
+  orderRouter,
   {
     path: '',
     component: Layout,

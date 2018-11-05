@@ -15,3 +15,35 @@ export function fetchCarList(data) {
     data
   })
 }
+
+export function updateCarStatus(data) {
+  return request({
+    url: '/car/updateCar',
+    method: 'post',
+    data
+  })
+}
+
+export function fetchColorList(data) {
+  return request({
+    url: '/carColor/searchAll',
+    method: 'post',
+    data
+  })
+}
+
+export function fetchModelList(data) {
+  return request({
+    url: '/carModel/searchAll',
+    method: 'post',
+    data
+  })
+}
+
+export function fetchBrandList(data) {
+  return request({
+    url: '/carBrand/searchAll',
+    method: 'post',
+    data
+  })
+}

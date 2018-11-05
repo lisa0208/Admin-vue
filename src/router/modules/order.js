@@ -1,19 +1,19 @@
 import Layout from '@/views/layout/Layout'
 
 const tableRouter = {
-  path: '/order-list',
+  path: '/car',
   component: Layout,
-  redirect: '/user/user-audit',
-  name: 'Order',
+  redirect: '/car/car-audit',
+  name: 'Car',
   meta: {
     title: '订单管理',
-    icon: 'user'
+    icon: 'shopping'
   },
   children: [
     {
       path: 'order-list',
-      component: () => import('@/views/table/complexTable'),
-      name: 'carAudit',
+      component: () => import('@/views/order/orderList'),
+      name: 'orderList',
       meta: { title: '订单列表' }
     }
   ]

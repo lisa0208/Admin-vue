@@ -10,24 +10,19 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"/>
 
-      <el-input :placeholder="'车牌号'" v-model="listQuery.plateNum" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'型号'" v-model="listQuery.model" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'用户名'" v-model="listQuery.nickName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'订单号'" v-model="listQuery.plateNo" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'用户名'" v-model="listQuery.username" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'车牌号'" v-model="listQuery.plateNo" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-input :placeholder="'手机号'" v-model="listQuery.mobilePhone" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-
-      <el-select v-model="listQuery.city" :placeholder="'城市'" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in cityOptions" :key="item.key" :label="item.label" :value="item.key"/>
-      </el-select>
+      <el-input :placeholder="'型号'" v-model="listQuery.model" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'颜色'" v-model="listQuery.model" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
       <el-select v-model="chekcValue" :placeholder="'状态(全部/未审核/已审核)'" clearable style="width: 220px" class="filter-item">
         <el-option v-for="item in checkOptions" :key="item.key" :label="item.label" :value="item.key"/>
       </el-select>
 
-      <el-select v-model="passValue" :placeholder="'审核(全部/通过/未通过)'" clearable style="width: 220px" class="filter-item">
-        <el-option v-for="item in passOptions" :key="item.key" :label="item.label" :value="item.key"/>
-      </el-select>
-
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">{{ $t('table.add') }}</el-button>
 
     </div>
 
@@ -40,51 +35,77 @@
       style="width: 100%;"
       @sort-change="sortChange">
 
-      <el-table-column :label="'ID'" prop="id" sortable="custom" align="center" width="65">
+      <el-table-column :label="'订单ID'" align="center" width="220">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.orderId }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'车主姓名'" width="150px" align="center">
+      <el-table-column :label="'车辆ID'" width="100px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.jfUser.nickname }}</span>
+          <span>{{ scope.row.carId }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'城市'" min-width="150px">
+      <el-table-column :label="'优惠券ID'" min-width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.city }}</span>
+          <span>{{ scope.row.couponId }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'品牌'" width="110px" align="center">
+      <el-table-column :label="'订单类型'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.brand }}</span>
+          <span>{{ scope.row.orderType }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'型号'" width="110px" align="center">
+      <el-table-column :label="'应付费用'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.model }}</span>
+          <span>{{ scope.row.shouldFee }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'车牌号'" width="110px" align="center">
+      <el-table-column :label="'实际费用'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.plateNumber }}</span>
+          <span>{{ scope.row.actualFee }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'颜色'" width="110px" align="center">
+      
+
+      <el-table-column :label="'扣除费用'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.color }}</span>
+          <span>{{ scope.row.cutFee }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'申请时间'" width="110px" align="center">
+      <el-table-column :label="'违章扣费'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <span>{{ scope.row.cutPeccancyFee }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'车辆扣费'" width="110px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.cutCarFee }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'支付时间'" width="110px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderPayTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'订单开始时间'" width="110px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderStartTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'订单结束时间'" width="110px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderStopTime }}</span>
         </template>
       </el-table-column>
 
@@ -94,10 +115,16 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="'车辆信息'" width="110px" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="handleShowCarInfo(scope.row.jfCar)">查看</el-button>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)">通过</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 4)">不通过</el-button>
+          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)">上线</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">下线</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -139,6 +166,41 @@
         <el-form-item :label="'驾照反面'" prop="type">
           <img :src="ownerInfo.drivingBack">
         </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="'车辆信息查看'" :visible.sync="dialogShowCarInfo">
+      <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+
+        <el-form-item :label="'车辆 ID'" prop="type">
+          <el-input v-model="ownerInfo.plateNumber"/>
+        </el-form-item>
+
+        <el-form-item :label="'车牌号'" prop="type">
+          <el-input v-model="ownerInfo.plateNumber"/>
+        </el-form-item>
+        <el-form-item :label="'品牌'" prop="type">
+          <el-input v-model="ownerInfo.brand"/>
+        </el-form-item>
+        <el-form-item :label="'型号'" prop="type">
+          <el-input v-model="ownerInfo.model"/>
+        </el-form-item>
+
+        <el-form-item :label="'城市'" prop="type">
+          <img :src="ownerInfo.city">
+        </el-form-item>
+
+        <el-form-item :label="'颜色'" prop="type">
+          <img :src="ownerInfo.color">
+        </el-form-item>
+
+        <el-form-item :label="'齿轮箱'" prop="type">
+          <el-input v-model="ownerInfo.gearbox"/>
+        </el-form-item>
 
       </el-form>
 
@@ -151,11 +213,11 @@
 </template>
 
 <script>
-import { fetchCarAudit, updateCarStatus } from '@/api/car'
+import { fetchOrderList } from '@/api/order'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
-  name: 'CarAudit',
+  name: 'CarList',
   components: { Pagination },
 
   data() {
@@ -169,9 +231,9 @@ export default {
         limit: 10,
         date: undefined,
         city: '1',
-        plateNum: '',
+        plateNo: '',
         model: '',
-        nickName: '',
+        username: '',
         mobilePhone: ''
       },
 
@@ -213,6 +275,38 @@ export default {
         userOpenId: undefined,
         userStatus: undefined,
         userType: undefined
+      },
+
+      dialogShowCarInfo: false,
+      carInfo: {
+        brand: undefined,
+        carDesc: undefined,
+        carPhoto: undefined,
+        carStatus: undefined,
+        city: undefined,
+        color: undefined,
+        createTime: undefined,
+        deposit: undefined,
+        engineNum: undefined,
+        enterModel: undefined,
+        frameNum: undefined,
+        gearbox: undefined,
+        id: undefined,
+        jfUser: undefined,
+        model: undefined,
+        oilNumber: undefined,
+        output: undefined,
+        ownerId: undefined,
+        peccancyDeposit: undefined,
+        plateNumber: undefined,
+        rent: undefined,
+        safeMoney: undefined,
+        seatNum: undefined,
+        serviceMoney: undefined,
+        unavailableTimeStart: undefined,
+        unavailableTimeStop: undefined,
+        updateTime: undefined,
+        wantRent: undefined
       }
     }
   },
@@ -224,7 +318,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchCarAudit(this.listQuery).then(response => {
+      fetchOrderList(this.listQuery).then(response => {
         this.list = response.data.body.infos
         this.total = response.data.body.pageInfo.size
         this.listLoading = false
@@ -248,14 +342,12 @@ export default {
       this.ownerInfo = user
     },
 
-    handlePass(row, status) {
-      updateCarStatus({
-        'jfCar.carStatus': status
-      }).then(response => {
-        this.getList();
-      })
+    handleShowCarInfo(car) {
+      this.dialogShowCarInfo = true
+      this.carInfo = car
+    },
 
-    }
+    handlePass() {}
   }
 }
 </script>

@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function fetchBrandList(data) {
+export function fetchUserList(data) {
   return request({
-    url: '/carBrand/searchAll',
+    url: '/user/userManageSearch',
     method: 'post',
     data
   })
