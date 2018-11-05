@@ -123,8 +123,12 @@
 
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)">上线</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">下线</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">接单</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">拒单</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">已取车</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">催还</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">退还车辆押金</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">退还违章押金</el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -11,23 +11,37 @@ Vue.use(Router)
 export const constantRouterMap = [
 
   {
+    path: '',
+    component: Layout,
+    redirect: 'dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: 'Dashboard',
+        meta: { title: ' 数据统计', icon: 'dashboard', noCache: true }
+      }
+    ]
+  },
+
+  {
     path: '/404',
     component: () => import('@/views/errorPage/404'),
     hidden: true
   },
 
-  {
-    path: '/icon',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/svg-icons/index'),
-        name: 'Icons',
-        meta: { title: 'icons', icon: 'icon', noCache: true }
-      }
-    ]
-  }
+  // {
+  //   path: '/icon',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/svg-icons/index'),
+  //       name: 'Icons',
+  //       meta: { title: 'icons', icon: 'icon', noCache: true }
+  //     }
+  //   ]
+  // }
 
 ]
 
@@ -42,18 +56,5 @@ export const asyncRouterMap = [
   carRouter,
   userRouter,
   orderRouter,
-  {
-    path: '',
-    component: Layout,
-    redirect: 'dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: ' 数据统计', icon: 'dashboard', noCache: true }
-      }
-    ]
-  },
   { path: '*', redirect: '/404', hidden: true }
 ]
