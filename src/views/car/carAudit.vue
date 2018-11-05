@@ -268,7 +268,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .el-range-editor--small .el-range-input {
   font-size: 13px;
   position: relative;
