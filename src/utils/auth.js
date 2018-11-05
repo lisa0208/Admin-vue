@@ -4,7 +4,7 @@ const TokenKey = 'jf_token'
 
 export function getToken() {
   console.log(Cookies.get(TokenKey))
-  return Cookies.get(TokenKey)
+  return 'editor'
 }
 
 export function setToken(token) {
