@@ -50,14 +50,17 @@
           <el-input v-model="brandInfo.brand"/>
         </el-form-item>
         <el-form-item :label="'是否热门品牌'" prop="type">
-          <el-input v-model="brandInfo.brand"/>
+          
+          <el-select v-model="brandInfo.hotBrand" :placeholder="'请选择'" clearable style="width: 220px" class="filter-item">
+            <el-option  :label="'是'" :value="1"/>
+            <el-option  :label="'否'" :value="0"/>
+          </el-select>
         </el-form-item>
         <el-form-item :label="'品牌图片'" prop="type">
           <el-upload
             :action="uploadUrl"
             :show-file-list="false"
-            :on-success="handleUploadSuccess"
-            :before-upload="beforeUpload"
+            :http-request = "beforeUpload"
             class="avatar-uploader">
             <img v-if="brandInfo.brandImg" :src="brandInfo.brandImg" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"/>
@@ -67,7 +70,7 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogShowbrandInfo = false">新增</el-button>
+        <el-button @click="handleAddBrand">新增</el-button>
       </div>
 
     </el-dialog>
@@ -77,17 +80,18 @@
 </template>
 
 <script>
-import { fetchBrandList } from '@/api/car'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import env from '../../../config/sit.env'
+import { fetchBrandList, addBrand } from "@/api/car";
+import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
+import env from "../../../config/sit.env";
+import axios from "axios";
 
 export default {
-  name: 'CarList',
+  name: "CarList",
   components: { Pagination },
 
   data() {
     return {
-      uploadUrl: env.BASE_API + '/file/upload',
+      uploadUrl: env.BASE_API + "/file/upload",
 
       list: null,
       total: 0,
@@ -105,75 +109,109 @@ export default {
         hotBrand: undefined,
         brandImg: undefined
       }
-    }
+    };
   },
 
   created() {
-    this.getList()
+    this.getList();
   },
 
   methods: {
     getList() {
-      this.listLoading = true
+      this.listLoading = true;
       fetchBrandList(this.listQuery).then(response => {
-        this.list = response.data.body
-        this.total = response.data.body.length
-        this.listLoading = false
-      })
+        this.list = response.data.body;
+        this.total = response.data.body.length;
+        this.listLoading = false;
+      });
     },
 
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
 
     sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
+      const { prop, order } = data;
+      if (prop === "id") {
+        this.sortByID(order);
       }
     },
 
     handleShowBrand(user) {
-      this.dialogShowAddBrand = true
+      this.dialogShowAddBrand = true;
     },
 
     handleAddBrand(user) {
-      this.dialogShowAddBrand = true
+      this.dialogShowbrandInfo = true;
+
+      let fd = new FormData();
+      fd.append('brand', this.brandInfo.brand);
+      fd.append('hotBrand', this.brandInfo.hotBrand);
+      fd.append('brandImg', this.brandInfo.brandImg);
+      addBrand(fd).then(response => {
+       this.dialogShowAddBrand = false;
+      });
     },
 
     handleUploadSuccess() {},
-    handleUploadSuccess() {},
-    beforeUpload(data, a, b, c) {
-      console.log(data, a, b, c)
+
+    
+
+    beforeUpload(data) {
+      console.log(data);
+
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+
+      let self = this;
+
+      // 自己上传文件 想加什么都可以
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          // 加这里
+          headers: {
+            jf_token:
+              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+          }
+        })
+        .then(function(response) {
+          console.log(response.data.body);
+          self.brandInfo.brandImg = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+      return false; // 返回false不会自动上传
     }
   }
-}
+};
 </script>
 
 <style scoped>
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>
 

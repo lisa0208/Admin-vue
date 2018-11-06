@@ -55,3 +55,11 @@ export function addCar(data) {
     data
   })
 }
+
+export function addBrand(data) {
+  return request({
+    url: '/carBrand/add',
+    method: 'post',
+    data
+  })
+}
