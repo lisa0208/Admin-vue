@@ -79,3 +79,11 @@ export function addModel(data) {
     data
   })
 }
+
+export function searchCarById(data) {
+  return request({
+    url: '/car/searchCarById',
+    method: 'post',
+    data
+  })
+}

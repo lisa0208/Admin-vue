@@ -181,7 +181,7 @@
 </template>
 
 <script>
-import { addCar } from "@/api/car";
+import { addCar, searchCarById} from "@/api/car";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 import axios from 'axios';
 import env from "../../../config/sit.env";
@@ -192,6 +192,8 @@ export default {
 
   data() {
     return {
+
+      id: this.$route.params.id ? this.$route.params.id : false,
 
       uploadUrl: '',
 
@@ -232,7 +234,54 @@ export default {
   },
 
   created() {
-    
+    console.log(this.id);
+    // 拉取车辆信息
+    if(this.id){
+
+      let fd = new FormData();
+
+      fd.append('id', this.id);
+
+      searchCarById(fd).then(response => {
+        this.listLoading = false;
+
+        console.log(response)
+
+        this.ownerInfo.name = response.data.body.jfUser.name;
+        this.ownerInfo.mobile = response.data.body.jfUser.mobile;
+        this.ownerInfo.idcard = response.data.body.jfUser.idcard;
+        this.ownerInfo.idcardBack = response.data.body.jfUser.idcardBack;
+        this.ownerInfo.idcardFront = response.data.body.jfUser.idcardFront;
+        this.ownerInfo.drivingBack = response.data.body.jfUser.drivingBack;
+        this.ownerInfo.drivingFront = response.data.body.jfUser.drivingFront;
+        this.ownerInfo.drivingNum = response.data.body.jfUser.drivingNum;
+        this.ownerInfo.drivingType = response.data.body.jfUser.drivingType;
+        this.ownerInfo.headImg = response.data.body.jfUser.headImg;
+
+
+        this.carInfo.plateNumber = response.data.body.plateNumber;
+        this.carInfo.brand = response.data.body.brand;
+        this.carInfo.carDesc = response.data.body.carDesc;
+        this.carInfo.carPhoto = response.data.body.carPhoto;
+        this.carInfo.city = response.data.body.city;
+        this.carInfo.color = response.data.body.color;
+        this.carInfo.engineNum = response.data.body.engineNum;
+        this.carInfo.frameNum = response.data.body.frameNum;
+        this.carInfo.gearbox = response.data.body.gearbox;
+        this.carInfo.model = response.data.body.model;
+        this.carInfo.oilNumber = response.data.body.oilNumber;
+        this.carInfo.wantRent = response.data.body.wantRent;
+        this.carInfo.seatNum = response.data.body.seatNum;
+        this.carInfo.output = response.data.body.output;
+        this.carInfo.enterModel = response.data.body.enterModel;
+        
+      
+
+
+
+      });
+
+    }
   },
 
   methods: {
