@@ -5,7 +5,7 @@
     <div class="filter-container">
 
       <el-select :value="carBrand" :placeholder="'品牌'" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in brandList" :key="item.id" :value="item.brand"/>
+        <el-option v-for="item in brandList" :key="item.id" :label="item.brand" :value="item.id"/>
       </el-select>
 
       <el-input :placeholder="'型号'" v-model="carModel" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
@@ -63,33 +63,26 @@
 
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <!-- <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" /> -->
 
-    <el-dialog :title="'车主信息查看'" :visible.sync="dialogShowAddBrand">
+    <el-dialog :title="'添加车辆型号'" :visible.sync="dialogShowAddBrand">
 
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="'品牌'" prop="type">
-          <el-input v-model="brandInfo.brand"/>
+        <el-form-item :label="'请选择品牌'" prop="type">
+          
+          <el-select v-model="selectedCarBrand" :placeholder="'品牌'" clearable style="width: 90px" class="filter-item">
+            <el-option v-for="item in brandList" :key="item.id" :label="item.brand" :value="item.id"/>
+          </el-select>
+          
         </el-form-item>
-        <el-form-item :label="'是否热门品牌'" prop="type">
-          <el-input v-model="brandInfo.brand"/>
-        </el-form-item>
-        <el-form-item :label="'品牌图片'" prop="type">
-          <el-upload
-            :action="uploadUrl"
-            :show-file-list="false"
-            :on-success="handleUploadSuccess"
-            :before-upload="beforeUpload"
-            class="avatar-uploader">
-            <img v-if="brandInfo.brandImg" :src="brandInfo.brandImg" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"/>
-          </el-upload>
+        <el-form-item :label="'请输入型号'" prop="type">
+          <el-input v-model="addedCarModel"/>
         </el-form-item>
 
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogShowbrandInfo = false">新增</el-button>
+        <el-button @click="handleAddModel">新增</el-button>
       </div>
 
     </el-dialog>
@@ -99,7 +92,7 @@
 </template>
 
 <script>
-import { fetchModelList, fetchBrandList } from '@/api/car'
+import { fetchModelList, fetchBrandList, addModel} from '@/api/car'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import env from '../../../config/sit.env'
 
@@ -127,6 +120,9 @@ export default {
         brandImg: undefined
       },
 
+      selectedCarBrand: undefined,
+      addedCarModel: undefined,
+
       carModel: undefined,
       carBrand: undefined,
       brandList: []
@@ -141,13 +137,14 @@ export default {
   methods: {
 
     getList() {
-      this.listLoading = true
-      fetchModelList({
-        carBrand: this.carBrand,
-        carModel: this.carModel
-      }).then(response => {
+      this.listLoading = true;
+
+      let fd = new FormData();
+      fd.append('carBrand', this.carBrand);
+      fd.append('carModel', this.carModel);
+
+      fetchModelList(fd).then(response => {
         this.list = response.data.body
-        this.total = response.data.body.length
         this.listLoading = false
       })
     },
@@ -185,12 +182,27 @@ export default {
     handleUploadSuccess() {},
     beforeUpload(data, a, b, c) {
       console.log(data, a, b, c)
+    },
+
+    handleAddModel(){
+
+      let fd = new FormData();
+      fd.append('brandId', this.selectedCarBrand);
+      fd.append('model', this.addedCarModel);
+
+      addModel(fd).then(response => {
+        this.list = response.data.body
+        // this.total = response.data.body.length
+        this.listLoading = false;
+        window.location.reload();
+      })
     }
+
   }
 }
 </script>
 
-<style scoped>
+<style>
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;

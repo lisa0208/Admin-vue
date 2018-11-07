@@ -26,9 +26,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'品牌'" width="110px" align="center">
+      <el-table-column :label="'品牌'" width="160px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.brand }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'品牌 Logo'" width="110px" align="center">
+        <template slot-scope="scope">
+          <img :src='scope.row.brandImg' style='width:100px; height:100px;'>
         </template>
       </el-table-column>
 
@@ -159,7 +165,6 @@ export default {
     
 
     beforeUpload(data) {
-      console.log(data);
 
       let fd = new FormData();
       fd.append("uploadFile", data.file);
@@ -189,7 +194,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;

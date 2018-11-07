@@ -28,7 +28,7 @@
       </el-select>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">{{ $t('table.add') }}</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="goToAddCar">{{ $t('table.add') }}</el-button>
 
     </div>
 
@@ -250,18 +250,22 @@ export default {
       this.ownerInfo = user
     },
 
-    handlePass() {}
+    handlePass() {},
+    goToAddCar(){
+      window.location.href = '/#/car/car-add/:id'
+    }
   }
 }
 </script>
 
 <style scoped>
-.el-range-editor--small .el-range-input {
+.el-range-editor--medium .el-range-input {
   font-size: 13px;
   position: relative;
   top: -8px;
 }
-.el-range-editor--small .el-range-separator {
+
+.el-range-editor--medium .el-range-separator {
   line-height: 24px;
   font-size: 13px;
   position: relative;

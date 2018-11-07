@@ -30,56 +30,52 @@
 
             <el-form-item label="驾照类型" >
               <el-select  placeholder="请选择驾照类型" v-model="ownerInfo.drivingType">
-                <el-option label="C1" value="C1"></el-option>
-                <el-option label="C2" value="C2"></el-option>
+                <el-option label="C1" value="1"></el-option>
+                <el-option label="C2" value="2"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="身份证正面">
               <el-upload
-                          class="avatar-uploader"
-                          action="https://jsonplaceholder.typicode.com/posts/"
-                          :show-file-list="false"
-                           :on-success="handleAvatarSuccess"
-                           :before-upload="beforeAvatarUpload">
-                           <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                           </el-upload>          
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadIdCardFront"
+                class="avatar-uploader">
+                <img v-if="ownerInfo.idcardFront" :src="ownerInfo.idcardFront" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>         
             </el-form-item>
 
             <el-form-item label="身份证背面">
               <el-upload
-                          class="avatar-uploader"
-                          action="https://jsonplaceholder.typicode.com/posts/"
-                          :show-file-list="false"
-                           :on-success="handleAvatarSuccess"
-                           :before-upload="beforeAvatarUpload">
-                           <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                           </el-upload>          
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadIdCardBack"
+                class="avatar-uploader">
+                <img v-if="ownerInfo.idcardBack" :src="ownerInfo.idcardBack" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>           
             </el-form-item>
 
             <el-form-item label="驾照正页">
               <el-upload
-                          class="avatar-uploader"
-                          action="https://jsonplaceholder.typicode.com/posts/"
-                          :show-file-list="false"
-                           :on-success="handleAvatarSuccess"
-                           :before-upload="beforeAvatarUpload">
-                           <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                           </el-upload>          
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadDrivingFront"
+                class="avatar-uploader">
+                <img v-if="ownerInfo.drivingFront" :src="ownerInfo.drivingFront" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>           
             </el-form-item>
             <el-form-item label="驾照副页">
               <el-upload
-                          class="avatar-uploader"
-                          action="https://jsonplaceholder.typicode.com/posts/"
-                          :show-file-list="false"
-                           :on-success="handleAvatarSuccess"
-                           :before-upload="beforeAvatarUpload">
-                           <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                           </el-upload>          
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadDrivingBack"
+                class="avatar-uploader">
+                <img v-if="ownerInfo.drivingBack" :src="ownerInfo.drivingBack" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>             
             </el-form-item>
 
           </el-form>
@@ -93,86 +89,82 @@
            <el-form ref="form" label-width="180px">
             
             <el-form-item label="车牌号">
-              <el-input v-model="ownerInfo.plateNumber"></el-input>
+              <el-input v-model="carInfo.plateNumber"></el-input>
             </el-form-item>
 
             <el-form-item label="车辆品牌">
-              <el-input v-model="ownerInfo.brand"></el-input>
+              <el-input v-model="carInfo.brand"></el-input>
             </el-form-item>
 
             <el-form-item label="型号">
-              <el-input v-model="ownerInfo.model"></el-input>
+              <el-input v-model="carInfo.model"></el-input>
             </el-form-item>
 
             <el-form-item label="城市区域">
-              <el-select  placeholder="请选择汽车城市" v-model="ownerInfo.city">
+              <el-select  placeholder="请选择汽车城市" v-model="carInfo.city">
                 <el-option label="上海" value="shanghai"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="颜色">
-              <el-select  placeholder="请选择汽车颜色" v-model="ownerInfo.color">
+              <el-select  placeholder="请选择汽车颜色" v-model="carInfo.color">
                 <el-option label="红色" value=" red"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="排量">
-              <el-select  placeholder="请选择汽车排量" v-model="ownerInfo.output">
+              <el-select  placeholder="请选择汽车排量" v-model="carInfo.output">
                 <el-option label="1.2L" value="1.2"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="变速箱">
-              <el-select  placeholder="请选择变速箱类型" v-model="ownerInfo.gearbox">
+              <el-select  placeholder="请选择变速箱类型" v-model="carInfo.gearbox">
                 <el-option label="DST" value="DST"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="座位数">
-              <el-input v-model="ownerInfo.seatNum"></el-input>
+              <el-input v-model="carInfo.seatNum"></el-input>
             </el-form-item>
 
             <el-form-item label="发动机号">
-              <el-input v-model="ownerInfo.engineNum"></el-input>
+              <el-input v-model="carInfo.engineNum"></el-input>
             </el-form-item>
 
             <el-form-item label="车架号">
-              <el-input v-model="ownerInfo.frameNum"></el-input>
+              <el-input v-model="carInfo.frameNum"></el-input>
             </el-form-item>
 
             <el-form-item label="入驻模式">
-              <el-input v-model="ownerInfo.enterModel"></el-input>
+              <el-input v-model="carInfo.enterModel"></el-input>
             </el-form-item>
 
             <el-form-item label="预期租金">
-              <el-input v-model="ownerInfo.wantRent"></el-input>
+              <el-input v-model="carInfo.wantRent"></el-input>
             </el-form-item>
 
             <el-form-item label="车辆照片">
               <el-upload
-                          class="avatar-uploader"
-                          action="https://jsonplaceholder.typicode.com/posts/"
-                          :show-file-list="false"
-                           :on-success="handleAvatarSuccess"
-                           :before-upload="beforeAvatarUpload">
-                           <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                           </el-upload>          
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadCarPhoto"
+                class="avatar-uploader">
+                <img v-if="carInfo.carPhoto" :src="carInfo.carPhoto" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>        
             </el-form-item>
 
             <el-form-item label="车辆描述">
-              <el-input v-model="ownerInfo.carDesc"></el-input>
+              <el-input v-model="carInfo.carDesc"></el-input>
             </el-form-item>
 
             <el-form-item label="油号">
-              <el-select  placeholder="请选择车辆油号" v-model="ownerInfo.oilNumber">
+              <el-select  placeholder="请选择车辆油号" v-model="carInfo.oilNumber">
                 <el-option label="95" value="95"></el-option>
                 <el-option label="98" value="98"></el-option>
               </el-select>
             </el-form-item>
-
-
-
 
           </el-form>
         </div>
@@ -191,6 +183,8 @@
 <script>
 import { addCar } from "@/api/car";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
+import axios from 'axios';
+import env from "../../../config/sit.env";
 
 export default {
   name: "CarList",
@@ -199,61 +193,37 @@ export default {
   data() {
     return {
 
+      uploadUrl: '',
+
       cityOptions: [{ label: "上海", key: "1" }],
 
       ownerInfo: {
-        balance: undefined,
-        bankCardCount: undefined,
-        createTime: undefined,
         drivingBack: undefined,
         drivingFront: undefined,
         drivingNum: undefined,
         drivingType: undefined,
-        headImg: undefined,
-        id: 1,
-        idcard: undefined,
         idcardBack: undefined,
         idcardFront: undefined,
-        loginChannel: undefined,
         mobile: undefined,
-        name: undefined,
-        nickname: undefined,
-        password: undefined,
-        qualityType: undefined,
-        updateTime: undefined,
-        userOpenId: undefined,
-        userStatus: undefined,
-        userType: undefined
+        idcard: undefined,
+        name: undefined
       },
 
       carInfo: {
         brand: undefined,
         carDesc: undefined,
         carPhoto: undefined,
-        carStatus: undefined,
         city: undefined,
         color: undefined,
-        createTime: undefined,
-        deposit: undefined,
         engineNum: undefined,
         enterModel: undefined,
         frameNum: undefined,
         gearbox: undefined,
-        id: undefined,
-        jfUser: undefined,
         model: undefined,
         oilNumber: undefined,
         output: undefined,
-        ownerId: undefined,
-        peccancyDeposit: undefined,
         plateNumber: undefined,
-        rent: undefined,
-        safeMoney: undefined,
         seatNum: undefined,
-        serviceMoney: undefined,
-        unavailableTimeStart: undefined,
-        unavailableTimeStop: undefined,
-        updateTime: undefined,
         wantRent: undefined
       }
 
@@ -273,13 +243,15 @@ export default {
       for(let i in this.ownerInfo){
         console.log(i);
         if(typeof(this.ownerInfo[i]) == "undefined" || this.ownerInfo[i] =='undefined'){
+          console.log(this.ownerInfo[i])
           alert('请完善车主信息');
           return false;
         }
       }
       
       for(let j in this.carInfo){
-        if(typeof(this.ownerInfo[j]) == "undefined" || this.ownerInfo[j] =='undefined'){
+        if(typeof(this.carInfo[j]) == "undefined" || this.carInfo[j] =='undefined'){
+          console.log(this.carInfo[j])
           alert('请完善车辆信息');
           return false;
         }
@@ -288,8 +260,8 @@ export default {
       let fd = new FormData();
 
       fd.append('jfUser.mobile', this.ownerInfo.mobile);
-      fd.append('jfUser.idcard', this.ownerInfo.idcard);
       fd.append('jfUser.name', this.ownerInfo.name);
+      fd.append('jfUser.idcard', this.ownerInfo.idcard);
       fd.append('jfUser.drivingNum', this.ownerInfo.drivingNum);
       fd.append('jfUser.drivingType', this.ownerInfo.drivingType);
       fd.append('jfUser.idcardFront', this.ownerInfo.idcardFront);
@@ -316,10 +288,130 @@ export default {
 
       this.listLoading = true;
       addCar(fd).then(response => {
-        this.listLoading = false
+        this.listLoading = false;
+        window.location.reload();
       });
 
-    }
+    },
+
+    beforeUploadIdCardFront(data) {
+      
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+
+      let self = this;
+
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token:
+              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+          }
+        })
+        .then(function(response) {
+          self.ownerInfo.idcardFront = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+      return false;
+    },
+
+    beforeUploadIdCardBack(data) {
+      
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+
+      let self = this;
+
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token:
+              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+          }
+        })
+        .then(function(response) {
+          self.ownerInfo.idcardBack = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+      return false;
+    },
+
+    beforeUploadDrivingFront(data) {
+      
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+
+      let self = this;
+
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token:
+              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+          }
+        })
+        .then(function(response) {
+          self.ownerInfo.drivingFront = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+      return false;
+    },
+    beforeUploadDrivingBack(data) {
+      
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+
+      let self = this;
+
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token:
+              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+          }
+        })
+        .then(function(response) {
+          self.ownerInfo.drivingBack = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+      return false;
+    },
+    
+    beforeUploadCarPhoto(data) {
+      
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+
+      let self = this;
+
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token:
+              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+          }
+        })
+        .then(function(response) {
+          self.carInfo.carPhoto = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+      return false;
+    },
 
   }
 };

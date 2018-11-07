@@ -151,11 +151,11 @@
 </template>
 
 <script>
-import { fetchCarAudit, updateCarStatus } from '@/api/car'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { fetchCarAudit, updateCarStatus } from "@/api/car";
+import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 
 export default {
-  name: 'CarAudit',
+  name: "CarAudit",
   components: { Pagination },
 
   data() {
@@ -168,25 +168,25 @@ export default {
         page: 1,
         limit: 10,
         date: undefined,
-        city: '1',
-        plateNum: '',
-        model: '',
-        nickName: '',
-        mobilePhone: ''
+        city: undefined,
+        plateNum: undefined,
+        model: undefined,
+        nickName: undefined,
+        mobilePhone: undefined
       },
 
-      cityOptions: [{ label: '上海', key: '1' }],
+      cityOptions: [{ label: "上海", key: "1" }],
 
       chekcValue: undefined, // 全部
       checkOptions: [
-        { label: '未审核', key: '0' },
-        { label: '已审核', key: '1' }
+        { label: "未审核", key: "0" },
+        { label: "已审核", key: "1" }
       ],
 
       passValue: undefined, // 全部
       passOptions: [
-        { label: '审核通过', key: '1' },
-        { label: '审核不通过', key: '0' }
+        { label: "审核通过", key: "1" },
+        { label: "审核不通过", key: "0" }
       ],
 
       dialogShowOwnerInfo: false,
@@ -214,67 +214,100 @@ export default {
         userStatus: undefined,
         userType: undefined
       }
-
-    }
+    };
   },
 
   created() {
-    this.getList()
+    this.getList();
   },
 
   methods: {
     getList() {
-      this.listLoading = true
-      fetchCarAudit(this.listQuery).then(response => {
-        this.list = response.data.body.infos
-        this.total = response.data.body.pageInfo.size
-        this.listLoading = false
-      })
+      this.listLoading = true;
+      let fd = new FormData();
+
+      if (this.listQuery.page) {
+        fd.append("page", this.listQuery.page);
+      }
+
+      if (this.listQuery.limit) {
+        fd.append("limit", this.listQuery.limit);
+      }
+
+      if (this.listQuery.date) {
+        fd.append("date", this.listQuery.date);
+      }
+
+      if (this.listQuery.city) {
+        fd.append("city", this.listQuery.city);
+      }
+
+      if (this.listQuery.plateNum) {
+        fd.append("plateNum", this.listQuery.plateNum);
+      }
+
+      if (this.listQuery.model) {
+        fd.append("model", this.listQuery.model);
+      }
+
+      if (this.listQuery.nickName) {
+        fd.append("nickName", this.listQuery.nickName);
+      }
+
+      if (this.listQuery.mobilePhone) {
+        fd.append("mobilePhone", this.listQuery.mobilePhone);
+      }
+
+      fetchCarAudit(fd).then(response => {
+        if (response.data.body) {
+          this.list = response.data.body.infos ? response.data.body.infos : [];
+          this.total = response.data.body.pageInfo.size;
+        }
+        this.listLoading = false;
+      });
     },
 
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
 
     sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
+      const { prop, order } = data;
+      if (prop === "id") {
+        this.sortByID(order);
       }
     },
 
     handleShowOwnerInfo(user) {
-      this.dialogShowOwnerInfo = true
-      this.ownerInfo = user
+      this.dialogShowOwnerInfo = true;
+      this.ownerInfo = user;
     },
 
     handlePass(row, status) {
-
       let fd = new FormData();
-      fd.append('jfCar.carStatus', status);
-      fd.append('jfCar.id', row.id);
-      fd.append('jfUser.id', row.jfUser.id);
+      fd.append("jfCar.carStatus", status);
+      fd.append("jfCar.id", row.id);
+      fd.append("jfUser.id", row.jfUser.id);
 
       updateCarStatus(fd).then(response => {
         this.getList();
-        if(status== 3){
-          window.location.hash = '/car/car-add/' + row.id
+        if (status == 3) {
+          window.location.hash = "/car/car-add/" + row.id;
         }
-      })
-
+      });
     }
   }
-}
+};
 </script>
 
 <style>
-.el-range-editor--small .el-range-input {
+.el-range-editor--medium .el-range-input {
   font-size: 13px;
   position: relative;
-  top: -8px;
+  top: -8px !important;
 }
-.el-range-editor--small .el-range-separator {
+.el-range-editor--medium .el-range-separator {
   line-height: 24px;
   font-size: 13px;
   position: relative;

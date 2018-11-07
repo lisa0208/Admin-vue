@@ -356,13 +356,13 @@ export default {
 }
 </script>
 
-<style>
-.el-range-editor--small .el-range-input {
+<style scoped>
+.el-range-input {
   font-size: 13px;
   position: relative;
   top: -8px;
 }
-.el-range-editor--small .el-range-separator {
+.el-range-separator {
   line-height: 24px;
   font-size: 13px;
   position: relative;

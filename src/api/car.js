@@ -63,3 +63,19 @@ export function addBrand(data) {
     data
   })
 }
+
+export function addColor(data) {
+  return request({
+    url: '/carColor/add',
+    method: 'post',
+    data
+  })
+}
+
+export function addModel(data) {
+  return request({
+    url: '/carModel/add',
+    method: 'post',
+    data
+  })
+}

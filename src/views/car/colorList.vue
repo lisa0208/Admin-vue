@@ -7,7 +7,7 @@
       <el-input :placeholder="'颜色'" v-model="listQuery.plateNo" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleShowBrand">{{ $t('table.add') }}</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleShowAddUser">{{ $t('table.add') }}</el-button>
 
     </div>
 
@@ -55,31 +55,16 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-    <el-dialog :title="'车主信息查看'" :visible.sync="dialogShowAddBrand">
+    <el-dialog :title="'添加颜色'" :visible.sync="dialogShowAddUser">
 
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="'品牌'" prop="type">
-          <el-input v-model="brandInfo.brand"/>
+        <el-form-item :label="'颜色'" prop="type">
+          <el-input v-model="color"/>
         </el-form-item>
-        <el-form-item :label="'是否热门品牌'" prop="type">
-          <el-input v-model="brandInfo.brand"/>
-        </el-form-item>
-        <el-form-item :label="'品牌图片'" prop="type">
-          <el-upload
-            :action="uploadUrl"
-            :show-file-list="false"
-            :on-success="handleUploadSuccess"
-            :before-upload="beforeUpload"
-            class="avatar-uploader">
-            <img v-if="brandInfo.brandImg" :src="brandInfo.brandImg" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"/>
-          </el-upload>
-        </el-form-item>
-
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogShowbrandInfo = false">新增</el-button>
+        <el-button @click="handleAddBrand">新增</el-button>
       </div>
 
     </el-dialog>
@@ -89,7 +74,7 @@
 </template>
 
 <script>
-import { fetchColorList } from '@/api/car'
+import { fetchColorList, addColor} from '@/api/car'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import env from '../../../config/sit.env'
 
@@ -110,12 +95,8 @@ export default {
         brannd: undefined
       },
 
-      dialogShowAddBrand: false,
-      brandInfo: {
-        brand: undefined,
-        hotBrand: undefined,
-        brandImg: undefined
-      }
+      dialogShowAddUser: false,
+      color: undefined
     }
   },
 
@@ -145,12 +126,20 @@ export default {
       }
     },
 
-    handleShowBrand(user) {
-      this.dialogShowAddBrand = true
+    handleShowAddUser(user) {
+      this.dialogShowAddUser = true
     },
 
     handleAddBrand(user) {
-      this.dialogShowAddBrand = true
+      this.dialogShowAddUser = true;
+      let fd = new FormData();
+      fd.append('color', this.color);
+      let self = this;
+
+      addColor(fd).then(response => {
+        this.dialogShowAddUser = false;
+        self.getList();
+      })
     },
 
     handleUploadSuccess() {},
@@ -162,7 +151,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;

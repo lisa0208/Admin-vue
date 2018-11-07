@@ -7,3 +7,11 @@ export function fetchUserList(data) {
     data
   })
 }
+
+export function updateUser(data) {
+  return request({
+    url: '/user/update',
+    method: 'post',
+    data
+  })
+}

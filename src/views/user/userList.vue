@@ -15,7 +15,6 @@
       </el-select>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">{{ $t('table.add') }}</el-button>
 
     </div>
 
@@ -52,6 +51,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="'用户信息'" width="110px" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="handleViewUserInfo(scope.row)">查看</el-button>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="'注册时间'" width="110px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
@@ -60,15 +65,17 @@
 
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)">解禁</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">封禁</el-button>
+          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)">通过</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 2)">拒绝</el-button>
+          <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)">拉黑</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">解禁</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-    <el-dialog :title="'车主信息查看'" :visible.sync="dialogShowOwnerInfo">
+    <el-dialog :title="'用户信息查看'" :visible.sync="dialogShowOwnerInfo">
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item :label="'姓名'" prop="type">
           <el-input v-model="ownerInfo.name"/>
@@ -115,7 +122,7 @@
 </template>
 
 <script>
-import { fetchUserList } from '@/api/user'
+import { fetchUserList, updateUser } from '@/api/user'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -132,11 +139,11 @@ export default {
         page: 1,
         limit: 10,
         date: undefined,
-        city: '1',
-        plateNo: '',
-        model: '',
-        username: '',
-        mobilePhone: ''
+        city: undefined,
+        plateNo: undefined,
+        model: undefined,
+        username: undefined,
+        mobilePhone: undefined
       },
 
       cityOptions: [{ label: '上海', key: '1' }],
@@ -207,23 +214,33 @@ export default {
       }
     },
 
-    handleShowOwnerInfo(user) {
+    handleViewUserInfo(user) {
       this.dialogShowOwnerInfo = true
       this.ownerInfo = user
     },
 
-    handlePass() {}
+    handlePass(row, status) {
+
+      let fd = new FormData();
+      fd.append('id', row.id);
+      fd.append('userStatus', status);
+
+      updateUser(fd).then(response => {
+        this.listLoading = false;
+        this.getList();
+      })
+    }
   }
 }
 </script>
 
-<style>
-.el-range-editor--small .el-range-input {
+<style scoped>
+.el-range-input {
   font-size: 13px;
   position: relative;
   top: -8px;
 }
-.el-range-editor--small .el-range-separator {
+.el-range-separator {
   line-height: 24px;
   font-size: 13px;
   position: relative;
