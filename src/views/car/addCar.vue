@@ -30,8 +30,13 @@
 
             <el-form-item label="驾照类型" >
               <el-select  placeholder="请选择驾照类型" v-model="ownerInfo.drivingType">
-                <el-option label="C1" value="1"></el-option>
-                <el-option label="C2" value="2"></el-option>
+                <el-option label="A1驾照" value="0"></el-option>
+                <el-option label="A2驾照" value="1"></el-option>
+                <el-option label="A3驾照" value="2"></el-option>
+                <el-option label="B1驾照" value="3"></el-option>
+                <el-option label="B2驾照" value="4"></el-option>
+                <el-option label="C1驾照" value="5"></el-option>
+                <el-option label="C2驾照" value="6"></el-option>
               </el-select>
             </el-form-item>
 
@@ -108,20 +113,16 @@
 
             <el-form-item label="颜色">
               <el-select  placeholder="请选择汽车颜色" v-model="carInfo.color">
-                <el-option label="红色" value=" red"></el-option>
+                <el-option v-for="item in colorOption" :key="item.id" :label="item.color" :value="item.id"/>
               </el-select>
             </el-form-item>
 
             <el-form-item label="排量">
-              <el-select  placeholder="请选择汽车排量" v-model="carInfo.output">
-                <el-option label="1.2L" value="1.2"></el-option>
-              </el-select>
+              <el-input v-model="carInfo.output"></el-input>
             </el-form-item>
 
             <el-form-item label="变速箱">
-              <el-select  placeholder="请选择变速箱类型" v-model="carInfo.gearbox">
-                <el-option label="DST" value="DST"></el-option>
-              </el-select>
+              <el-input v-model="carInfo.gearbox"></el-input>
             </el-form-item>
 
             <el-form-item label="座位数">
@@ -162,6 +163,7 @@
             <el-form-item label="油号">
               <el-select  placeholder="请选择车辆油号" v-model="carInfo.oilNumber">
                 <el-option label="95" value="95"></el-option>
+                <el-option label="97" value="97"></el-option>
                 <el-option label="98" value="98"></el-option>
               </el-select>
             </el-form-item>
@@ -181,7 +183,7 @@
 </template>
 
 <script>
-import { addCar, searchCarById} from "@/api/car";
+import { addCar, searchCarById, fetchColorList} from "@/api/car";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 import axios from 'axios';
 import env from "../../../config/sit.env";
@@ -197,7 +199,9 @@ export default {
 
       uploadUrl: '',
 
-      cityOptions: [{ label: "上海", key: "1" }],
+      cityOptions: [{ label: "上海", key: "shanghai" }],
+
+      colorOption: [],
 
       ownerInfo: {
         drivingBack: undefined,
@@ -281,7 +285,15 @@ export default {
 
       });
 
+      fetchColorList().then(response => {
+        this.colorOption = response.data.body;
+        console.log('this.colorOption', this.colorOption)
+      });
+
     }
+
+    // 获取颜色列表
+
   },
 
   methods: {
