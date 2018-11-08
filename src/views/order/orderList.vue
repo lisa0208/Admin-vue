@@ -10,15 +10,13 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"/>
 
-      <el-input :placeholder="'订单号'" v-model="listQuery.plateNo" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'用户名'" v-model="listQuery.username" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'车牌号'" v-model="listQuery.plateNo" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'手机号'" v-model="listQuery.mobilePhone" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'型号'" v-model="listQuery.model" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'颜色'" v-model="listQuery.model" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'订单号'" v-model="listQuery.orderId" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'用户名'" v-model="listQuery.nickName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'车牌号'" v-model="listQuery.plateNum" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'手机号'" v-model="listQuery.mobile" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
-      <el-select v-model="chekcValue" :placeholder="'状态(全部/未审核/已审核)'" clearable style="width: 220px" class="filter-item">
-        <el-option v-for="item in checkOptions" :key="item.key" :label="item.label" :value="item.key"/>
+      <el-select v-model="statusValue" :placeholder="'订单状态'" clearable style="width: 220px" class="filter-item">
+        <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key"/>
       </el-select>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
@@ -147,11 +145,11 @@
           <el-input v-model="ownerInfo.idcard"/>
         </el-form-item>
 
-        <el-form-item :label="'身份证正面'" prop="type">
+        <el-form-item :label="'身份证正面'" prop="type" style="width:100px; height:100px;">
           <img :src="ownerInfo.idcardFront">
         </el-form-item>
 
-        <el-form-item :label="'身份证反面'" prop="type">
+        <el-form-item :label="'身份证反面'" prop="type" style="width:100px; height:100px;">
           <img :src="ownerInfo.idcardBack">
         </el-form-item>
 
@@ -163,11 +161,11 @@
           <el-input v-model="ownerInfo.drivingType"/>
         </el-form-item>
 
-        <el-form-item :label="'驾照正面'" prop="type">
+        <el-form-item :label="'驾照正面'" prop="type" style="width:100px; height:100px;">
           <img :src="ownerInfo.drivingFront">
         </el-form-item>
 
-        <el-form-item :label="'驾照反面'" prop="type">
+        <el-form-item :label="'驾照反面'" prop="type" style="width:100px; height:100px;">
           <img :src="ownerInfo.drivingBack">
         </el-form-item>
       </el-form>
@@ -181,29 +179,29 @@
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
 
         <el-form-item :label="'车辆 ID'" prop="type">
-          <el-input v-model="ownerInfo.plateNumber"/>
+          <el-input v-model="carInfo.plateNumber"/>
         </el-form-item>
 
         <el-form-item :label="'车牌号'" prop="type">
-          <el-input v-model="ownerInfo.plateNumber"/>
+          <el-input v-model="carInfo.plateNumber"/>
         </el-form-item>
         <el-form-item :label="'品牌'" prop="type">
-          <el-input v-model="ownerInfo.brand"/>
+          <el-input v-model="carInfo.brand"/>
         </el-form-item>
         <el-form-item :label="'型号'" prop="type">
-          <el-input v-model="ownerInfo.model"/>
+          <el-input v-model="carInfo.model"/>
         </el-form-item>
 
         <el-form-item :label="'城市'" prop="type">
-          <img :src="ownerInfo.city">
+          <img :src="carInfo.city">
         </el-form-item>
 
         <el-form-item :label="'颜色'" prop="type">
-          <img :src="ownerInfo.color">
+          <img :src="carInfo.color">
         </el-form-item>
 
         <el-form-item :label="'齿轮箱'" prop="type">
-          <el-input v-model="ownerInfo.gearbox"/>
+          <el-input v-model="carInfo.gearbox"/>
         </el-form-item>
 
       </el-form>
@@ -231,28 +229,31 @@ export default {
       listLoading: true,
 
       listQuery: {
+        orderId: undefined,
+        orderType: undefined,
+
         page: 1,
         limit: 10,
+
         date: undefined,
-        city: '1',
-        plateNo: '',
-        model: '',
-        username: '',
-        mobilePhone: ''
+
+        plateNum: '',
+
+        nickName: '',
+        mobile: ''
       },
 
-      cityOptions: [{ label: '上海', key: '1' }],
-
-      chekcValue: undefined, // 全部
-      checkOptions: [
-        { label: '未审核', key: '0' },
-        { label: '已审核', key: '1' }
-      ],
-
-      passValue: undefined, // 全部
-      passOptions: [
-        { label: '审核通过', key: '1' },
-        { label: '审核不通过', key: '0' }
+      statusValue: undefined, // 全部
+      statusOptions: [
+        { label: "待付款", key: "0" },
+        { label: "待接单", key: "1" },
+        { label: "已接单", key: "2" },
+        { label: "已取车", key: "3" },
+        { label: "已还车", key: "4" },
+        { label: "已完成", key: "5" },
+        { label: "已取消", key: "6" },
+        { label: "已拒单", key: "7" },
+        { label: "已过期", key: "8" }
       ],
 
       dialogShowOwnerInfo: false,
@@ -320,11 +321,47 @@ export default {
   },
 
   methods: {
-    getList() {
-      this.listLoading = true
-      fetchOrderList(this.listQuery).then(response => {
+    getList(data) {
+
+      this.listLoading = true;
+
+      let fd = new FormData();
+
+      if (this.listQuery.page) {
+        fd.append("pageInfo.pageNum", this.listQuery.page);
+      }
+
+     if (this.listQuery.date) {
+        fd.append("date", this.listQuery.date);
+      }
+
+      if (this.listQuery.plateNum) {
+        fd.append("plateNum", this.listQuery.plateNum);
+      }
+
+      if (this.listQuery.model) {
+        fd.append("model", this.listQuery.model);
+      }
+
+      if (this.listQuery.nickName) {
+        fd.append("nickName", this.listQuery.nickName);
+      }
+
+      if (this.listQuery.mobile) {
+        fd.append("mobile", this.listQuery.mobile);
+      }
+
+      if (this.listQuery.orderId) {
+        fd.append("orderId", this.listQuery.orderId);
+      }
+
+      if (this.statusValue) {
+        fd.append("orderType", this.statusValue);
+      }
+
+      fetchOrderList(fd).then(response => {
         this.list = response.data.body.infos
-        this.total = response.data.body.pageInfo.size
+        this.total = response.data.body.pageInfo.total
         this.listLoading = false
       })
     },
@@ -356,13 +393,14 @@ export default {
 }
 </script>
 
-<style scoped>
-.el-range-input {
+<style>
+.el-range-editor--medium .el-range-input {
   font-size: 13px;
   position: relative;
   top: -8px;
 }
-.el-range-separator {
+
+.el-range-editor--medium .el-range-separator {
   line-height: 24px;
   font-size: 13px;
   position: relative;
