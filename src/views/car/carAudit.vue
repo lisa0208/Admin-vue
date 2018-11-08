@@ -15,9 +15,9 @@
       <el-input :placeholder="'用户名'" v-model="listQuery.nickName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-input :placeholder="'手机号'" v-model="listQuery.mobilePhone" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
-      <el-select v-model="listQuery.city" :placeholder="'城市'" clearable style="width: 90px" class="filter-item">
+      <!-- <el-select v-model="listQuery.city" :placeholder="'城市'" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in cityOptions" :key="item.key" :label="item.label" :value="item.key"/>
-      </el-select>
+      </el-select> -->
 
       <el-select v-model="chekcValue" :placeholder="'状态(全部/未审核/已审核)'" clearable style="width: 220px" class="filter-item">
         <el-option v-for="item in checkOptions" :key="item.key" :label="item.label" :value="item.key"/>
@@ -52,11 +52,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'城市'" min-width="150px">
+      <!-- <el-table-column :label="'城市'" min-width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.city }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column :label="'品牌'" width="110px" align="center">
         <template slot-scope="scope">

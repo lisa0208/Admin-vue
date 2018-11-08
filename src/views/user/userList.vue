@@ -4,14 +4,10 @@
     <div class="filter-container">
       
       <el-input :placeholder="'姓名'" v-model="listQuery.username" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'手机号'" v-model="listQuery.mobilePhone" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'手机号'" v-model="listQuery.mobile" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
-      <el-select v-model="chekcValue" :placeholder="'状态(全部/未审核/已审核)'" clearable style="width: 220px" class="filter-item">
-        <el-option v-for="item in checkOptions" :key="item.key" :label="item.label" :value="item.key"/>
-      </el-select>
-
-      <el-select v-model="passValue" :placeholder="'审核(全部/通过/未通过)'" clearable style="width: 220px" class="filter-item">
-        <el-option v-for="item in passOptions" :key="item.key" :label="item.label" :value="item.key"/>
+      <el-select v-model="listQuery.status" :placeholder="'状态(全部/未审核/已审核)'" clearable style="width: 220px" class="filter-item">
+        <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key"/>
       </el-select>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
@@ -68,7 +64,6 @@
           <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)">通过</el-button>
           <el-button type="danger" size="mini" @click="handlePass(scope.row, 2)">拒绝</el-button>
           <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)">拉黑</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">解禁</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -138,26 +133,19 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        date: undefined,
-        city: undefined,
-        plateNo: undefined,
-        model: undefined,
         username: undefined,
-        mobilePhone: undefined
+        mobile: undefined,
+        status: undefined
       },
 
       cityOptions: [{ label: '上海', key: '1' }],
 
       chekcValue: undefined, // 全部
-      checkOptions: [
+      statusOptions: [
         { label: '未审核', key: '0' },
-        { label: '已审核', key: '1' }
-      ],
-
-      passValue: undefined, // 全部
-      passOptions: [
-        { label: '审核通过', key: '1' },
-        { label: '审核不通过', key: '0' }
+        { label: '已审核', key: '1' },
+        { label: '未通过', key: '2' },
+        { label: '已拉黑', key: '3' }
       ],
 
       dialogShowOwnerInfo: false,
@@ -193,11 +181,34 @@ export default {
   },
 
   methods: {
-    getList() {
-      this.listLoading = true
-      fetchUserList(this.listQuery).then(response => {
+
+    getList(data) {
+
+      this.listLoading = true;
+
+      if(data && data.page){
+        this.listQuery.page = data.page;
+      }
+
+      let fd = new FormData();
+      fd.append('page', this.listQuery.page);
+
+      if(this.listQuery.username){
+        fd.append('username', this.listQuery.username);
+      }
+
+      if(this.listQuery.mobile){
+        fd.append('mobile', this.listQuery.mobile);
+      }
+
+      if(this.listQuery.status){
+        fd.append('userStatus', this.listQuery.status);
+      }
+
+
+      fetchUserList(fd).then(response => {
         this.list = response.data.body.infos
-        this.total = response.data.body.pageInfo.size
+        this.total = response.data.body.pageInfo.total
         this.listLoading = false
       })
     },
