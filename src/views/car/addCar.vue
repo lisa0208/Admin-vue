@@ -174,9 +174,7 @@
 
     </el-row>
 
-
-    <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleSubmit">保存</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-upload2" @click="handleSubmit">提交</el-button>
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-upload2" @click="handleSubmit">提交</el-button>
 
 
   </div>

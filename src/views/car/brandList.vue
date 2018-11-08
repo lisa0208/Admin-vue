@@ -4,7 +4,7 @@
 
     <div class="filter-container">
 
-      <el-input :placeholder="'品牌'" v-model="listQuery.plateNum" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'品牌'" v-model="listQuery.brand" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleShowBrand">{{ $t('table.add') }}</el-button>
@@ -104,7 +104,6 @@ export default {
       listLoading: true,
 
       listQuery: {
-        plateNum: undefined,
         page: 1,
         brannd: undefined
       },
@@ -123,9 +122,26 @@ export default {
   },
 
   methods: {
-    getList() {
+    getList(data) {
       this.listLoading = true;
-      fetchBrandList(this.listQuery).then(response => {
+
+      let fd = new FormData();
+
+      if(data && data.page){
+        this.listQuery.page = data.page;
+      }
+
+      if (this.listQuery.page) {
+        fd.append("pageInfo.pageNum", this.listQuery.page);
+      }
+
+      if (this.listQuery.brand) {
+        fd.append("brand", this.listQuery.brand);
+      }
+
+
+
+      fetchBrandList(fd).then(response => {
         this.list = response.data.body;
         this.total = response.data.body.length;
         this.listLoading = false;

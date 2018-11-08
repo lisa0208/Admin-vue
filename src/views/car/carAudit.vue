@@ -19,12 +19,8 @@
         <el-option v-for="item in cityOptions" :key="item.key" :label="item.label" :value="item.key"/>
       </el-select> -->
 
-      <el-select v-model="chekcValue" :placeholder="'状态(全部/未审核/已审核)'" clearable style="width: 220px" class="filter-item">
-        <el-option v-for="item in checkOptions" :key="item.key" :label="item.label" :value="item.key"/>
-      </el-select>
-
-      <el-select v-model="passValue" :placeholder="'审核(全部/通过/未通过)'" clearable style="width: 220px" class="filter-item">
-        <el-option v-for="item in passOptions" :key="item.key" :label="item.label" :value="item.key"/>
+      <el-select v-model="statusValue" :placeholder="'车辆状态'" clearable style="width: 220px" class="filter-item">
+        <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key"/>
       </el-select>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
@@ -116,11 +112,11 @@
           <el-input v-model="ownerInfo.idcard"/>
         </el-form-item>
 
-        <el-form-item :label="'身份证正面'" prop="type">
+        <el-form-item :label="'身份证正面'" prop="type" style='width:150px; height:150px'>
           <img :src="ownerInfo.idcardFront">
         </el-form-item>
 
-        <el-form-item :label="'身份证反面'" prop="type">
+        <el-form-item :label="'身份证反面'" prop="type" style='width:150px; height:150px'>
           <img :src="ownerInfo.idcardBack">
         </el-form-item>
 
@@ -132,11 +128,11 @@
           <el-input v-model="ownerInfo.drivingType"/>
         </el-form-item>
 
-        <el-form-item :label="'驾照正面'" prop="type">
+        <el-form-item :label="'驾照正面'" prop="type" style='width:150px; height:150px'>
           <img :src="ownerInfo.drivingFront">
         </el-form-item>
 
-        <el-form-item :label="'驾照反面'" prop="type">
+        <el-form-item :label="'驾照反面'" prop="type" style='width:150px; height:150px'>
           <img :src="ownerInfo.drivingBack">
         </el-form-item>
 
@@ -177,16 +173,14 @@ export default {
 
       cityOptions: [{ label: "上海", key: "1" }],
 
-      chekcValue: undefined, // 全部
-      checkOptions: [
+      statusValue: undefined, // 全部
+      statusOptions: [
         { label: "未审核", key: "0" },
-        { label: "已审核", key: "1" }
-      ],
-
-      passValue: undefined, // 全部
-      passOptions: [
-        { label: "审核通过", key: "1" },
-        { label: "审核不通过", key: "0" }
+        { label: "上线", key: "1" },
+        { label: "下线", key: "2" },
+        { label: "审核通过", key: "3" },
+        { label: "未通过", key: "4" },
+        { label: "已预定", key: "5" }
       ],
 
       dialogShowOwnerInfo: false,
@@ -222,24 +216,21 @@ export default {
   },
 
   methods: {
-    getList() {
+    getList(data) {
       this.listLoading = true;
+      
       let fd = new FormData();
 
-      if (this.listQuery.page) {
-        fd.append("page", this.listQuery.page);
+      if(data && data.page){
+        this.listQuery.page = data.page;
       }
 
-      if (this.listQuery.limit) {
-        fd.append("limit", this.listQuery.limit);
+      if (this.listQuery.page) {
+        fd.append("pageInfo.pageNum", this.listQuery.page);
       }
 
       if (this.listQuery.date) {
         fd.append("date", this.listQuery.date);
-      }
-
-      if (this.listQuery.city) {
-        fd.append("city", this.listQuery.city);
       }
 
       if (this.listQuery.plateNum) {
@@ -255,13 +246,17 @@ export default {
       }
 
       if (this.listQuery.mobilePhone) {
-        fd.append("mobilePhone", this.listQuery.mobilePhone);
+        fd.append("mobile", this.listQuery.mobilePhone);
+      }
+
+      if (this.statusValue) {
+        fd.append("carStatus", this.statusValue);
       }
 
       fetchCarAudit(fd).then(response => {
         if (response.data.body) {
           this.list = response.data.body.infos ? response.data.body.infos : [];
-          this.total = response.data.body.pageInfo.size;
+          this.total = response.data.body.pageInfo.total;
         }
         this.listLoading = false;
       });

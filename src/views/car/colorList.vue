@@ -4,7 +4,7 @@
 
     <div class="filter-container">
 
-      <el-input :placeholder="'颜色'" v-model="listQuery.plateNo" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'颜色'" v-model="listQuery.color" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleShowAddUser">{{ $t('table.add') }}</el-button>
@@ -92,7 +92,7 @@ export default {
 
       listQuery: {
         page: 1,
-        brannd: undefined
+        color: undefined
       },
 
       dialogShowAddUser: false,
@@ -105,9 +105,25 @@ export default {
   },
 
   methods: {
-    getList() {
-      this.listLoading = true
-      fetchColorList(this.listQuery).then(response => {
+    getList(data) {
+
+      this.listLoading = true;
+
+      let fd = new FormData();
+
+      if(data && data.page){
+        this.listQuery.page = data.page;
+      }
+
+      if (this.listQuery.page) {
+        fd.append("pageInfo.pageNum", this.listQuery.page);
+      }
+
+      if (this.listQuery.color) {
+        fd.append("color", this.listQuery.color);
+      }
+
+      fetchColorList(fd).then(response => {
         this.list = response.data.body
         this.total = response.data.body.length
         this.listLoading = false

@@ -4,7 +4,7 @@
 
     <div class="filter-container">
 
-      <el-select :value="carBrand" :placeholder="'品牌'" clearable style="width: 90px" class="filter-item">
+      <el-select v-model="carBrand" :placeholder="'品牌'" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in brandList" :key="item.id" :label="item.brand" :value="item.id"/>
       </el-select>
 
@@ -140,8 +140,12 @@ export default {
       this.listLoading = true;
 
       let fd = new FormData();
-      fd.append('carBrand', this.carBrand);
-      fd.append('carModel', this.carModel);
+      if(this.carBrand){
+        fd.append('carBrand', this.carBrand);
+      }
+      if(this.carModel){
+       fd.append('carModel', this.carModel);
+      }
 
       fetchModelList(fd).then(response => {
         this.list = response.data.body

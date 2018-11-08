@@ -138,7 +138,7 @@ export default {
         status: undefined
       },
 
-      cityOptions: [{ label: '上海', key: '1' }],
+      cityOptions: [{ label: '上海', key: 'shanghai' }],
 
       chekcValue: undefined, // 全部
       statusOptions: [
