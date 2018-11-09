@@ -7,3 +7,11 @@ export function fetchOrderList(data) {
     data
   })
 }
+
+export function updateOrder(data) {
+  return request({
+    url: '/order/updateStatus',
+    method: 'post',
+    data
+  })
+}

@@ -118,14 +118,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('table.actions')" align="center" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">接单</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">拒单</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">已取车</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">催还</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">退还车辆押金</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">退还违章押金</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder1(scope.row)" v-if="scope.row.orderType==1">接单</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder2(scope.row)" v-if="scope.row.orderType==1">拒单</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder3(scope.row)" v-if="scope.row.orderType==2">已送车</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder4(scope.row)" v-if="scope.row.orderType==3">退车辆押金</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder5(scope.row)" v-if="scope.row.orderType==4">退违章押金</el-button>
+          <el-button type="info" size="mini" v-else>本状态无操作</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -214,11 +214,11 @@
 </template>
 
 <script>
-import { fetchOrderList } from '@/api/order'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { fetchOrderList, updateOrder } from "@/api/order";
+import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 
 export default {
-  name: 'CarList',
+  name: "CarList",
   components: { Pagination },
 
   data() {
@@ -236,10 +236,10 @@ export default {
 
         date: undefined,
 
-        plateNum: '',
+        plateNum: "",
 
-        nickName: '',
-        mobile: ''
+        nickName: "",
+        mobile: ""
       },
 
       statusValue: undefined, // 全部
@@ -256,13 +256,13 @@ export default {
       ],
 
       drivingMap: {
-        '0': 'A1驾照',
-        '1': 'A2驾照',
-        '2': 'A3驾照',
-        '3': 'B1驾照',
-        '4': 'B2驾照',
-        '5': 'C1驾照',
-        '6': 'C2驾照'
+        "0": "A1驾照",
+        "1": "A2驾照",
+        "2": "A3驾照",
+        "3": "B1驾照",
+        "4": "B2驾照",
+        "5": "C1驾照",
+        "6": "C2驾照"
       },
 
       orderStatusMap: {
@@ -334,16 +334,15 @@ export default {
         updateTime: undefined,
         wantRent: undefined
       }
-    }
+    };
   },
 
   created() {
-    this.getList()
+    this.getList();
   },
 
   methods: {
     getList(data) {
-
       this.listLoading = true;
 
       let fd = new FormData();
@@ -352,7 +351,7 @@ export default {
         fd.append("pageInfo.pageNum", this.listQuery.page);
       }
 
-     if (this.listQuery.date) {
+      if (this.listQuery.date) {
         fd.append("date", this.listQuery.date);
       }
 
@@ -381,37 +380,168 @@ export default {
       }
 
       fetchOrderList(fd).then(response => {
-        this.list = response.data.body.infos
-        this.total = response.data.body.pageInfo.total
-        this.listLoading = false
-      })
+        this.list = response.data.body.infos;
+        this.total = response.data.body.pageInfo.total;
+        this.listLoading = false;
+      });
     },
 
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
 
     sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
+      const { prop, order } = data;
+      if (prop === "id") {
+        this.sortByID(order);
       }
     },
 
     handleShowOwnerInfo(user) {
-      this.dialogShowOwnerInfo = true
-      this.ownerInfo = user
+      this.dialogShowOwnerInfo = true;
+      this.ownerInfo = user;
     },
 
     handleShowCarInfo(car) {
-      this.dialogShowCarInfo = true
-      this.carInfo = car
+      this.dialogShowCarInfo = true;
+      this.carInfo = car;
     },
 
-    handleOrder() {}
+    // 接单
+    handleOrder1(row) {
+      this.$confirm("确认要接单?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let fd = new FormData();
+          fd.append("orderId", row.orderId);
+          fd.append("event", 0);
+          fd.append("oprateUserId", 0);
+
+          updateOrder(fd).then(response => {
+            console.log(response);
+
+            this.$message({
+              type: "success",
+              message: "接单成功，请按照客户填写的时间、地点准确送车!"
+            });
+             this.getList();
+          });
+        })
+        .catch(() => {});
+    },
+
+    // 拒单
+    handleOrder2(row) {
+      this.$confirm("确认要拒单?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let fd = new FormData();
+          fd.append("orderId", row.orderId);
+          fd.append("event", 1);
+          fd.append("oprateUserId", 0);
+
+          updateOrder(fd).then(response => {
+            console.log(response);
+
+            this.$message({
+              type: "success",
+              message: "拒单成功!"
+            });
+             this.getList();
+          });
+        })
+        .catch(() => {});
+    },
+
+    // 已送车
+    handleOrder3(row) {
+      this.$confirm("确认已经将车送给客户了?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let fd = new FormData();
+          fd.append("orderId", row.orderId);
+          fd.append("event", 2);
+          fd.append("oprateUserId", 0);
+
+          updateOrder(fd).then(response => {
+            console.log(response);
+
+            this.$message({
+              type: "success",
+              message: "确认送车成功，请留意后续客户还车动态!"
+            });
+          });
+
+           this.getList();
+        })
+        .catch(() => {});
+    },
+
+    // 退还车辆押金
+    handleOrder4(row) {
+      this.$confirm("确认退还车辆押金?请确保车已归还！", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+
+          let fd = new FormData();
+          fd.append("orderId", row.orderId);
+          fd.append("event", 3);
+          fd.append("oprateUserId", 0);
+
+          updateOrder(fd).then(response => {
+            console.log(response);
+
+            this.$message({
+              type: "success",
+              message: "退还车辆押金成功，请留意后续步骤!"
+            });
+            this.getList();
+          });
+        })
+        .catch(() => {});
+    },
+
+    // 退还违章押金
+    handleOrder5(row) {
+      this.$confirm("确认退还违章押金?请确保车已归还、违章结果已审核！", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let fd = new FormData();
+          fd.append("orderId", row.orderId);
+          fd.append("event", 4);
+          fd.append("oprateUserId", 0);
+
+          updateOrder(fd).then(response => {
+            console.log(response);
+
+            this.$message({
+              type: "success",
+              message: "退还违章押金成功，本订单已经关闭!"
+            });
+             this.getList();
+          });
+        })
+        .catch(() => {});
+    }
+
   }
-}
+};
 </script>
 
 <style>
@@ -426,6 +556,9 @@ export default {
   font-size: 13px;
   position: relative;
   top: -8px;
+}
+.fixed-width .el-button--mini {
+  width: auto;
 }
 </style>
 
