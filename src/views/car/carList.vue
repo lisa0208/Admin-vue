@@ -94,13 +94,13 @@
     <el-dialog :title="'车主信息查看'" :visible.sync="dialogShowOwnerInfo">
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item :label="'姓名'" prop="type">
-          <el-input v-model="ownerInfo.name"/>
+          <el-input v-model="ownerInfo.name" readonly/>
         </el-form-item>
         <el-form-item :label="'手机号'" prop="type">
-          <el-input v-model="ownerInfo.mobile"/>
+          <el-input v-model="ownerInfo.mobile" readonly/>
         </el-form-item>
         <el-form-item :label="'身份证'" prop="type">
-          <el-input v-model="ownerInfo.idcard"/>
+          <el-input v-model="ownerInfo.idcard" readonly/>
         </el-form-item>
 
         <el-form-item :label="'身份证正面'" prop="type">
@@ -112,11 +112,11 @@
         </el-form-item>
 
         <el-form-item :label="'驾照'" prop="type">
-          <el-input v-model="ownerInfo.drivingNum"/>
+          <el-input v-model="ownerInfo.drivingNum" readonly/>
         </el-form-item>
 
         <el-form-item :label="'驾照类型'" prop="type">
-          <el-input v-model="ownerInfo.drivingType"/>
+          <el-input v-model="drivingMap[ownerInfo.drivingType]" readonly/>
         </el-form-item>
 
         <el-form-item :label="'驾照正面'" prop="type">
@@ -172,6 +172,16 @@ export default {
         { label: "未通过", key: "4" },
         { label: "已预定", key: "5" }
       ],
+
+      drivingMap: {
+        '0': 'A1驾照',
+        '1': 'A2驾照',
+        '2': 'A3驾照',
+        '3': 'B1驾照',
+        '4': 'B2驾照',
+        '5': 'C1驾照',
+        '6': 'C2驾照'
+      },
 
       dialogShowOwnerInfo: false,
       ownerInfo: {

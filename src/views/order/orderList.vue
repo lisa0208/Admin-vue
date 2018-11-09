@@ -136,21 +136,21 @@
     <el-dialog :title="'车主信息查看'" :visible.sync="dialogShowOwnerInfo">
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item :label="'姓名'" prop="type">
-          <el-input v-model="ownerInfo.name"/>
+          <el-input v-model="ownerInfo.name" readonly/>
         </el-form-item>
         <el-form-item :label="'手机号'" prop="type">
-          <el-input v-model="ownerInfo.mobile"/>
+          <el-input v-model="ownerInfo.mobile" readonly/>
         </el-form-item>
         <el-form-item :label="'身份证'" prop="type">
-          <el-input v-model="ownerInfo.idcard"/>
+          <el-input v-model="ownerInfo.idcard" readonly/>
         </el-form-item>
 
-        <el-form-item :label="'身份证正面'" prop="type" style="width:100px; height:100px;">
-          <img :src="ownerInfo.idcardFront">
+        <el-form-item :label="'身份证正面'" prop="type">
+          <img :src="ownerInfo.idcardFront" style="width:100px; height:100px;">
         </el-form-item>
 
-        <el-form-item :label="'身份证反面'" prop="type" style="width:100px; height:100px;">
-          <img :src="ownerInfo.idcardBack">
+        <el-form-item :label="'身份证反面'" prop="type">
+          <img :src="ownerInfo.idcardBack" style="width:100px; height:100px;">
         </el-form-item>
 
         <el-form-item :label="'驾照'" prop="type">
@@ -158,15 +158,15 @@
         </el-form-item>
 
         <el-form-item :label="'驾照类型'" prop="type">
-          <el-input v-model="ownerInfo.drivingType"/>
+          <el-input v-model="drivingMap[ownerInfo.drivingType]"/>
         </el-form-item>
 
-        <el-form-item :label="'驾照正面'" prop="type" style="width:100px; height:100px;">
-          <img :src="ownerInfo.drivingFront">
+        <el-form-item :label="'驾照正面'" prop="type">
+          <img :src="ownerInfo.drivingFront" style="width:100px; height:100px;">
         </el-form-item>
 
-        <el-form-item :label="'驾照反面'" prop="type" style="width:100px; height:100px;">
-          <img :src="ownerInfo.drivingBack">
+        <el-form-item :label="'驾照反面'" prop="type">
+          <img :src="ownerInfo.drivingBack" style="width:100px; height:100px;">
         </el-form-item>
       </el-form>
 
@@ -179,29 +179,29 @@
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
 
         <el-form-item :label="'车辆 ID'" prop="type">
-          <el-input v-model="carInfo.plateNumber"/>
+          <el-input v-model="carInfo.id" readonly/>
         </el-form-item>
 
         <el-form-item :label="'车牌号'" prop="type">
-          <el-input v-model="carInfo.plateNumber"/>
+          <el-input v-model="carInfo.plateNumber" readonly/>
         </el-form-item>
         <el-form-item :label="'品牌'" prop="type">
-          <el-input v-model="carInfo.brand"/>
+          <el-input v-model="carInfo.brand" readonly/>
         </el-form-item>
         <el-form-item :label="'型号'" prop="type">
-          <el-input v-model="carInfo.model"/>
+          <el-input v-model="carInfo.model" readonly/>
         </el-form-item>
 
         <el-form-item :label="'城市'" prop="type">
-          <img :src="carInfo.city">
+          <img :src="carInfo.city" readonly>
         </el-form-item>
 
         <el-form-item :label="'颜色'" prop="type">
-          <img :src="carInfo.color">
+          <img :src="carInfo.color" readonly>
         </el-form-item>
 
         <el-form-item :label="'齿轮箱'" prop="type">
-          <el-input v-model="carInfo.gearbox"/>
+          <el-input v-model="carInfo.gearbox" readonly/>
         </el-form-item>
 
       </el-form>
@@ -255,6 +255,16 @@ export default {
         { label: "已拒单", key: "7" },
         { label: "已过期", key: "8" }
       ],
+
+      drivingMap: {
+        '0': 'A1驾照',
+        '1': 'A2驾照',
+        '2': 'A3驾照',
+        '3': 'B1驾照',
+        '4': 'B2驾照',
+        '5': 'C1驾照',
+        '6': 'C2驾照'
+      },
 
       dialogShowOwnerInfo: false,
       ownerInfo: {

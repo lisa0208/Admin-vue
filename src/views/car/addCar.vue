@@ -111,7 +111,7 @@
 
             <el-form-item label="城市区域">
               <el-select  placeholder="请选择汽车城市" v-model="carInfo.city">
-                <el-option label="上海" value="shanghai"></el-option>
+                <el-option label="上海" value="上海"></el-option>
               </el-select>
             </el-form-item>
 
@@ -235,7 +235,7 @@ export default {
 
       uploadUrl: '',
 
-      cityOptions: [{ label: "上海", key: "shanghai" }],
+      cityOptions: [{ label: "上海", key: "上海" }],
 
       colorOption: [],
       brandOption: [],
