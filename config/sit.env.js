@@ -1,5 +1,5 @@
 module.exports = {
   NODE_ENV: '"production"',
   ENV_CONFIG: '"sit"',
-  BASE_API: 'http://47.100.24.146:80'
+  BASE_API: 'https://api.jfchuxing.com/api/'
 }
