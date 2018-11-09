@@ -10,7 +10,7 @@
         <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key"/>
       </el-select>
 
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
 
     </div>
 
@@ -59,7 +59,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)" v-if="scope.row.userStatus==0">通过</el-button>
           <el-button type="danger" size="mini" @click="handlePass(scope.row, 2)" v-if="scope.row.userStatus==0">拒绝</el-button>

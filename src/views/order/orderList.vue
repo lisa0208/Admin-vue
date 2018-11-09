@@ -19,8 +19,8 @@
         <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key"/>
       </el-select>
 
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">{{ $t('table.add') }}</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">添加</el-button>
 
     </div>
 
@@ -39,9 +39,41 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="'支付时间'" width="110px" align="center" sortable>
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderPayTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'订单状态'" width="110px" align="center">
+        <template slot-scope="scope">
+          <span>{{ orderStatusMap[scope.row.orderType] }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'订单天数'" width="110px" align="center">
+        <template slot-scope="scope">
+          <span>{{scope.row.orderDays}}</span>
+        </template>
+      </el-table-column>
+
+      
+
       <el-table-column :label="'车辆ID'" width="100px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.carId }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'实际费用(元)'" width="110px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.actualFee }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'应付费用(元)'" width="110px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.shouldFee }}</span>
         </template>
       </el-table-column>
 
@@ -51,46 +83,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'订单类型'" width="110px" align="center">
+      <el-table-column :label="'车辆押金扣费(元)'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ orderStatusMap[scope.row.orderType] }}</span>
+          <el-input v-model="scope.row.cutCarFee"/>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'应付费用'" width="110px" align="center">
+      <el-table-column :label="'违章押金扣费(元)'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.shouldFee }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="'实际费用'" width="110px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.actualFee }}</span>
-        </template>
-      </el-table-column>
-
-
-      <el-table-column :label="'扣除费用'" width="110px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.cutFee }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="'违章扣费'" width="110px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.cutPeccancyFee }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="'车辆扣费'" width="110px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.cutCarFee }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="'支付时间'" width="110px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.orderPayTime }}</span>
+          <el-input v-model="scope.row.cutPeccancyFee"/>
         </template>
       </el-table-column>
 
@@ -118,13 +119,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="$t('table.actions')" align="center" width="200" class-name="small-padding fixed-width">
+      <el-table-column :label="'操作'" align="center" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="danger" size="mini" @click="handleOrder1(scope.row)" v-if="scope.row.orderType==1">接单</el-button>
           <el-button type="danger" size="mini" @click="handleOrder2(scope.row)" v-if="scope.row.orderType==1">拒单</el-button>
           <el-button type="danger" size="mini" @click="handleOrder3(scope.row)" v-if="scope.row.orderType==2">确认已送车</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder4(scope.row)" v-if="scope.row.orderType==3">退车辆押金</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder5(scope.row)" v-if="scope.row.orderType==4">退违章押金</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder4(scope.row)" v-if="scope.row.orderType==3">扣车辆押金</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder5(scope.row)" v-if="scope.row.orderType==4">扣违章押金</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -213,7 +214,7 @@
 </template>
 
 <script>
-import { fetchOrderList, updateOrder } from "@/api/order";
+import { fetchOrderList, updateOrderStatus, updateOrder } from "@/api/order";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 
 export default {
@@ -235,10 +236,11 @@ export default {
 
         date: undefined,
 
-        plateNum: "",
+        plateNum: undefined,
 
-        nickName: "",
-        mobile: ""
+        nickName: undefined,
+        mobile: undefined,
+        sortKey: undefined
       },
 
       statusValue: undefined, // 全部
@@ -378,6 +380,10 @@ export default {
         fd.append("orderType", this.statusValue);
       }
 
+      if (this.listQuery.sortKey) {
+        fd.append("sortKey", this.listQuery.sortKey);
+      }
+
       fetchOrderList(fd).then(response => {
         this.list = response.data.body.infos;
         this.total = response.data.body.pageInfo.total;
@@ -391,10 +397,11 @@ export default {
     },
 
     sortChange(data) {
+      // console.log(data)
       const { prop, order } = data;
-      if (prop === "id") {
-        this.sortByID(order);
-      }
+      this.listQuery.sortKey = order == "descending" ? 2 : 1;
+      this.list.page = 1;
+      this.getList();
     },
 
     handleShowOwnerInfo(user) {
@@ -420,14 +427,14 @@ export default {
           fd.append("event", 0);
           fd.append("oprateUserId", 0);
 
-          updateOrder(fd).then(response => {
+          updateOrderStatus(fd).then(response => {
             console.log(response);
 
             this.$message({
               type: "success",
               message: "接单成功，请按照客户填写的时间、地点准确送车!"
             });
-             this.getList();
+            this.getList();
           });
         })
         .catch(() => {});
@@ -446,14 +453,14 @@ export default {
           fd.append("event", 1);
           fd.append("oprateUserId", 0);
 
-          updateOrder(fd).then(response => {
+          updateOrderStatus(fd).then(response => {
             console.log(response);
 
             this.$message({
               type: "success",
               message: "拒单成功!"
             });
-             this.getList();
+            this.getList();
           });
         })
         .catch(() => {});
@@ -472,7 +479,7 @@ export default {
           fd.append("event", 2);
           fd.append("oprateUserId", 0);
 
-          updateOrder(fd).then(response => {
+          updateOrderStatus(fd).then(response => {
             console.log(response);
 
             this.$message({
@@ -481,65 +488,99 @@ export default {
             });
             this.getList();
           });
-
-           
         })
         .catch(() => {});
     },
 
     // 退还车辆押金
     handleOrder4(row) {
-      this.$confirm("确认退还车辆押金?请确保车已归还！", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
+      let cutCarFee = row.cutCarFee;
 
-          let fd = new FormData();
-          fd.append("orderId", row.orderId);
-          fd.append("event", 3);
-          fd.append("oprateUserId", 0);
+      let fd = new FormData();
+      fd.append("orderId", row.orderId);
+      fd.append("cutCarFee", cutCarFee);
+      fd.append("oprateUserId", 1);
 
-          updateOrder(fd).then(response => {
-            console.log(response);
+      // 先存入车辆押金的数字
+      updateOrder(fd).then(response => {
+        if (response.data.header.code != 200) {
+          this.$alert(response.data.header.desc);
+        } else {
+          this.$confirm(
+            "确认扣除车辆押金" + cutCarFee + "元?请确保车已归还！",
+            "提示",
+            {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }
+          )
+            .then(() => {
+              let fd = new FormData();
+              fd.append("orderId", row.orderId);
+              fd.append("event", 3);
+              fd.append("oprateUserId", 1);
 
-            this.$message({
-              type: "success",
-              message: "退还车辆押金成功，请留意后续步骤!"
-            });
-            this.getList();
-          });
-        })
-        .catch(() => {});
+              updateOrderStatus(fd).then(response => {
+                console.log(response);
+
+                this.$message({
+                  type: "success",
+                  message: "退还车辆押金成功，请留意后续步骤!"
+                });
+                this.getList();
+              });
+            })
+            .catch(() => {});
+        }
+      });
     },
 
     // 退还违章押金
     handleOrder5(row) {
-      this.$confirm("确认退还违章押金?请确保车已归还、违章结果已审核！", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          let fd = new FormData();
-          fd.append("orderId", row.orderId);
-          fd.append("event", 4);
-          fd.append("oprateUserId", 0);
+      let cutPeccancyFee = row.cutPeccancyFee;
 
-          updateOrder(fd).then(response => {
-            console.log(response);
+      let fd = new FormData();
+      fd.append("orderId", row.orderId);
+      fd.append("cutPeccancyFee", cutPeccancyFee);
+      fd.append("oprateUserId", 1);
 
-            this.$message({
-              type: "success",
-              message: "退还违章押金成功，本订单已经关闭!"
-            });
-             this.getList();
-          });
-        })
-        .catch(() => {});
+      // 先存入应扣除的违章押金的数字
+      updateOrder(fd).then(response => {
+        if (response.data.header.code != 200) {
+          this.$alert(response.data.header.desc);
+        } else {
+          this.$confirm(
+            "确认扣除违章押金" +
+              row.cutPeccancyFee +
+              "元?请确保车已归还、违章结果已审核！",
+            "提示",
+            {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }
+          )
+            .then(() => {
+              let fd = new FormData();
+              fd.append("orderId", row.orderId);
+              fd.append("event", 4);
+              fd.append("oprateUserId", 1);
+
+              updateOrderStatus(fd).then(response => {
+                console.log(response);
+
+                this.$message({
+                  type: "success",
+                  message: "退还违章押金成功，本订单已经关闭!"
+                });
+                this.getList();
+              });
+            })
+            .catch(() => {});
+        }
+      });
     }
-
   }
 };
 </script>

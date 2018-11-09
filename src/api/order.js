@@ -8,9 +8,17 @@ export function fetchOrderList(data) {
   })
 }
 
-export function updateOrder(data) {
+export function updateOrderStatus(data) {
   return request({
     url: '/order/updateStatus',
+    method: 'post',
+    data
+  })
+}
+
+export function updateOrder(data) {
+  return request({
+    url: '/order/update',
     method: 'post',
     data
   })

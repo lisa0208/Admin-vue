@@ -91,6 +91,7 @@
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)" v-if="scope.row.carStatus==3">上线</el-button>
           <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)" v-if="scope.row.carStatus==1">下线</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)" v-if="scope.row.carStatus==1">设置不可用日期</el-button>
         </template>
       </el-table-column>
     </el-table>

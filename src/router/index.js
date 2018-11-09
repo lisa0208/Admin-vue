@@ -4,6 +4,7 @@ import Layout from '@/views/layout/Layout'
 import carRouter from './modules/car'
 import userRouter from './modules/user'
 import orderRouter from './modules/order'
+import bussinessRouter from './modules/bussiness'
 
 Vue.use(Router)
 
@@ -30,18 +31,18 @@ export const constantRouterMap = [
     hidden: true
   },
 
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/svg-icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // }
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/svg-icons/index'),
+        name: 'Icons',
+        meta: { title: 'icons', icon: 'icon', noCache: true }
+      }
+    ]
+  }
 
 ]
 
@@ -56,5 +57,6 @@ export const asyncRouterMap = [
   carRouter,
   userRouter,
   orderRouter,
+  bussinessRouter,
   { path: '*', redirect: '/404', hidden: true }
 ]
