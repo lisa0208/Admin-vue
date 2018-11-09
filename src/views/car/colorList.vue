@@ -6,8 +6,8 @@
 
       <el-input :placeholder="'颜色'" v-model="listQuery.color" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleShowAddUser">{{ $t('table.add') }}</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleShowAddUser">添加</el-button>
 
     </div>
 
@@ -44,7 +44,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <!-- <el-button type="primary" size="mini" @click="handleStatus(scope.row, 1)">上线</el-button>
           <el-button type="danger" size="mini" @click="handleStatus(scope.row, 0)">下线</el-button> -->
