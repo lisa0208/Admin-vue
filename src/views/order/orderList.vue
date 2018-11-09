@@ -53,7 +53,7 @@
 
       <el-table-column :label="'订单类型'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderType }}</span>
+          <span>{{ orderStatusMap[scope.row.orderType] }}</span>
         </template>
       </el-table-column>
 
@@ -69,7 +69,6 @@
         </template>
       </el-table-column>
 
-      
 
       <el-table-column :label="'扣除费用'" width="110px" align="center">
         <template slot-scope="scope">
@@ -121,12 +120,12 @@
 
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">接单</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">拒单</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">已取车</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">催还</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">退还车辆押金</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">退还违章押金</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">接单</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">拒单</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">已取车</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">催还</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">退还车辆押金</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder(scope.row, 0)">退还违章押金</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -266,6 +265,18 @@ export default {
         '6': 'C2驾照'
       },
 
+      orderStatusMap: {
+        "0": "待付款",
+        "1": "待接单",
+        "2": "已接单",
+        "3": "已取车",
+        "4": "已还车",
+        "5": "已完成",
+        "6": "已取消",
+        "7": "已拒单",
+        "8": "已过期"
+      },
+
       dialogShowOwnerInfo: false,
       ownerInfo: {
         balance: undefined,
@@ -398,7 +409,7 @@ export default {
       this.carInfo = car
     },
 
-    handlePass() {}
+    handleOrder() {}
   }
 }
 </script>
