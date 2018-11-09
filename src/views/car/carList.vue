@@ -63,6 +63,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="'车辆状态'" width="150px" align="center">
+        <template slot-scope="scope">
+          <span>{{ carStatusMap[scope.row.carStatus] }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="'颜色'" width="110px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.color }}</span>
@@ -83,8 +89,8 @@
 
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)">上线</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)">下线</el-button>
+          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)" v-if="scope.row.carStatus==3">上线</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)" v-if="scope.row.carStatus==1">下线</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -181,6 +187,15 @@ export default {
         '4': 'B2驾照',
         '5': 'C1驾照',
         '6': 'C2驾照'
+      },
+
+      carStatusMap: {
+        '0': '未审核',
+        '1': '上线',
+        '2': '下线',
+        '3': '审核通过',
+        '4': '未通过',
+        '5': '已预定'
       },
 
       dialogShowOwnerInfo: false,

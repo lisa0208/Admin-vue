@@ -40,8 +40,8 @@
 
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleStatus(scope.row, 1)">上线</el-button>
-          <el-button type="danger" size="mini" @click="handleStatus(scope.row, 0)">下线</el-button>
+          <!-- <el-button type="primary" size="mini" @click="handleStatus(scope.row, 1)">上线</el-button>
+          <el-button type="danger" size="mini" @click="handleStatus(scope.row, 0)">下线</el-button> -->
         </template>
       </el-table-column>
 

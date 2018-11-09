@@ -61,9 +61,9 @@
 
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)">通过</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 2)">拒绝</el-button>
-          <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)">拉黑</el-button>
+          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)" v-if="scope.row.userStatus==0">通过</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 2)" v-if="scope.row.userStatus==0">拒绝</el-button>
+          <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)" v-if="scope.row.userStatus==1">拉黑</el-button>
         </template>
       </el-table-column>
     </el-table>

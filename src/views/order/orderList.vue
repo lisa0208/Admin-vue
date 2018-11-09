@@ -121,11 +121,10 @@
       <el-table-column :label="$t('table.actions')" align="center" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="danger" size="mini" @click="handleOrder1(scope.row)" v-if="scope.row.orderType==1">接单</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder2(scope.row)" v-else-if="scope.row.orderType==1">拒单</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder3(scope.row)" v-else-if="scope.row.orderType==2">确认已送车</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder4(scope.row)" v-else-if="scope.row.orderType==3">退车辆押金</el-button>
-          <el-button type="danger" size="mini" @click="handleOrder5(scope.row)" v-else-if="scope.row.orderType==4">退违章押金</el-button>
-          <el-button type="info" size="mini" v-else>本状态无操作</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder2(scope.row)" v-if="scope.row.orderType==1">拒单</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder3(scope.row)" v-if="scope.row.orderType==2">确认已送车</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder4(scope.row)" v-if="scope.row.orderType==3">退车辆押金</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder5(scope.row)" v-if="scope.row.orderType==4">退违章押金</el-button>
         </template>
       </el-table-column>
     </el-table>
