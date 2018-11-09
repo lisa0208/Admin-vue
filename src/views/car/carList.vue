@@ -104,11 +104,11 @@
         </el-form-item>
 
         <el-form-item :label="'身份证正面'" prop="type">
-          <img :src="ownerInfo.idcardFront">
+          <img :src="ownerInfo.idcardFront" style='width:150px; height:150px'>
         </el-form-item>
 
         <el-form-item :label="'身份证反面'" prop="type">
-          <img :src="ownerInfo.idcardBack">
+          <img :src="ownerInfo.idcardBack" style='width:150px; height:150px'>
         </el-form-item>
 
         <el-form-item :label="'驾照'" prop="type">
@@ -120,11 +120,11 @@
         </el-form-item>
 
         <el-form-item :label="'驾照正面'" prop="type">
-          <img :src="ownerInfo.drivingFront">
+          <img :src="ownerInfo.drivingFront" style='width:150px; height:150px'>
         </el-form-item>
 
         <el-form-item :label="'驾照反面'" prop="type">
-          <img :src="ownerInfo.drivingBack">
+          <img :src="ownerInfo.drivingBack" style='width:150px; height:150px'>
         </el-form-item>
 
       </el-form>

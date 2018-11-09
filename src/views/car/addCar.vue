@@ -98,11 +98,15 @@
             </el-form-item>
 
             <el-form-item label="车辆品牌">
-              <el-input v-model="carInfo.brand"></el-input>
+              <el-select  placeholder="请选择车辆品牌" v-model="carInfo.brand">
+                <el-option v-for="item in brandOption" :key="item.id" :label="item.brand" :value="item.id"/>
+              </el-select>
             </el-form-item>
 
             <el-form-item label="型号">
-              <el-input v-model="carInfo.model"></el-input>
+              <el-select  placeholder="请选择车辆品牌" v-model="carInfo.model">
+                <el-option v-for="item in modelOption" :key="item.id" :label="item.model" :value="item.id"/>
+              </el-select>
             </el-form-item>
 
             <el-form-item label="城市区域">
@@ -174,6 +178,40 @@
 
     </el-row>
 
+    <el-row :gutter="20">
+      <el-col :span="10">
+        <!-- 车辆费用信息 -->
+        <div class="grid-content bg-purple">
+
+           <el-form ref="form" label-width="180px">
+            
+            <el-form-item label="车辆租金(元/天)">
+              <el-input v-model="feeInfo.rent"></el-input>
+            </el-form-item>
+
+            <el-form-item label="车辆保险费(元)">
+              <el-input v-model="feeInfo.safeMoney"></el-input>
+            </el-form-item>
+
+            <el-form-item label="车辆押金(元)">
+              <el-input v-model="feeInfo.deposit"></el-input>
+            </el-form-item>
+
+            <el-form-item label="违章押金(元)">
+              <el-input v-model="feeInfo.peccancyDeposit"></el-input>
+            </el-form-item>
+
+            <el-form-item label="服务费(元)">
+              <el-input v-model="feeInfo.serviceMoney"></el-input>
+            </el-form-item>
+
+
+
+          </el-form>
+        </div>
+      </el-col>
+    </el-row>
+
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-upload2" @click="handleSubmit">提交</el-button>
 
 
@@ -181,7 +219,7 @@
 </template>
 
 <script>
-import { addCar, searchCarById, fetchColorList} from "@/api/car";
+import { addCar, searchCarById, fetchColorList, fetchBrandList, fetchModelList} from "@/api/car";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 import axios from 'axios';
 import env from "../../../config/sit.env";
@@ -200,6 +238,8 @@ export default {
       cityOptions: [{ label: "上海", key: "shanghai" }],
 
       colorOption: [],
+      brandOption: [],
+      modelOption: [],
 
       ownerInfo: {
         drivingBack: undefined,
@@ -229,6 +269,14 @@ export default {
         plateNumber: undefined,
         seatNum: undefined,
         wantRent: undefined
+      },
+
+      feeInfo: {
+        rent: undefined,
+        safeMoney: undefined,
+        deposit: undefined,
+        peccancyDeposit: undefined,
+        serviceMoney: undefined,
       }
 
 
@@ -276,13 +324,16 @@ export default {
         this.carInfo.seatNum = response.data.body.seatNum;
         this.carInfo.output = response.data.body.output;
         this.carInfo.enterModel = response.data.body.enterModel;
-        
-      
 
-
+        this.feeInfo.rent = response.data.body.rent;
+        this.feeInfo.safeMoney = response.data.body.safeMoney;
+        this.feeInfo.deposit = response.data.body.deposit;
+        this.feeInfo.peccancyDeposit = response.data.body.peccancyDeposit;
+        this.feeInfo.serviceMoney = response.data.body.serviceMoney;
 
       });
 
+      // 获取颜色列表
       fetchColorList().then(response => {
         this.colorOption = response.data.body;
         console.log('this.colorOption', this.colorOption)
@@ -290,7 +341,17 @@ export default {
 
     }
 
-    // 获取颜色列表
+    // 获取品牌列表
+      fetchBrandList().then(response => {
+        this.brandOption = response.data.body;
+        console.log('this.brandOption', this.brandOption)
+      });
+
+    // 获取型号列表
+      fetchModelList().then(response => {
+        this.modelOption = response.data.body;
+        console.log('this.modelOption', this.modelOption)
+      });
 
   },
 
@@ -343,6 +404,12 @@ export default {
       fd.append('JfCar.carPhoto', this.carInfo.carPhoto);
       fd.append('JfCar.carDesc', this.carInfo.carDesc);
       fd.append('JfCar.oilNumber', this.carInfo.oilNumber);
+
+      fd.append('JfCar.rent', this.feeInfo.rent);
+      fd.append('JfCar.safeMoney', this.feeInfo.safeMoney);
+      fd.append('JfCar.deposit', this.feeInfo.deposit);
+      fd.append('JfCar.peccancyDeposit', this.feeInfo.peccancyDeposit);
+      fd.append('JfCar.serviceMoney', this.feeInfo.serviceMoney);
 
 
       this.listLoading = true;
