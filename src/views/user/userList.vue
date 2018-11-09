@@ -201,7 +201,10 @@ export default {
       }
 
       let fd = new FormData();
-      fd.append('page', this.listQuery.page);
+
+      if (this.listQuery.page) {
+        fd.append("pageInfo.pageNum", this.listQuery.page);
+      }
 
       if(this.listQuery.username){
         fd.append('username', this.listQuery.username);
