@@ -62,7 +62,9 @@ export default {
   },
   watch: {},
 
-  created() {},
+  created() {
+    Cookies.set("jf_token", '');
+  },
   destroyed() {},
   methods: {
     showPwd() {
@@ -91,7 +93,7 @@ export default {
         if (response.data.body) {
           let token = response.data.body.token;
           Cookies.set("jf_token", token);
-          window.location.replace("/#/");
+          window.location.replace("/#/dashboard");
         } else {
           this.$alert(response.data.header.desc);
         }

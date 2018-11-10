@@ -21,7 +21,7 @@ export default {
   created() {
      Cookies.set('jf_token', '');
      setTimeout(function(){
-       window.location.replace('/#/login2')
+       window.location.replace('/#/userLogin')
      }, 1000);
   },
   destroyed() {},

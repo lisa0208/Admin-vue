@@ -14,7 +14,7 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: 'login2',
+    redirect: 'userLogin',
   },
 
   {
@@ -38,12 +38,12 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/login2',
+    path: '/userLogin',
     component: () => import('@/views/login/index'),
     hidden: true
   },
   {
-    path: '/logout2',
+    path: '/userLogout',
     component: () => import('@/views/logout/index'),
     hidden: true
   },

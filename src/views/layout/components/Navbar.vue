@@ -71,7 +71,7 @@ export default {
       this.$store.dispatch('toggleSideBar')
     },
     logout() {
-      window.location.replace('/#/logout2')
+      window.location.replace('/#/userLogout')
     }
   }
 }
