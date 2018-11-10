@@ -91,7 +91,7 @@
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)" v-if="scope.row.carStatus==3">上线</el-button>
           <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)" v-if="scope.row.carStatus==1">下线</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)" v-if="scope.row.carStatus==1">设置不可用日期</el-button>
+          <el-button type="danger" size="mini" @click="setUnavaluableDays(scope.row)" v-if="scope.row.carStatus==1">设置不可用日期</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import { fetchCarList } from '@/api/car'
+import { fetchCarList, updateCarStatus} from '@/api/car'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -298,7 +298,21 @@ export default {
       this.ownerInfo = user
     },
 
-    handlePass() {},
+    handlePass(row, status) {
+      let fd = new FormData();
+      fd.append('jfCar.id', row.id);
+      fd.append('jfUser.id', row.jfUser.id);
+      fd.append('jfCar.carStatus', status);
+
+      updateCarStatus(fd).then(response => {
+        this.getList();
+      })
+    },
+    
+    setUnavaluableDays(){
+
+    },
+
     goToAddCar(){
       window.location.href = '/#/car/car-add/:id'
     }
