@@ -153,7 +153,7 @@
 </template>
 
 <script>
-import { fetchCarAudit, updateCarStatus } from "@/api/car";
+import { fetchCarAudit, updateCar } from "@/api/car";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 
 export default {
@@ -310,7 +310,7 @@ export default {
       fd.append("jfCar.id", row.id);
       fd.append("jfUser.id", row.jfUser.id);
 
-      updateCarStatus(fd).then(response => {
+      updateCar(fd).then(response => {
         this.getList();
         if (status == 3) {
           window.location.hash = "/car/car-add/" + row.id;

@@ -5,7 +5,7 @@
       <el-date-picker
         v-model="listQuery.date"
         class="filter-item"
-        type="daterange"
+        type="datetime"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"/>
@@ -75,7 +75,18 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'申请时间'" width="110px" align="center">
+      <el-table-column :label="'不可用开始时间'" width="160px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.unavailableTimeStart }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="'不可用结束时间'" width="160px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.unavailableTimeStop }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'申请时间'" width="160px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
@@ -141,15 +152,37 @@
       </div>
     </el-dialog>
 
+    <el-dialog :title="'设置不可用日期'" :visible.sync="dialogShowUnavailableDays">
+      
+      <el-form label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+        
+        <el-form-item :label="'请选择日期范围'" prop="type">
+          <el-date-picker
+            v-model="unavailableDays"
+            class="filter-item"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始日期时间"
+            end-placeholder="结束日期时间"/>
+          </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleSetUnavailableDays">设置</el-button>
+        <el-button @click="dialogShowUnavailableDays = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { fetchCarList, updateCarStatus} from '@/api/car'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { fetchCarList, updateCar } from "@/api/car";
+import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 
 export default {
-  name: 'CarList',
+  name: "CarList",
   components: { Pagination },
 
   data() {
@@ -168,7 +201,7 @@ export default {
         mobile: undefined
       },
 
-      cityOptions: [{ label: '上海', key: '1' }],
+      cityOptions: [{ label: "上海", key: "1" }],
 
       statusValue: undefined, // 全部
       statusOptions: [
@@ -181,22 +214,22 @@ export default {
       ],
 
       drivingMap: {
-        '0': 'A1驾照',
-        '1': 'A2驾照',
-        '2': 'A3驾照',
-        '3': 'B1驾照',
-        '4': 'B2驾照',
-        '5': 'C1驾照',
-        '6': 'C2驾照'
+        "0": "A1驾照",
+        "1": "A2驾照",
+        "2": "A3驾照",
+        "3": "B1驾照",
+        "4": "B2驾照",
+        "5": "C1驾照",
+        "6": "C2驾照"
       },
 
       carStatusMap: {
-        '0': '未审核',
-        '1': '上线',
-        '2': '下线',
-        '3': '审核通过',
-        '4': '未通过',
-        '5': '已预定'
+        "0": "未审核",
+        "1": "上线",
+        "2": "下线",
+        "3": "审核通过",
+        "4": "未通过",
+        "5": "已预定"
       },
 
       dialogShowOwnerInfo: false,
@@ -225,21 +258,25 @@ export default {
         userType: undefined
       },
 
-    }
+      dialogShowUnavailableDays: false,
+      unavailableDays: undefined,
+
+      rowCarId: undefined,
+      rowUserId: undefined
+    };
   },
 
   created() {
-    this.getList()
+    this.getList();
   },
 
   methods: {
     getList(data) {
       this.listLoading = true;
 
-
       let fd = new FormData();
 
-      if(data && data.page){
+      if (data && data.page) {
         this.listQuery.page = data.page;
       }
 
@@ -271,53 +308,87 @@ export default {
         fd.append("carStatus", this.statusValue);
       }
 
-      
-
-
       fetchCarList(fd).then(response => {
-        this.list = response.data.body.infos
-        this.total = response.data.body.pageInfo.total
-        this.listLoading = false
-      })
+        this.list = response.data.body.infos;
+        this.total = response.data.body.pageInfo.total;
+        this.listLoading = false;
+      });
     },
 
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
 
     sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
+      const { prop, order } = data;
+      if (prop === "id") {
+        this.sortByID(order);
       }
     },
 
     handleShowOwnerInfo(user) {
-      this.dialogShowOwnerInfo = true
-      this.ownerInfo = user
+      this.dialogShowOwnerInfo = true;
+      this.ownerInfo = user;
     },
 
     handlePass(row, status) {
       let fd = new FormData();
-      fd.append('jfCar.id', row.id);
-      fd.append('jfUser.id', row.jfUser.id);
-      fd.append('jfCar.carStatus', status);
+      fd.append("jfCar.id", row.id);
+      fd.append("jfUser.id", row.jfUser.id);
+      fd.append("jfCar.carStatus", status);
 
-      updateCarStatus(fd).then(response => {
+      updateCar(fd).then(response => {
         this.getList();
-      })
-    },
-    
-    setUnavaluableDays(){
-
+      });
     },
 
-    goToAddCar(){
-      window.location.href = '/#/car/car-add/:id'
+    setUnavaluableDays(row) {
+      this.rowCarId = row.id;
+      this.rowUserId = row.jfUser.id;
+      this.dialogShowUnavailableDays = true;
+    },
+
+    formatDate(time) {
+      var date = new Date(time);
+
+      var year = date.getFullYear(),
+        month = date.getMonth() + 1, //月份是从0开始的
+        day = date.getDate(),
+        hour = date.getHours() > 9 ? date.getHours() : '0' + date.getHours(),
+        min = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes(),
+        sec = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds();
+      var newTime =
+        year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+      return newTime;
+    },
+
+    handleSetUnavailableDays() {
+      if (this.unavailableDays) {
+
+        let startTime = this.unavailableDays[0];
+        let endTime = this.unavailableDays[1];
+
+        let fd = new FormData();
+        fd.append("jfCar.id", this.rowCarId);
+        fd.append("jfUser.id", this.rowUserId);
+        fd.append("jfCar.unavailableTimeStart", this.formatDate(startTime));
+        fd.append("jfCar.unavailableTimeStop", this.formatDate(endTime));
+
+        updateCar(fd).then(response => {
+          this.dialogShowUnavailableDays = false;
+          this.getList();
+        });
+      } else {
+        this.$alert("请选择起止时间");
+      }
+    },
+
+    goToAddCar() {
+      window.location.href = "/#/car/car-add/:id";
     }
   }
-}
+};
 </script>
 
 <style>
@@ -332,6 +403,13 @@ export default {
   font-size: 13px;
   position: relative;
   top: -8px;
+}
+.fixed-width .el-button--mini {
+  width: auto;
+}
+.el-dialog__body .el-range-editor--medium .el-range-input,
+.el-dialog__body .el-range-editor--medium .el-range-separator {
+  top: 0px;
 }
 </style>
 

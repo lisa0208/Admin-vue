@@ -16,7 +16,7 @@ export function fetchCarList(data) {
   })
 }
 
-export function updateCarStatus(data) {
+export function updateCar(data) {
   return request({
     url: '/car/updateCar',
     method: 'post',
