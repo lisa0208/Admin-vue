@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 
-const TokenKey = 'jf_token'
+const TokenKey = 'jf_role'
 
 export function getToken() {
   console.log(Cookies.get(TokenKey))

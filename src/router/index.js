@@ -12,6 +12,12 @@ Vue.use(Router)
 export const constantRouterMap = [
 
   {
+    path: '/',
+    component: Layout,
+    redirect: 'login2',
+  },
+
+  {
     path: '',
     component: Layout,
     redirect: 'dashboard',
@@ -28,6 +34,17 @@ export const constantRouterMap = [
   {
     path: '/404',
     component: () => import('@/views/errorPage/404'),
+    hidden: true
+  },
+
+  {
+    path: '/login2',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
+  {
+    path: '/logout2',
+    component: () => import('@/views/logout/index'),
     hidden: true
   },
 

@@ -208,8 +208,8 @@ export default {
       }
 
       fetchTakeCashList(fd).then(response => {
-        this.list = response.data.body.infos;
-        this.total = response.data.body.pageInfo.total;
+        this.list = response.data.body ? response.data.body.infos : [];
+        this.total = response.data.body ? response.data.body.pageInfo.total: this.total;
         this.listLoading = false;
       });
     },

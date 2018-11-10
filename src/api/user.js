@@ -15,3 +15,11 @@ export function updateUser(data) {
     data
   })
 }
+
+export function loginAdmin(data) {
+  return request({
+    url: '/web/login',
+    method: 'post',
+    data
+  })
+}

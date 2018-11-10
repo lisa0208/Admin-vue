@@ -21,7 +21,7 @@ import './mock' // simulation data
 
 import * as filters from './filters' // global filters
 
-Cookies.set('jf_token', 'editor');
+Cookies.set('jf_role', 'editor');
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
