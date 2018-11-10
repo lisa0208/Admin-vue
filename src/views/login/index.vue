@@ -45,7 +45,7 @@
 
 <script>
 import { loginAdmin } from "@/api/user";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 
 export default {
   name: "Login",
@@ -73,20 +73,28 @@ export default {
       }
     },
     handleLogin() {
-
-      let fd = new FormData();
-      if(this.loginForm.username){
-        fd.append('user_name', this.loginForm.username);
+      if (!this.loginForm.username || !this.loginForm.password) {
+        this.$alert("请输入用户名密码");
+        return;
       }
 
-      if(this.loginForm.password){
-        fd.append('password', this.loginForm.password);
+      let fd = new FormData();
+      if (this.loginForm.username) {
+        fd.append("user_name", this.loginForm.username);
+      }
+
+      if (this.loginForm.password) {
+        fd.append("password", this.loginForm.password);
       }
 
       loginAdmin(fd).then(response => {
-        let token = response.data.body.token;
-        Cookies.set('jf_token', token);
-        window.location.replace('/#/')
+        if (response.data.body) {
+          let token = response.data.body.token;
+          Cookies.set("jf_token", token);
+          window.location.replace("/#/");
+        } else {
+          this.$alert(response.data.header.desc);
+        }
       });
     }
   }
