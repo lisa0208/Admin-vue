@@ -96,6 +96,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="'车辆照片'" width="110px" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="handleShowCarPhoto(scope.row.carPhoto)">查看</el-button>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)" v-if="scope.row.carStatus==0">通过</el-button>
@@ -143,6 +149,19 @@
         </el-form-item>
 
       </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="'车辆照片查看'" :visible.sync="dialogShowCarPhoto">
+
+      <el-carousel height="150px">
+      <el-carousel-item v-for="item in carPhoto" :key="item">
+        <img :src="item">
+      </el-carousel-item>
+      </el-carousel>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
@@ -232,7 +251,10 @@ export default {
         userOpenId: undefined,
         userStatus: undefined,
         userType: undefined
-      }
+      },
+
+      dialogShowCarPhoto: false,
+      carPhoto: []
     };
   },
 
@@ -304,6 +326,12 @@ export default {
       this.ownerInfo = user;
     },
 
+    handleShowCarPhoto(carPhoto) {
+      this.dialogShowCarPhoto = true;
+      this.carPhoto = carPhoto.split(",");
+      console.log('this.carPhoto', this.carPhoto)
+    },
+
     handlePass(row, status) {
       let fd = new FormData();
       fd.append("jfCar.carStatus", status);
@@ -333,5 +361,20 @@ export default {
   position: relative;
   top: -8px;
 }
+.el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+  }
+
+  .el-carousel__item:nth-child(2n) {
+     background-color: #99a9bf;
+  }
+  
+  .el-carousel__item:nth-child(2n+1) {
+     background-color: #d3dce6;
+  }
 </style>
 
