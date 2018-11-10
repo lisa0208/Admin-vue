@@ -36,7 +36,7 @@
       style="width: 100%;"
       @sort-change="sortChange">
 
-      <el-table-column :label="'ID'" prop="id" sortable="custom" align="center" width="65">
+      <el-table-column :label="'ID'" prop="id" align="center" width="65">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -101,6 +101,7 @@
           <el-button type="primary" size="mini" @click="handleShowCarPhoto(scope.row.carPhoto)">查看</el-button>
         </template>
       </el-table-column>
+      
 
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -157,9 +158,9 @@
 
     <el-dialog :title="'车辆照片查看'" :visible.sync="dialogShowCarPhoto">
 
-      <el-carousel height="150px">
+      <el-carousel height="300px" indicator-position="outside">
       <el-carousel-item v-for="item in carPhoto" :key="item">
-        <img :src="item">
+        <img :src="item" style='height:300px'>
       </el-carousel-item>
       </el-carousel>
 
@@ -361,20 +362,5 @@ export default {
   position: relative;
   top: -8px;
 }
-.el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    opacity: 0.75;
-    line-height: 150px;
-    margin: 0;
-  }
-
-  .el-carousel__item:nth-child(2n) {
-     background-color: #99a9bf;
-  }
-  
-  .el-carousel__item:nth-child(2n+1) {
-     background-color: #d3dce6;
-  }
 </style>
 

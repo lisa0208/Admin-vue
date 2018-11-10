@@ -31,7 +31,7 @@
       style="width: 100%;"
       @sort-change="sortChange">
 
-      <el-table-column :label="'ID'" prop="id" sortable="custom" align="center" width="65">
+      <el-table-column :label="'ID'" prop="id" align="center" width="65">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>

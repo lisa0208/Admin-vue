@@ -142,7 +142,9 @@
             </el-form-item>
 
             <el-form-item label="入驻模式">
-              <el-input v-model="carInfo.enterModel"></el-input>
+              <el-select  placeholder="请选择" v-model="carInfo.enterModel">
+                <el-option label="个人" value="0"></el-option>
+              </el-select>
             </el-form-item>
 
             <el-form-item label="预期租金">
@@ -150,14 +152,18 @@
             </el-form-item>
 
             <el-form-item label="车辆照片">
+             
               <el-upload
-                :action="uploadUrl"
-                :show-file-list="false"
-                :http-request = "beforeUploadCarPhoto"
-                class="avatar-uploader">
-                <img v-if="carInfo.carPhoto" :src="carInfo.carPhoto" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"/>
-              </el-upload>        
+              action="uploadUrl"
+              :limit="5"
+              list-type="picture"
+              :http-request = "beforeUploadCarPhoto"
+              :on-exceed="handleExceed"
+              :on-remove="handleRemove"
+              :file-list="fileList"
+              :on-change="handlecarPhotoListChange">
+              <el-button size="small" type="primary">点击上传</el-button>
+              </el-upload>
             </el-form-item>
 
             <el-form-item label="车辆描述">
@@ -225,7 +231,8 @@ import {
   fetchColorList,
   fetchBrandList,
   fetchModelList,
-  fetchModelByBrand
+  fetchModelByBrand,
+  updateCar
 } from "@/api/car";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 import axios from "axios";
@@ -262,7 +269,6 @@ export default {
       carInfo: {
         brand: undefined,
         carDesc: undefined,
-        carPhoto: undefined,
         city: undefined,
         color: undefined,
         engineNum: undefined,
@@ -283,7 +289,9 @@ export default {
         deposit: undefined,
         peccancyDeposit: undefined,
         serviceMoney: undefined
-      }
+      },
+      carPhotoList: [],
+      fileList: []
     };
   },
 
@@ -314,7 +322,6 @@ export default {
         this.carInfo.plateNumber = response.data.body.plateNumber;
         this.carInfo.brand = response.data.body.brand;
         this.carInfo.carDesc = response.data.body.carDesc;
-        this.carInfo.carPhoto = response.data.body.carPhoto;
         this.carInfo.city = response.data.body.city;
         this.carInfo.color = response.data.body.color;
         this.carInfo.engineNum = response.data.body.engineNum;
@@ -332,6 +339,20 @@ export default {
         this.feeInfo.deposit = response.data.body.deposit;
         this.feeInfo.peccancyDeposit = response.data.body.peccancyDeposit;
         this.feeInfo.serviceMoney = response.data.body.serviceMoney;
+
+        // 处理照片回显
+
+        let arr = response.data.body.carPhoto.split(",");
+        let tempArr = [];
+        for (let i = 0; i < arr.length; i++) {
+          let json = {};
+          json.url = arr[i];
+          json.name = arr[i];
+
+          tempArr.push(json);
+          console.log("tempArr", tempArr);
+        }
+        this.fileList = tempArr;
       });
 
       // 获取颜色列表
@@ -351,6 +372,24 @@ export default {
   },
 
   methods: {
+    handlecarPhotoListChange(file, fileList) {
+      // this.carPhotoList.push(file);
+      console.log(file, fileList);
+    },
+
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+      for(let i = 0; i < this.fileList.length; i++){
+        if(this.fileList[i].uid == file.uid){
+          this.fileList.splice(i,1);
+        }
+      }
+
+    },
+
+    handleExceed() {
+      this.$alert("最多上传5张车辆照片");
+    },
     getModelList(res) {
       if (res) {
         console.log(res, "res");
@@ -370,8 +409,6 @@ export default {
     },
 
     handleSubmit() {
-      console.log(this.ownerInfo, this.carInfo);
-
       for (let j in this.carInfo) {
         console.log(this.carInfo);
 
@@ -438,7 +475,13 @@ export default {
       fd.append("JfCar.frameNum", this.carInfo.frameNum);
       fd.append("JfCar.enterModel", this.carInfo.enterModel);
       fd.append("JfCar.wantRent", this.carInfo.wantRent);
-      fd.append("JfCar.carPhoto", this.carInfo.carPhoto);
+
+      let tempArr = new Array();
+      for (let i = 0; i < this.fileList.length; i++) {
+        tempArr.push(this.fileList[i].url);
+      }
+      fd.append("JfCar.carPhoto", tempArr.join(","));
+
       fd.append("JfCar.carDesc", this.carInfo.carDesc);
       fd.append("JfCar.oilNumber", this.carInfo.oilNumber);
 
@@ -449,10 +492,21 @@ export default {
       fd.append("JfCar.serviceMoney", this.feeInfo.serviceMoney);
 
       this.listLoading = true;
-      addCar(fd).then(response => {
+
+      // 如果有 id，则是更新。否则就是添加
+
+      if (this.id) {
+        fd.append('jfCar.id', this.id);
+        updateCar(fd).then(response => {
         this.listLoading = false;
         window.location.reload();
       });
+      } else {
+        addCar(fd).then(response => {
+          this.listLoading = false;
+          window.location.reload();
+        });
+      }
     },
 
     beforeUploadIdCardFront(data) {
@@ -561,7 +615,13 @@ export default {
           }
         })
         .then(function(response) {
-          self.carInfo.carPhoto = response.data.body;
+          let json = {};
+          json.name = response.data.body;
+          json.url = response.data.body;
+
+          self.fileList.push(json);
+
+          console.log('这里的 file list', self.fileList);
         })
         .catch(function(error) {
           console.log(error);
