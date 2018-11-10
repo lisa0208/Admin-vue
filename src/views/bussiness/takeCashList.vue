@@ -55,6 +55,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="'提现金额(元)'" width="100px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.putForwardAmount }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="'提现账户名'" width="110px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.putForwardUserName }}</span>
@@ -73,7 +79,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'提现流水号'" width="110px" align="center">
+      <el-table-column :label="'提现流水号'" width="260px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.putForwardSerialNum }}</span>
         </template>

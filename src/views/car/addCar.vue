@@ -99,13 +99,13 @@
 
             <el-form-item label="车辆品牌">
               <el-select  placeholder="请选择车辆品牌" v-model="carInfo.brand">
-                <el-option v-for="item in brandOption" :key="item.id" :label="item.brand" :value="item.id"/>
+                <el-option v-for="item in brandOption" :key="item.id" :label="item.brand" :value="item.brand"/>
               </el-select>
             </el-form-item>
 
             <el-form-item label="型号">
               <el-select  placeholder="请选择车辆品牌" v-model="carInfo.model">
-                <el-option v-for="item in modelOption" :key="item.id" :label="item.model" :value="item.id"/>
+                <el-option v-for="item in modelOption" :key="item.id" :label="item.model" :value="item.model"/>
               </el-select>
             </el-form-item>
 
@@ -117,7 +117,7 @@
 
             <el-form-item label="颜色">
               <el-select  placeholder="请选择汽车颜色" v-model="carInfo.color">
-                <el-option v-for="item in colorOption" :key="item.id" :label="item.color" :value="item.id"/>
+                <el-option v-for="item in colorOption" :key="item.id" :label="item.color" :value="item.color"/>
               </el-select>
             </el-form-item>
 
