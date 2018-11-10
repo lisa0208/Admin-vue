@@ -439,7 +439,7 @@ export default {
 }
 .el-dialog__body .el-range-editor--medium .el-range-input,
 .el-dialog__body .el-range-editor--medium .el-range-separator {
-  top: 0px;
+  top: 0px !important;
 }
 
 .el-carousel__item h3 {

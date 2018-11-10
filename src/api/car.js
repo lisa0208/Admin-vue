@@ -87,3 +87,11 @@ export function searchCarById(data) {
     data
   })
 }
+
+export function fetchModelByBrand(data) {
+  return request({
+    url: '/carModel/searchByBrand',
+    method: 'post',
+    data
+  })
+}

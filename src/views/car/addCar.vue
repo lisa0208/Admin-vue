@@ -98,13 +98,13 @@
             </el-form-item>
 
             <el-form-item label="车辆品牌">
-              <el-select  placeholder="请选择车辆品牌" v-model="carInfo.brand">
-                <el-option v-for="item in brandOption" :key="item.id" :label="item.brand" :value="item.brand"/>
+              <el-select  placeholder="请选择车辆品牌" v-model="carInfo.brand" @change="getModelList">
+                <el-option v-for="item in brandOption" :key="item.id" :label="item.brand" :value="item.id"/>
               </el-select>
             </el-form-item>
 
             <el-form-item label="型号">
-              <el-select  placeholder="请选择车辆品牌" v-model="carInfo.model">
+              <el-select  placeholder="请选择车辆型号" v-model="carInfo.model">
                 <el-option v-for="item in modelOption" :key="item.id" :label="item.model" :value="item.model"/>
               </el-select>
             </el-form-item>
@@ -219,9 +219,16 @@
 </template>
 
 <script>
-import { addCar, searchCarById, fetchColorList, fetchBrandList, fetchModelList} from "@/api/car";
+import {
+  addCar,
+  searchCarById,
+  fetchColorList,
+  fetchBrandList,
+  fetchModelList,
+  fetchModelByBrand
+} from "@/api/car";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
-import axios from 'axios';
+import axios from "axios";
 import env from "../../../config/sit.env";
 
 export default {
@@ -230,10 +237,9 @@ export default {
 
   data() {
     return {
-
       id: this.$route.params.id ? this.$route.params.id : false,
 
-      uploadUrl: '',
+      uploadUrl: "",
 
       cityOptions: [{ label: "上海", key: "上海" }],
 
@@ -276,26 +282,23 @@ export default {
         safeMoney: undefined,
         deposit: undefined,
         peccancyDeposit: undefined,
-        serviceMoney: undefined,
+        serviceMoney: undefined
       }
-
-
     };
   },
 
   created() {
     console.log(this.id);
     // 拉取车辆信息
-    if(this.id){
-
+    if (this.id) {
       let fd = new FormData();
 
-      fd.append('id', this.id);
+      fd.append("id", this.id);
 
       searchCarById(fd).then(response => {
         this.listLoading = false;
 
-        console.log(response)
+        console.log(response);
 
         this.ownerInfo.name = response.data.body.jfUser.name;
         this.ownerInfo.mobile = response.data.body.jfUser.mobile;
@@ -307,7 +310,6 @@ export default {
         this.ownerInfo.drivingNum = response.data.body.jfUser.drivingNum;
         this.ownerInfo.drivingType = response.data.body.jfUser.drivingType;
         this.ownerInfo.headImg = response.data.body.jfUser.headImg;
-
 
         this.carInfo.plateNumber = response.data.body.plateNumber;
         this.carInfo.brand = response.data.body.brand;
@@ -330,105 +332,130 @@ export default {
         this.feeInfo.deposit = response.data.body.deposit;
         this.feeInfo.peccancyDeposit = response.data.body.peccancyDeposit;
         this.feeInfo.serviceMoney = response.data.body.serviceMoney;
-
       });
 
       // 获取颜色列表
       fetchColorList().then(response => {
         this.colorOption = response.data.body;
-        console.log('this.colorOption', this.colorOption)
+        console.log("this.colorOption", this.colorOption);
       });
-
     }
 
     // 获取品牌列表
-      fetchBrandList().then(response => {
-        this.brandOption = response.data.body;
-        console.log('this.brandOption', this.brandOption)
-      });
+    fetchBrandList().then(response => {
+      this.brandOption = response.data.body;
+      console.log("this.brandOption", this.brandOption);
+    });
 
-    // 获取型号列表
-      fetchModelList().then(response => {
-        this.modelOption = response.data.body;
-        console.log('this.modelOption', this.modelOption)
-      });
-
+    this.getModelList(null);
   },
 
   methods: {
-  
+    getModelList(res) {
+      if (res) {
+        console.log(res, "res");
+        this.carInfo.brand = res;
+      }
+
+      // 获取型号列表
+      let fd = new FormData();
+      if (this.carInfo.brand) {
+        fd.append("id", this.carInfo.brand);
+      }
+
+      fetchModelByBrand(fd).then(response => {
+        this.modelOption = response.data.body;
+        console.log("this.modelOption", this.modelOption);
+      });
+    },
+
     handleSubmit() {
       console.log(this.ownerInfo, this.carInfo);
 
-      for(let i in this.ownerInfo){
-        console.log(i);
-        if(typeof(this.ownerInfo[i]) == "undefined" || this.ownerInfo[i] =='undefined'){
-          console.log(this.ownerInfo[i])
-          alert('请完善车主信息');
-          return false;
+      for (let j in this.carInfo) {
+        console.log(this.carInfo);
+
+        for (let x in this.brandOption) {
+          if (this.brandOption[x].id == this.carInfo.brand) {
+            this.carInfo.brandName = this.brandOption[x].brand;
+            console.log("this.carInfo.brand", this.carInfo.brandName);
+          }
         }
-      }
-      
-      for(let j in this.carInfo){
-        if(typeof(this.carInfo[j]) == "undefined" || this.carInfo[j] =='undefined'){
-          console.log(this.carInfo[j])
-          alert('请完善车辆信息');
+
+        if (
+          typeof this.carInfo[j] == "undefined" ||
+          this.carInfo[j] == "undefined"
+        ) {
+          console.log(this.carInfo[j]);
+          alert("请完善车辆信息");
           return false;
         }
       }
 
-       for(let k in this.feeInfo){
-        if(typeof(this.feeInfo[k]) == "undefined" || this.feeInfo[k] =='undefined'){
-          alert('请完善费用信息');
+      for (let i in this.ownerInfo) {
+        console.log(i);
+        if (
+          typeof this.ownerInfo[i] == "undefined" ||
+          this.ownerInfo[i] == "undefined"
+        ) {
+          console.log(this.ownerInfo[i]);
+          alert("请完善车主信息");
+          return false;
+        }
+      }
+
+      for (let k in this.feeInfo) {
+        if (
+          typeof this.feeInfo[k] == "undefined" ||
+          this.feeInfo[k] == "undefined"
+        ) {
+          alert("请完善费用信息");
           return false;
         }
       }
 
       let fd = new FormData();
 
-      fd.append('jfUser.mobile', this.ownerInfo.mobile);
-      fd.append('jfUser.name', this.ownerInfo.name);
-      fd.append('jfUser.idcard', this.ownerInfo.idcard);
-      fd.append('jfUser.drivingNum', this.ownerInfo.drivingNum);
-      fd.append('jfUser.drivingType', this.ownerInfo.drivingType);
-      fd.append('jfUser.idcardFront', this.ownerInfo.idcardFront);
-      fd.append('jfUser.idcardBack', this.ownerInfo.idcardBack);
-      fd.append('jfUser.drivingFront', this.ownerInfo.drivingFront);
-      fd.append('jfUser.drivingBack', this.ownerInfo.drivingBack);
+      fd.append("jfUser.mobile", this.ownerInfo.mobile);
+      fd.append("jfUser.name", this.ownerInfo.name);
+      fd.append("jfUser.idcard", this.ownerInfo.idcard);
+      fd.append("jfUser.drivingNum", this.ownerInfo.drivingNum);
+      fd.append("jfUser.drivingType", this.ownerInfo.drivingType);
+      fd.append("jfUser.idcardFront", this.ownerInfo.idcardFront);
+      fd.append("jfUser.idcardBack", this.ownerInfo.idcardBack);
+      fd.append("jfUser.drivingFront", this.ownerInfo.drivingFront);
+      fd.append("jfUser.drivingBack", this.ownerInfo.drivingBack);
 
-      fd.append('JfCar.city', this.carInfo.city);
-      fd.append('JfCar.plateNumber', this.carInfo.plateNumber);
-      fd.append('JfCar.brand', this.carInfo.brand);
-      fd.append('JfCar.model', this.carInfo.model);
-      fd.append('JfCar.color', this.carInfo.color);
-      fd.append('JfCar.output', this.carInfo.output);
-      fd.append('JfCar.gearbox', this.carInfo.gearbox);
-      fd.append('JfCar.seatNum', this.carInfo.seatNum);
-      fd.append('JfCar.engineNum', this.carInfo.engineNum);
-      fd.append('JfCar.frameNum', this.carInfo.frameNum);
-      fd.append('JfCar.enterModel', this.carInfo.enterModel);
-      fd.append('JfCar.wantRent', this.carInfo.wantRent);
-      fd.append('JfCar.carPhoto', this.carInfo.carPhoto);
-      fd.append('JfCar.carDesc', this.carInfo.carDesc);
-      fd.append('JfCar.oilNumber', this.carInfo.oilNumber);
+      fd.append("JfCar.city", this.carInfo.city);
+      fd.append("JfCar.plateNumber", this.carInfo.plateNumber);
+      fd.append("JfCar.brand", this.carInfo.brandName);
+      fd.append("JfCar.model", this.carInfo.model);
+      fd.append("JfCar.color", this.carInfo.color);
+      fd.append("JfCar.output", this.carInfo.output);
+      fd.append("JfCar.gearbox", this.carInfo.gearbox);
+      fd.append("JfCar.seatNum", this.carInfo.seatNum);
+      fd.append("JfCar.engineNum", this.carInfo.engineNum);
+      fd.append("JfCar.frameNum", this.carInfo.frameNum);
+      fd.append("JfCar.enterModel", this.carInfo.enterModel);
+      fd.append("JfCar.wantRent", this.carInfo.wantRent);
+      fd.append("JfCar.carPhoto", this.carInfo.carPhoto);
+      fd.append("JfCar.carDesc", this.carInfo.carDesc);
+      fd.append("JfCar.oilNumber", this.carInfo.oilNumber);
 
-      fd.append('JfCar.rent', this.feeInfo.rent);
-      fd.append('JfCar.safeMoney', this.feeInfo.safeMoney);
-      fd.append('JfCar.deposit', this.feeInfo.deposit);
-      fd.append('JfCar.peccancyDeposit', this.feeInfo.peccancyDeposit);
-      fd.append('JfCar.serviceMoney', this.feeInfo.serviceMoney);
-
+      fd.append("JfCar.rent", this.feeInfo.rent);
+      fd.append("JfCar.safeMoney", this.feeInfo.safeMoney);
+      fd.append("JfCar.deposit", this.feeInfo.deposit);
+      fd.append("JfCar.peccancyDeposit", this.feeInfo.peccancyDeposit);
+      fd.append("JfCar.serviceMoney", this.feeInfo.serviceMoney);
 
       this.listLoading = true;
       addCar(fd).then(response => {
         this.listLoading = false;
         window.location.reload();
       });
-
     },
 
     beforeUploadIdCardFront(data) {
-      
       let fd = new FormData();
       fd.append("uploadFile", data.file);
 
@@ -452,7 +479,6 @@ export default {
     },
 
     beforeUploadIdCardBack(data) {
-      
       let fd = new FormData();
       fd.append("uploadFile", data.file);
 
@@ -476,7 +502,6 @@ export default {
     },
 
     beforeUploadDrivingFront(data) {
-      
       let fd = new FormData();
       fd.append("uploadFile", data.file);
 
@@ -500,7 +525,6 @@ export default {
     },
 
     beforeUploadDrivingBack(data) {
-      
       let fd = new FormData();
       fd.append("uploadFile", data.file);
 
@@ -522,9 +546,8 @@ export default {
 
       return false;
     },
-    
+
     beforeUploadCarPhoto(data) {
-      
       let fd = new FormData();
       fd.append("uploadFile", data.file);
 
@@ -545,35 +568,34 @@ export default {
         });
 
       return false;
-    },
-
+    }
   }
 };
 </script>
 
 <style>
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 80px;
-    height: 80px;
-    line-height: 80px;
-    text-align: center;
-  }
-  .avatar {
-    width: 80px;
-    height: 80px;
-    display: block;
-  }
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  display: block;
+}
 </style>
 

@@ -1,12 +1,12 @@
 <template>
   <div class="dashboard-editor-container">
     <div class=" clearfix">
-      <pan-thumb :image="avatar" style="float: left"> Your roles:
-        <span v-for="item in roles" :key="item" class="pan-info-roles">{{ item }}</span>
+      <pan-thumb :image="avatar" style="float: left"> 
+        管理员
       </pan-thumb>
       
       <div class="info-container">
-        <span class="display_name">欢迎：{{ name }}，</span>
+        <span class="display_name">欢迎，</span>
         <span style="font-size:20px;padding-top:20px;display:inline-block;">来到飓风出行管理后台!</span>
       </div>
     </div>

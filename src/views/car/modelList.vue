@@ -8,7 +8,7 @@
         <el-option v-for="item in brandList" :key="item.id" :label="item.brand" :value="item.id"/>
       </el-select>
 
-      <el-input :placeholder="'型号'" v-model="carModel" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <!-- <el-input :placeholder="'型号'" v-model="carModel" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/> -->
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleShowBrand">添加</el-button>
@@ -71,7 +71,7 @@
         <el-form-item :label="'请选择品牌'" prop="type">
           
           <el-select v-model="selectedCarBrand" :placeholder="'品牌'" clearable style="width: 90px" class="filter-item">
-            <el-option v-for="item in brandList" :key="item.id" :label="item.brand" :value="item.id"/>
+            <el-option v-for="item in brandList" :key="item.id" :label="item.brand" :value="item.brand"/>
           </el-select>
           
         </el-form-item>
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { fetchModelList, fetchBrandList, addModel} from '@/api/car'
+import { fetchModelList, fetchBrandList, addModel, fetchModelByBrand} from '@/api/car'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import env from '../../../config/sit.env'
 
@@ -141,13 +141,10 @@ export default {
 
       let fd = new FormData();
       if(this.carBrand){
-        fd.append('carBrand', this.carBrand);
-      }
-      if(this.carModel){
-       fd.append('carModel', this.carModel);
+        fd.append('id', this.carBrand);
       }
 
-      fetchModelList(fd).then(response => {
+      fetchModelByBrand(fd).then(response => {
         this.list = response.data.body
         this.listLoading = false
       })
