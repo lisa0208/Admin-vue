@@ -79,6 +79,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="'提现时间'" width="160px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleStatus(scope.row, 2)" v-if="scope.row.status==1 || scope.row.status==4">通过</el-button>

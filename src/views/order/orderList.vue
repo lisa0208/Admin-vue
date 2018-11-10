@@ -39,7 +39,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'支付时间'" width="110px" align="center" sortable>
+      <el-table-column :label="'支付时间'" width="160px" align="center" sortable>
         <template slot-scope="scope">
           <span>{{ scope.row.orderPayTime }}</span>
         </template>
@@ -95,13 +95,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'订单开始时间'" width="110px" align="center">
+      <el-table-column :label="'订单开始时间'" width="160px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.orderStartTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'订单结束时间'" width="110px" align="center">
+      <el-table-column :label="'订单结束时间'" width="160px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.orderStopTime }}</span>
         </template>

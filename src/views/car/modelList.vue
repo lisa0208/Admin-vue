@@ -42,13 +42,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'创建时间'" width="130px" align="center">
+      <el-table-column :label="'创建时间'" width="160px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'更新时间'" width="130px" align="center">
+      <el-table-column :label="'更新时间'" width="160px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.updateTime }}</span>
         </template>

@@ -377,6 +377,13 @@ export default {
         }
       }
 
+       for(let k in this.feeInfo){
+        if(typeof(this.feeInfo[k]) == "undefined" || this.feeInfo[k] =='undefined'){
+          alert('请完善费用信息');
+          return false;
+        }
+      }
+
       let fd = new FormData();
 
       fd.append('jfUser.mobile', this.ownerInfo.mobile);
@@ -491,6 +498,7 @@ export default {
 
       return false;
     },
+
     beforeUploadDrivingBack(data) {
       
       let fd = new FormData();

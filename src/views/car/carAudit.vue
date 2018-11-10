@@ -84,7 +84,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'申请时间'" width="110px" align="center">
+      <el-table-column :label="'申请时间'" width="160px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
