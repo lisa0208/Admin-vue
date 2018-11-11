@@ -128,11 +128,11 @@
         </el-form-item>
 
         <el-form-item :label="'身份证正面'" prop="type">
-          <img :src="ownerInfo.idcardFront" style='width:150px; height:150px'>
+          <img :src="ownerInfo.idcardFront" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingFront)'>
         </el-form-item>
 
         <el-form-item :label="'身份证反面'" prop="type">
-          <img :src="ownerInfo.idcardBack" style='width:150px; height:150px'>
+          <img :src="ownerInfo.idcardBack" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingFront)'>
         </el-form-item>
 
         <el-form-item :label="'驾照'" prop="type">
@@ -144,11 +144,11 @@
         </el-form-item>
 
         <el-form-item :label="'驾照正面'" prop="type">
-          <img :src="ownerInfo.drivingFront" style='width:150px; height:150px'>
+          <img :src="ownerInfo.drivingFront" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingFront)'>
         </el-form-item>
 
         <el-form-item :label="'驾照反面'" prop="type">
-          <img :src="ownerInfo.drivingBack" style='width:150px; height:150px'>
+          <img :src="ownerInfo.drivingBack" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingFront)'>
         </el-form-item>
 
       </el-form>
@@ -168,6 +168,14 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="'预览照片'" :visible.sync="showViewPhoto" fullscreen='true'>
+
+      <img :src='viewPhotoURL'>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showViewPhoto = false">关闭</el-button>
       </div>
     </el-dialog>
 
@@ -284,7 +292,10 @@ export default {
       rowUserId: undefined,
 
       dialogShowCarPhoto: false,
-      carPhoto: []
+      carPhoto: [],
+
+      showViewPhoto: false,
+      viewPhotoURL: undefined
     };
   },
 
@@ -412,6 +423,11 @@ export default {
       } else {
         this.$alert("请选择起止时间");
       }
+    },
+
+    handleShowViewPhoto(URL) {
+      this.showViewPhoto = true;
+      this.viewPhotoURL = URL;
     },
 
     goToAddCar() {
