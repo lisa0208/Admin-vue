@@ -72,11 +72,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'颜色'" width="110px" align="center">
+      <!-- <el-table-column :label="'颜色'" width="110px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.color }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column :label="'车辆状态'" width="150px" align="center">
         <template slot-scope="scope">
@@ -96,11 +96,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'车辆照片'" width="110px" align="center">
+      <!-- <el-table-column :label="'车辆照片'" width="110px" align="center">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleShowCarPhoto(scope.row.carPhoto)">查看</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       
 
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
