@@ -6,7 +6,7 @@
       <el-input :placeholder="'姓名'" v-model="listQuery.username" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-input :placeholder="'手机号'" v-model="listQuery.mobile" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
-      <el-select v-model="listQuery.status" :placeholder="'状态(全部/未审核/已审核)'" clearable style="width: 220px" class="filter-item">
+      <el-select v-model="listQuery.status" :placeholder="'用户状态'" clearable style="width: 220px" class="filter-item">
         <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key"/>
       </el-select>
 
@@ -37,7 +37,7 @@
 
       <el-table-column :label="'用户状态'" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.userStatus }}</span>
+          <span>{{ statusMap[scope.row.userStatus] }}</span>
         </template>
       </el-table-column>
 
@@ -140,13 +140,19 @@ export default {
 
       cityOptions: [{ label: '上海', key: '上海' }],
 
-      chekcValue: undefined, // 全部
       statusOptions: [
         { label: '未审核', key: '0' },
         { label: '已审核', key: '1' },
         { label: '未通过', key: '2' },
         { label: '已拉黑', key: '3' }
       ],
+      
+      statusMap: {
+        '0': '未审核',
+        '1': '已审核',
+        '2': '未通过',
+        '3': '已拉黑',
+      },
 
       drivingMap: {
         '0': 'A1驾照',

@@ -235,7 +235,7 @@ export default {
         { label: "下线", key: "2" },
         // { label: "审核通过", key: "3" },
         // { label: "未通过", key: "4" },
-        { label: "已预定", key: "5" }
+        // { label: "已预定", key: "5" }
       ],
 
       drivingMap: {
