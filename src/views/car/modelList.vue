@@ -71,7 +71,7 @@
         <el-form-item :label="'请选择品牌'" prop="type">
           
           <el-select v-model="selectedCarBrand" :placeholder="'品牌'" clearable style="width: 90px" class="filter-item">
-            <el-option v-for="item in brandList" :key="item.id" :label="item.brand" :value="item.brand"/>
+            <el-option v-for="item in brandList" :key="item.id" :label="item.brand" :value="item.id"/>
           </el-select>
           
         </el-form-item>
