@@ -9,6 +9,10 @@ import Cookies from 'js-cookie'
 const service = axios.create({
   baseURL: env.BASE_API, // api 的 base_url
   timeout: 5000, // request timeout
+  validateStatus: function (status) {
+    console.log(status, '状态检查');
+    return status < 500; // 状态码在大于或等于500时才会 reject
+  }
 })
 
 service.interceptors.request.use(
@@ -33,19 +37,19 @@ service.interceptors.response.use(
 
   response => {
 
-    return response;
-    // const res = response.data;
-    // if(res.header.code == 401) {
-    //   console.log(res.header);
-    //   return Promise.reject(response)
-    // } else {
-    //   return response;
-    // }
-
+    console.log('res', response);
+    if(response.status == 401){
+      console.log('这里处理错误状态');
+      window.location.replace('/#/userLogin');
+      return Promise.reject(response);
+    } else {
+      return response;
+    }
+    
   },
 
-  error => {
-    console.log('err' + error) // for debug
+  (error, status) => {
+    console.log(error) // for debug
     Message({
       message: error.message,
       type: 'error',
