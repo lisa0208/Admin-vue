@@ -3,7 +3,7 @@
 
     <div class="filter-container">
       
-      <el-input :placeholder="'姓名'" v-model="listQuery.username" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'姓名'" v-model="listQuery.nameStr" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-input :placeholder="'手机号'" v-model="listQuery.mobile" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
       <el-select v-model="listQuery.status" :placeholder="'用户状态'" clearable style="width: 220px" class="filter-item">
@@ -133,7 +133,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        username: undefined,
+        nameStr: undefined,
         mobile: undefined,
         status: undefined
       },
@@ -212,8 +212,8 @@ export default {
         fd.append("pageInfo.pageNum", this.listQuery.page);
       }
 
-      if(this.listQuery.username){
-        fd.append('username', this.listQuery.username);
+      if(this.listQuery.nameStr){
+        fd.append('nameStr', this.listQuery.nameStr);
       }
 
       if(this.listQuery.mobile){
