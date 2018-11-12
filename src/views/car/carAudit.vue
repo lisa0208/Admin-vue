@@ -10,10 +10,10 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"/>
 
-      <el-input :placeholder="'车牌号'" v-model="listQuery.plateNum" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'型号'" v-model="listQuery.model" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'用户名'" v-model="listQuery.nickName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'手机号'" v-model="listQuery.mobilePhone" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input clearable :placeholder="'车牌号'" v-model="listQuery.plateNum" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input clearable :placeholder="'型号'" v-model="listQuery.model" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input clearable :placeholder="'用户名'" v-model="listQuery.nameStr" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input clearable :placeholder="'手机号'" v-model="listQuery.mobilePhone" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
       <!-- <el-select v-model="listQuery.city" :placeholder="'城市'" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in cityOptions" :key="item.key" :label="item.label" :value="item.key"/>
@@ -45,6 +45,12 @@
       <el-table-column :label="'车主姓名'" width="150px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.jfUser.name }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'手机号'" width="150px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.jfUser.mobile }}</span>
         </template>
       </el-table-column>
 
@@ -169,7 +175,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="'预览照片'" :visible.sync="showViewPhoto" fullscreen='true'>
+    <el-dialog :title="'预览照片'" :visible.sync="showViewPhoto" fullscreen>
 
       <img :src='viewPhotoURL'>
       <div slot="footer" class="dialog-footer">
@@ -201,7 +207,7 @@ export default {
         city: undefined,
         plateNum: undefined,
         model: undefined,
-        nickName: undefined,
+        nameStr: undefined,
         mobilePhone: undefined
       },
 
@@ -210,11 +216,11 @@ export default {
       statusValue: undefined, // 全部
       statusOptions: [
         { label: "未审核", key: "0" },
-        { label: "上线", key: "1" },
-        { label: "下线", key: "2" },
+        // { label: "上线", key: "1" },
+        // { label: "下线", key: "2" },
         { label: "审核通过", key: "3" },
         { label: "未通过", key: "4" },
-        { label: "已预定", key: "5" }
+        // { label: "已预定", key: "5" }
       ],
 
       drivingMap: {
@@ -253,7 +259,7 @@ export default {
         loginChannel: undefined,
         mobile: undefined,
         name: undefined,
-        nickname: undefined,
+        nameStr: undefined,
         password: undefined,
         qualityType: undefined,
         updateTime: undefined,
@@ -276,6 +282,21 @@ export default {
   },
 
   methods: {
+
+    formatDate(time) {
+      var date = new Date(time);
+
+      var year = date.getFullYear(),
+        month = date.getMonth() + 1, //月份是从0开始的
+        day = date.getDate(),
+        hour = date.getHours() > 9 ? date.getHours() : '0' + date.getHours(),
+        min = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes(),
+        sec = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds();
+      var newTime =
+        year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+      return newTime;
+    },
+
     getList(data) {
       this.listLoading = true;
       
@@ -290,7 +311,8 @@ export default {
       }
 
       if (this.listQuery.date) {
-        fd.append("date", this.listQuery.date);
+        fd.append("startTime", this.formatDate(this.listQuery.date[0]));
+        fd.append("endTime", this.formatDate(this.listQuery.date[1]));
       }
 
       if (this.listQuery.plateNum) {
@@ -301,8 +323,8 @@ export default {
         fd.append("model", this.listQuery.model);
       }
 
-      if (this.listQuery.nickName) {
-        fd.append("nickName", this.listQuery.nickName);
+      if (this.listQuery.nameStr) {
+        fd.append("nameStr", this.listQuery.nameStr);
       }
 
       if (this.listQuery.mobilePhone) {

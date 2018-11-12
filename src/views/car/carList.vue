@@ -2,18 +2,11 @@
   <div class="app-container">
 
     <div class="filter-container">
-      <el-date-picker
-        v-model="listQuery.date"
-        class="filter-item"
-        type="datetime"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"/>
 
-      <el-input :placeholder="'车牌号'" v-model="listQuery.plateNum" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'型号'" v-model="listQuery.model" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'用户名'" v-model="listQuery.nickName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'手机号'" v-model="listQuery.mobile" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input clearable :placeholder="'车牌号'" v-model="listQuery.plateNum" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input clearable :placeholder="'型号'" v-model="listQuery.model" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input clearable :placeholder="'用户名'" v-model="listQuery.nameStr" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input clearable :placeholder="'手机号'" v-model="listQuery.mobile" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
       <el-select v-model="statusValue" :placeholder="'车辆状态'" clearable style="width: 220px" class="filter-item">
         <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key"/>
@@ -42,6 +35,12 @@
       <el-table-column :label="'车主姓名'" width="150px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.jfUser.name }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'手机号'" width="150px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.jfUser.mobile }}</span>
         </template>
       </el-table-column>
 
@@ -171,7 +170,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="'预览照片'" :visible.sync="showViewPhoto" fullscreen='true'>
+    <el-dialog :title="'预览照片'" :visible.sync="showViewPhoto">
 
       <img :src='viewPhotoURL'>
       <div slot="footer" class="dialog-footer">
@@ -221,10 +220,9 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        date: undefined,
         plateNo: undefined,
         model: undefined,
-        nickName: undefined,
+        nameStr: undefined,
         mobile: undefined
       },
 
@@ -232,11 +230,11 @@ export default {
 
       statusValue: undefined, // 全部
       statusOptions: [
-        { label: "未审核", key: "0" },
+        // { label: "未审核", key: "0" },
         { label: "上线", key: "1" },
         { label: "下线", key: "2" },
-        { label: "审核通过", key: "3" },
-        { label: "未通过", key: "4" },
+        // { label: "审核通过", key: "3" },
+        // { label: "未通过", key: "4" },
         { label: "已预定", key: "5" }
       ],
 
@@ -276,7 +274,7 @@ export default {
         loginChannel: undefined,
         mobile: undefined,
         name: undefined,
-        nickname: undefined,
+        nameStr: undefined,
         password: undefined,
         qualityType: undefined,
         updateTime: undefined,
@@ -317,10 +315,6 @@ export default {
         fd.append("pageInfo.pageNum", this.listQuery.page);
       }
 
-      if (this.listQuery.date) {
-        fd.append("date", this.listQuery.date);
-      }
-
       if (this.listQuery.plateNum) {
         fd.append("plateNum", this.listQuery.plateNum);
       }
@@ -329,8 +323,8 @@ export default {
         fd.append("model", this.listQuery.model);
       }
 
-      if (this.listQuery.nickName) {
-        fd.append("nickName", this.listQuery.nickName);
+      if (this.listQuery.nameStr) {
+        fd.append("nameStr", this.listQuery.nameStr);
       }
 
       if (this.listQuery.mobile) {
