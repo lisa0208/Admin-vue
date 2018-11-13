@@ -10,7 +10,7 @@
 
       <!-- <el-input :placeholder="'型号'" v-model="carModel" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/> -->
 
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <!-- <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button> -->
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleShowBrand">添加</el-button>
 
     </div>
@@ -56,8 +56,7 @@
 
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!-- <el-button type="primary" size="mini" @click="handleStatus(scope.row, 1)">上线</el-button>
-          <el-button type="danger" size="mini" @click="handleStatus(scope.row, 0)">下线</el-button> -->
+          <el-button type="danger" size="mini" @click="HandleDeleteCarModel(scope.row)">删除</el-button>
         </template>
       </el-table-column>
 
@@ -92,7 +91,7 @@
 </template>
 
 <script>
-import { fetchModelList, fetchBrandList, addModel, fetchModelByBrand} from '@/api/car'
+import { fetchModelList, fetchBrandList, addModel, fetchModelByBrand, deleteCarModel} from '@/api/car'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import env from '../../../config/sit.env'
 
@@ -139,12 +138,12 @@ export default {
     getList() {
       this.listLoading = true;
 
-      let fd = new FormData();
-      if(this.carBrand){
-        fd.append('id', this.carBrand);
-      }
+      // let fd = new FormData();
+      // if(this.carBrand){
+      //   fd.append('id', this.carBrand);
+      // }
 
-      fetchModelByBrand(fd).then(response => {
+      fetchModelList().then(response => {
         this.list = response.data.body
         this.listLoading = false
       })
@@ -197,6 +196,29 @@ export default {
         this.listLoading = false;
         window.location.reload();
       })
+    },
+
+    HandleDeleteCarModel(row) {
+      this.$confirm("确认删除型号?请确保该品牌下无车辆", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let fd = new FormData();
+          fd.append("id", row.id);
+
+          deleteCarModel(fd).then(response => {
+            this.getList();
+            this.$message({
+              type: "success",
+              message: "删除车型成功!"
+            });
+          });
+        })
+        .catch((err) => {
+          console.log("取消", err);
+        });
     }
 
   }

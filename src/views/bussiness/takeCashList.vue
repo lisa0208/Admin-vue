@@ -206,6 +206,10 @@ export default {
       if (this.listQuery.putForwardSerialNum) {
         fd.append("putForwardSerialNum", this.listQuery.putForwardSerialNum);
       }
+      
+      if (this.takecashValue) {
+        fd.append("putForwardStatus", this.takecashValue);
+      }
 
       fetchTakeCashList(fd).then(response => {
         this.list = response.data.body ? response.data.body.infos : [];

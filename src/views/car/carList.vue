@@ -13,7 +13,7 @@
       </el-select>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="goToAddCar">添加</el-button>
+      <!-- <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="goToAddCar">添加</el-button> -->
 
     </div>
 
@@ -105,8 +105,8 @@
 
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)" v-if="scope.row.carStatus==3">上线</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 0)" v-if="scope.row.carStatus==1">下线</el-button>
+          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)" v-if="scope.row.carStatus==2">上线</el-button>
+          <el-button type="danger" size="mini" @click="handlePass(scope.row, 2)" v-if="scope.row.carStatus==1">下线</el-button>
           <el-button type="danger" size="mini" @click="setUnavaluableDays(scope.row)" v-if="scope.row.carStatus==1">设置不可用日期</el-button>
         </template>
       </el-table-column>
@@ -127,11 +127,11 @@
         </el-form-item>
 
         <el-form-item :label="'身份证正面'" prop="type">
-          <img :src="ownerInfo.idcardFront" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingFront)'>
+          <img :src="ownerInfo.idcardFront" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.idcardFront)'>
         </el-form-item>
 
         <el-form-item :label="'身份证反面'" prop="type">
-          <img :src="ownerInfo.idcardBack" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingFront)'>
+          <img :src="ownerInfo.idcardBack" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.idcardBack)'>
         </el-form-item>
 
         <el-form-item :label="'驾照'" prop="type">
@@ -147,7 +147,7 @@
         </el-form-item>
 
         <el-form-item :label="'驾照反面'" prop="type">
-          <img :src="ownerInfo.drivingBack" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingFront)'>
+          <img :src="ownerInfo.drivingBack" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingBack)'>
         </el-form-item>
 
       </el-form>
@@ -159,7 +159,7 @@
 
     <el-dialog :title="'车辆照片查看'" :visible.sync="dialogShowCarPhoto">
 
-      <el-carousel height="300px" width="300px" indicator-position="outside">
+      <el-carousel height="300px" width="400px" indicator-position="outside">
       <el-carousel-item v-for="item in carPhoto" :key="item">
         <img :src="item" style='width:400px;height:300px'>
       </el-carousel-item>
@@ -170,7 +170,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="'预览照片'" :visible.sync="showViewPhoto">
+    <el-dialog :title="'预览照片'" :visible.sync="showViewPhoto" fullscreen> 
 
       <img :src='viewPhotoURL'>
       <div slot="footer" class="dialog-footer">

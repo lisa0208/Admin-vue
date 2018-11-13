@@ -40,8 +40,7 @@
 
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!-- <el-button type="primary" size="mini" @click="handleStatus(scope.row, 1)">上线</el-button>
-          <el-button type="danger" size="mini" @click="handleStatus(scope.row, 0)">下线</el-button> -->
+          <el-button type="danger" size="mini" @click="handleDeleteBrand(scope.row)">删除</el-button>
         </template>
       </el-table-column>
 
@@ -86,7 +85,7 @@
 </template>
 
 <script>
-import { fetchBrandList, addBrand } from "@/api/car";
+import { fetchBrandList, addBrand, deleteCarBrand } from "@/api/car";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 import env from "../../../config/sit.env";
 import axios from "axios";
@@ -127,7 +126,7 @@ export default {
 
       let fd = new FormData();
 
-      if(data && data.page){
+      if (data && data.page) {
         this.listQuery.page = data.page;
       }
 
@@ -138,8 +137,6 @@ export default {
       if (this.listQuery.brand) {
         fd.append("brand", this.listQuery.brand);
       }
-
-
 
       fetchBrandList(fd).then(response => {
         this.list = response.data.body;
@@ -168,20 +165,18 @@ export default {
       this.dialogShowbrandInfo = true;
 
       let fd = new FormData();
-      fd.append('brand', this.brandInfo.brand);
-      fd.append('hotBrand', this.brandInfo.hotBrand);
-      fd.append('brandImg', this.brandInfo.brandImg);
+      fd.append("brand", this.brandInfo.brand);
+      fd.append("hotBrand", this.brandInfo.hotBrand);
+      fd.append("brandImg", this.brandInfo.brandImg);
       addBrand(fd).then(response => {
-       this.dialogShowAddBrand = false;
+        this.dialogShowAddBrand = false;
+        this.getList();
       });
     },
 
     handleUploadSuccess() {},
 
-    
-
     beforeUpload(data) {
-
       let fd = new FormData();
       fd.append("uploadFile", data.file);
 
@@ -205,6 +200,29 @@ export default {
         });
 
       return false; // 返回false不会自动上传
+    },
+
+    handleDeleteBrand(row) {
+      this.$confirm("确认删除品牌?请确保该品牌下无型号和车辆", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let fd = new FormData();
+          fd.append("id", row.id);
+
+          deleteCarBrand(fd).then(response => {
+            this.getList();
+            this.$message({
+              type: "success",
+              message: "删除品牌成功!"
+            });
+          });
+        })
+        .catch((err) => {
+          console.log("取消", err);
+        });
     }
   }
 };

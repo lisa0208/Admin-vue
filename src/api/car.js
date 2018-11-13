@@ -95,3 +95,27 @@ export function fetchModelByBrand(data) {
     data
   })
 }
+
+export function deleteCarBrand(data) {
+  return request({
+    url: '/carBrand/delete',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteCarColor(data) {
+  return request({
+    url: '/carColor/delete',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteCarModel(data) {
+  return request({
+    url: '/carModel/delete',
+    method: 'post',
+    data
+  })
+}

@@ -46,8 +46,7 @@
 
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!-- <el-button type="primary" size="mini" @click="handleStatus(scope.row, 1)">上线</el-button>
-          <el-button type="danger" size="mini" @click="handleStatus(scope.row, 0)">下线</el-button> -->
+         <el-button type="danger" size="mini" @click="handleDeleteColor(scope.row)">删除</el-button>
         </template>
       </el-table-column>
 
@@ -74,7 +73,7 @@
 </template>
 
 <script>
-import { fetchColorList, addColor} from '@/api/car'
+import { fetchColorList, addColor, deleteCarColor} from '@/api/car'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import env from '../../../config/sit.env'
 
@@ -162,7 +161,31 @@ export default {
     handleUploadSuccess() {},
     beforeUpload(data, a, b, c) {
       console.log(data, a, b, c)
+    },
+
+    handleDeleteColor(row) {
+      this.$confirm("确认删除颜色?请确保该颜色下无车辆", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let fd = new FormData();
+          fd.append("id", row.id);
+
+          deleteCarColor(fd).then(response => {
+            this.getList();
+            this.$message({
+              type: "success",
+              message: "删除颜色成功!"
+            });
+          });
+        })
+        .catch((err) => {
+          console.log("取消", err);
+        });
     }
+
   }
 }
 </script>
