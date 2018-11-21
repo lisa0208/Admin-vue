@@ -24,3 +24,11 @@ export function updateTakeCash(data) {
   })
 }
 
+export function getDaySummary(data) {
+  return request({
+    url: '/report/daySummary',
+    method: 'post',
+    data
+  })
+}
+

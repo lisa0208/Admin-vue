@@ -5,6 +5,7 @@ import carRouter from './modules/car'
 import userRouter from './modules/user'
 import orderRouter from './modules/order'
 import bussinessRouter from './modules/bussiness'
+import peccancyRouter from './modules/peccancy'
 
 Vue.use(Router)
 
@@ -75,5 +76,6 @@ export const asyncRouterMap = [
   userRouter,
   orderRouter,
   bussinessRouter,
+  peccancyRouter,
   { path: '*', redirect: '/404', hidden: true }
 ]

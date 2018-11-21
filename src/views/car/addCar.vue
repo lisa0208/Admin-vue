@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
 
+     <el-row :gutter="5">
 
-
-    <el-row :gutter="20">
-      
-      <el-col :span="10">
-
-        <!-- 车主基本信息 -->
-        <div class="grid-content bg-purple">
+      <el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>车主基本信息</span>
+          </div>
+          <div class="text">
           
-          <el-form ref="form" label-width="180px">
+          <el-form ref="form" label-width="100px">
             
             <el-form-item label="真实姓名">
               <el-input v-model="ownerInfo.name"></el-input>
@@ -84,14 +84,17 @@
             </el-form-item>
 
           </el-form>
-        </div>
+          </div>
+        </el-card>
       </el-col>
 
-      <el-col :span="10">
-        <!-- 车辆基本信息 -->
-        <div class="grid-content bg-purple">
-
-           <el-form ref="form" label-width="180px">
+      <el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>车辆基本信息</span>
+          </div>
+          <div class="text">
+                      <el-form ref="form" label-width="100px">
             
             <el-form-item label="车牌号">
               <el-input v-model="carInfo.plateNumber"></el-input>
@@ -179,17 +182,17 @@
             </el-form-item>
 
           </el-form>
-        </div>
+          </div>
+        </el-card>
       </el-col>
 
-    </el-row>
-
-    <el-row :gutter="20">
-      <el-col :span="10">
-        <!-- 车辆费用信息 -->
-        <div class="grid-content bg-purple">
-
-           <el-form ref="form" label-width="180px">
+      <el-col :span="8">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>车辆费用信息</span>
+          </div>
+          <div class="text">
+            <el-form ref="form" label-width="120px">
             
             <el-form-item label="车辆租金(元/天)">
               <el-input v-model="feeInfo.rent"></el-input>
@@ -214,9 +217,12 @@
 
 
           </el-form>
-        </div>
+          </div>
+        </el-card>
       </el-col>
+
     </el-row>
+
 
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-upload2" @click="handleSubmit">提交</el-button>
 
@@ -379,12 +385,11 @@ export default {
 
     handleRemove(file, fileList) {
       console.log(file, fileList);
-      for(let i = 0; i < this.fileList.length; i++){
-        if(this.fileList[i].uid == file.uid){
-          this.fileList.splice(i,1);
+      for (let i = 0; i < this.fileList.length; i++) {
+        if (this.fileList[i].uid == file.uid) {
+          this.fileList.splice(i, 1);
         }
       }
-
     },
 
     handleExceed() {
@@ -496,11 +501,11 @@ export default {
       // 如果有 id，则是更新。否则就是添加
 
       if (this.id) {
-        fd.append('jfCar.id', this.id);
+        fd.append("jfCar.id", this.id);
         updateCar(fd).then(response => {
-        this.listLoading = false;
-        window.location.reload();
-      });
+          this.listLoading = false;
+          window.location.reload();
+        });
       } else {
         addCar(fd).then(response => {
           this.listLoading = false;
@@ -621,7 +626,7 @@ export default {
 
           self.fileList.push(json);
 
-          console.log('这里的 file list', self.fileList);
+          console.log("这里的 file list", self.fileList);
         })
         .catch(function(error) {
           console.log(error);
