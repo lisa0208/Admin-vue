@@ -4,9 +4,9 @@
 
     <div class="filter-container">
 
-      <el-select v-model="carBrand" :placeholder="'品牌'" clearable style="width: 90px" class="filter-item">
+      <!-- <el-select v-model="carBrand" :placeholder="'品牌'" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in brandList" :key="item.id" :label="item.brand" :value="item.id"/>
-      </el-select>
+      </el-select> -->
 
       <!-- <el-input :placeholder="'型号'" v-model="carModel" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/> -->
 

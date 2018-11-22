@@ -7,13 +7,13 @@ const tableRouter = {
   name: 'User',
   meta: {
     title: '违章管理',
-    icon: 'user'
+    icon: 'bug'
   },
   children: [
     {
       path: 'peccancy-list',
       component: () => import('@/views/order/peccancyList'),
-      name: 'userList',
+      name: 'peccancyList',
       meta: { title: '违章列表' }
     }
   ]

@@ -3,218 +3,36 @@
 
      <el-row :gutter="5">
 
-      <el-col :span="8">
+      <el-col :span="24">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span>车主基本信息</span>
+            <span>修改密码</span>
           </div>
           <div class="text">
           
-          <el-form ref="form" label-width="100px">
+          <el-form ref="form" label-width="150px">
+
+            <el-form-item label="姓名">
+              <el-input v-model="username"></el-input>
+            </el-form-item>
             
-            <el-form-item label="真实姓名">
-              <el-input v-model="ownerInfo.name"></el-input>
+            <el-form-item label="手机号">
+              <el-input placeholder="请输入手机号" v-model="input4">
+                <el-button slot="append">发送验证码</el-button>
+              </el-input>
             </el-form-item>
 
-            <el-form-item label="电话">
+            <el-form-item label="验证码">
               <el-input v-model="ownerInfo.mobile"></el-input>
             </el-form-item>
 
-            <el-form-item label="身份证号码">
+            <el-form-item label="新密码">
               <el-input v-model="ownerInfo.idcard"></el-input>
             </el-form-item>
 
-            <el-form-item label="驾照号">
-              <el-input v-model="ownerInfo.drivingNum"></el-input>
+            <el-form-item label="再次输入新密码">
+              <el-input v-model="ownerInfo.idcard"></el-input>
             </el-form-item>
-
-            <el-form-item label="驾照类型" >
-              <el-select  placeholder="请选择驾照类型" v-model="ownerInfo.drivingType">
-                <el-option label="A1驾照" value="0"></el-option>
-                <el-option label="A2驾照" value="1"></el-option>
-                <el-option label="A3驾照" value="2"></el-option>
-                <el-option label="B1驾照" value="3"></el-option>
-                <el-option label="B2驾照" value="4"></el-option>
-                <el-option label="C1驾照" value="5"></el-option>
-                <el-option label="C2驾照" value="6"></el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="身份证正面">
-              <el-upload
-                :action="uploadUrl"
-                :show-file-list="false"
-                :http-request = "beforeUploadIdCardFront"
-                class="avatar-uploader">
-                <img v-if="ownerInfo.idcardFront" :src="ownerInfo.idcardFront" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"/>
-              </el-upload>         
-            </el-form-item>
-
-            <el-form-item label="身份证背面">
-              <el-upload
-                :action="uploadUrl"
-                :show-file-list="false"
-                :http-request = "beforeUploadIdCardBack"
-                class="avatar-uploader">
-                <img v-if="ownerInfo.idcardBack" :src="ownerInfo.idcardBack" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"/>
-              </el-upload>           
-            </el-form-item>
-
-            <el-form-item label="驾照正页">
-              <el-upload
-                :action="uploadUrl"
-                :show-file-list="false"
-                :http-request = "beforeUploadDrivingFront"
-                class="avatar-uploader">
-                <img v-if="ownerInfo.drivingFront" :src="ownerInfo.drivingFront" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"/>
-              </el-upload>           
-            </el-form-item>
-            <el-form-item label="驾照副页">
-              <el-upload
-                :action="uploadUrl"
-                :show-file-list="false"
-                :http-request = "beforeUploadDrivingBack"
-                class="avatar-uploader">
-                <img v-if="ownerInfo.drivingBack" :src="ownerInfo.drivingBack" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"/>
-              </el-upload>             
-            </el-form-item>
-
-          </el-form>
-          </div>
-        </el-card>
-      </el-col>
-
-      <el-col :span="8">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>车辆基本信息</span>
-          </div>
-          <div class="text">
-                      <el-form ref="form" label-width="100px">
-            
-            <el-form-item label="车牌号">
-              <el-input v-model="carInfo.plateNumber"></el-input>
-            </el-form-item>
-
-            <el-form-item label="车辆品牌">
-              <el-select  placeholder="请选择车辆品牌" v-model="carInfo.brand" @change="getModelList">
-                <el-option v-for="item in brandOption" :key="item.id" :label="item.brand" :value="item.id"/>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="型号">
-              <el-select  placeholder="请选择车辆型号" v-model="carInfo.model">
-                <el-option v-for="item in modelOption" :key="item.id" :label="item.model" :value="item.model"/>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="城市区域">
-              <el-select  placeholder="请选择汽车城市" v-model="carInfo.city">
-                <el-option label="上海" value="上海"></el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="颜色">
-              <el-select  placeholder="请选择汽车颜色" v-model="carInfo.color">
-                <el-option v-for="item in colorOption" :key="item.id" :label="item.color" :value="item.color"/>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="排量">
-              <el-input v-model="carInfo.output"></el-input>
-            </el-form-item>
-
-            <el-form-item label="变速箱">
-              <el-input v-model="carInfo.gearbox"></el-input>
-            </el-form-item>
-
-            <el-form-item label="座位数">
-              <el-input v-model="carInfo.seatNum"></el-input>
-            </el-form-item>
-
-            <el-form-item label="发动机号">
-              <el-input v-model="carInfo.engineNum"></el-input>
-            </el-form-item>
-
-            <el-form-item label="车架号">
-              <el-input v-model="carInfo.frameNum"></el-input>
-            </el-form-item>
-
-            <el-form-item label="入驻模式">
-              <el-select  placeholder="请选择" v-model="carInfo.enterModel">
-                <el-option label="个人" value="0"></el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="预期租金">
-              <el-input v-model="carInfo.wantRent"></el-input>
-            </el-form-item>
-
-            <el-form-item label="车辆照片">
-             
-              <el-upload
-              action="uploadUrl"
-              :limit="5"
-              list-type="picture"
-              :http-request = "beforeUploadCarPhoto"
-              :on-exceed="handleExceed"
-              :on-remove="handleRemove"
-              :file-list="fileList"
-              :on-change="handlecarPhotoListChange">
-              <el-button size="small" type="primary">点击上传</el-button>
-              </el-upload>
-            </el-form-item>
-
-            <el-form-item label="车辆描述">
-              <el-input v-model="carInfo.carDesc"></el-input>
-            </el-form-item>
-
-            <el-form-item label="油号">
-              <el-select  placeholder="请选择车辆油号" v-model="carInfo.oilNumber">
-                <el-option label="95" value="95"></el-option>
-                <el-option label="97" value="97"></el-option>
-                <el-option label="98" value="98"></el-option>
-              </el-select>
-            </el-form-item>
-
-          </el-form>
-          </div>
-        </el-card>
-      </el-col>
-
-      <el-col :span="8">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>车辆费用信息</span>
-          </div>
-          <div class="text">
-            <el-form ref="form" label-width="120px">
-            
-            <el-form-item label="车辆租金(元/天)">
-              <el-input v-model="feeInfo.rent"></el-input>
-            </el-form-item>
-
-            <el-form-item label="车辆保险费(元)">
-              <el-input v-model="feeInfo.safeMoney"></el-input>
-            </el-form-item>
-
-            <el-form-item label="车辆押金(元)">
-              <el-input v-model="feeInfo.deposit"></el-input>
-            </el-form-item>
-
-            <el-form-item label="违章押金(元)">
-              <el-input v-model="feeInfo.peccancyDeposit"></el-input>
-            </el-form-item>
-
-            <el-form-item label="服务费(元)">
-              <el-input v-model="feeInfo.serviceMoney"></el-input>
-            </el-form-item>
-
-
 
           </el-form>
           </div>

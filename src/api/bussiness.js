@@ -32,3 +32,26 @@ export function getDaySummary(data) {
   })
 }
 
+export function getBussinessOrder(data) {
+  return request({
+    url: '/report/selectOrderReport',
+    method: 'post',
+    data
+  })
+}
+
+export function getBussinessInput(data) {
+  return request({
+    url: '/report/selectRechargeReport',
+    method: 'post',
+    data
+  })
+}
+
+export function getBussinessOupt(data) {
+  return request({
+    url: '/report/selectTakeCashReport',
+    method: 'post',
+    data
+  })
+}

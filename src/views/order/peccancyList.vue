@@ -10,12 +10,11 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"/>
 
-      <el-input :placeholder="'违章单号'" v-model="listQuery.orderId" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="'订单号'" v-model="listQuery.orderId" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-input :placeholder="'用户名'" v-model="listQuery.nickName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-input :placeholder="'车牌号'" v-model="listQuery.plateNum" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input :placeholder="'手机号'" v-model="listQuery.mobile" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
 
-      <el-select v-model="statusValue" :placeholder="'违章状态'" clearable style="width: 220px" class="filter-item">
+      <el-select v-model="statusValue" :placeholder="'状态'" clearable style="width: 220px" class="filter-item">
         <el-option v-for="item in statusOptions" :key="item.key" :label="item.label" :value="item.key"/>
       </el-select>
 
@@ -33,7 +32,7 @@
       style="width: 100%;"
       @sort-change="sortChange">
 
-      <el-table-column :label="'违章单号'" align="center" width="220">
+      <el-table-column :label="'订单号'" align="center" width="220">
         <template slot-scope="scope">
           <span>{{ scope.row.orderId }}</span>
         </template>
@@ -41,27 +40,19 @@
 
       <el-table-column :label="'用户名'" width="160px" align="center" sortable>
         <template slot-scope="scope">
-          <span>{{ scope.row.orderPayTime }}</span>
-        </template>
-      </el-table-column>
-
-      
-
-      <el-table-column :label="'手机号'" width="100px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.carId }}</span>
+          <span>{{ scope.row.userName }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="'车牌号'" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.actualFee }}</span>
+          <span>{{ scope.row.carPlateNumber }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'违章时间'" width="110px" align="center">
+      <el-table-column :label="'违章时间'" width="200px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.shouldFee }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
@@ -77,27 +68,27 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="'状态'" width="110px" align="center">
+        <template slot-scope="scope">
+          <span>{{ statusMap[scope.row.peccancyStatus] }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="'违章押金'" width="100px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.carId }}</span>
+          <span>{{ scope.row.peccancyDeposit }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="'扣分'" width="100px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.carId }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="'余额'" width="100px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.carId }}</span>
+          <span>{{ scope.row.cutPoints }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="'操作'" align="center" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="handleOrder1(scope.row)" v-if="scope.row.orderType==1">扣除费用</el-button>
+          <el-button type="danger" size="mini" @click="handleOrder1(scope.row)" v-if="scope.row.peccancyStatus==0">扣除费用</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -186,7 +177,7 @@
 </template>
 
 <script>
-import { fetchOrderList, updateOrderStatus, updateOrder } from "@/api/order";
+import { getEndorsementList} from "@/api/order";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 
 export default {
@@ -229,6 +220,11 @@ export default {
         "4": "B2驾照",
         "5": "C1驾照",
         "6": "C2驾照"
+      },
+
+      statusMap: {
+        "0": "未处理",
+        "1": "已处理"
       },
 
       orderStatusMap: {
@@ -349,7 +345,7 @@ export default {
         fd.append("sortKey", this.listQuery.sortKey);
       }
 
-      fetchOrderList(fd).then(response => {
+      getEndorsementList().then(response => {
         this.list = response.data.body.infos;
         this.total = response.data.body.pageInfo.total;
         this.listLoading = false;
@@ -379,173 +375,6 @@ export default {
       this.carInfo = car;
     },
 
-    // 接单
-    handleOrder1(row) {
-      this.$confirm("确认要接单?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          let fd = new FormData();
-          fd.append("orderId", row.orderId);
-          fd.append("event", 0);
-          fd.append("oprateUserId", 0);
-
-          updateOrderStatus(fd).then(response => {
-            console.log(response);
-
-            this.$message({
-              type: "success",
-              message: "接单成功，请按照客户填写的时间、地点准确送车!"
-            });
-            this.getList();
-          });
-        })
-        .catch(() => {});
-    },
-
-    // 拒单
-    handleOrder2(row) {
-      this.$confirm("确认要拒单?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          let fd = new FormData();
-          fd.append("orderId", row.orderId);
-          fd.append("event", 1);
-          fd.append("oprateUserId", 0);
-
-          updateOrderStatus(fd).then(response => {
-            console.log(response);
-
-            this.$message({
-              type: "success",
-              message: "拒单成功!"
-            });
-            this.getList();
-          });
-        })
-        .catch(() => {});
-    },
-
-    // 已送车
-    handleOrder3(row) {
-      this.$confirm("确认已经将车送给客户了?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          let fd = new FormData();
-          fd.append("orderId", row.orderId);
-          fd.append("event", 2);
-          fd.append("oprateUserId", 0);
-
-          updateOrderStatus(fd).then(response => {
-            console.log(response);
-
-            this.$message({
-              type: "success",
-              message: "确认送车成功，请留意后续客户还车动态!"
-            });
-            this.getList();
-          });
-        })
-        .catch(() => {});
-    },
-
-    // 退还车辆押金
-    handleOrder4(row) {
-      let cutCarFee = row.cutCarFee;
-
-      let fd = new FormData();
-      fd.append("orderId", row.orderId);
-      fd.append("cutCarFee", cutCarFee);
-      fd.append("oprateUserId", 1);
-
-      // 先存入车辆押金的数字
-      updateOrder(fd).then(response => {
-        if (response.data.header.code != 200) {
-          this.$alert(response.data.header.desc);
-        } else {
-          this.$confirm(
-            "确认扣除车辆押金" + cutCarFee + "元?请确保车已归还！",
-            "提示",
-            {
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              type: "warning"
-            }
-          )
-            .then(() => {
-              let fd = new FormData();
-              fd.append("orderId", row.orderId);
-              fd.append("event", 3);
-              fd.append("oprateUserId", 1);
-
-              updateOrderStatus(fd).then(response => {
-                console.log(response);
-
-                this.$message({
-                  type: "success",
-                  message: "退还车辆押金成功，请留意后续步骤!"
-                });
-                this.getList();
-              });
-            })
-            .catch(() => {});
-        }
-      });
-    },
-
-    // 退还违章押金
-    handleOrder5(row) {
-      let cutPeccancyFee = row.cutPeccancyFee;
-
-      let fd = new FormData();
-      fd.append("orderId", row.orderId);
-      fd.append("cutPeccancyFee", cutPeccancyFee);
-      fd.append("oprateUserId", 1);
-
-      // 先存入应扣除的违章押金的数字
-      updateOrder(fd).then(response => {
-        if (response.data.header.code != 200) {
-          this.$alert(response.data.header.desc);
-        } else {
-          this.$confirm(
-            "确认扣除违章押金" +
-              row.cutPeccancyFee +
-              "元?请确保车已归还、违章结果已审核！",
-            "提示",
-            {
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              type: "warning"
-            }
-          )
-            .then(() => {
-              let fd = new FormData();
-              fd.append("orderId", row.orderId);
-              fd.append("event", 4);
-              fd.append("oprateUserId", 1);
-
-              updateOrderStatus(fd).then(response => {
-                console.log(response);
-
-                this.$message({
-                  type: "success",
-                  message: "退还违章押金成功，本订单已经关闭!"
-                });
-                this.getList();
-              });
-            })
-            .catch(() => {});
-        }
-      });
-    }
   }
 };
 </script>

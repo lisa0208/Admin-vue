@@ -23,3 +23,19 @@ export function updateOrder(data) {
     data
   })
 }
+
+export function getEndorsementList(data) {
+  return request({
+    url: '/endorsement/cmsGetList',
+    method: 'post',
+    data
+  })
+}
+
+export function getCouponList(data) {
+  return request({
+    url: '/coupon/cmsSearch',
+    method: 'post',
+    data
+  })
+}
