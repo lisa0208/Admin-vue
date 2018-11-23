@@ -13,10 +13,18 @@
       
       <el-input :placeholder="'用户名'" v-model="listQuery.userName" style="width: 200px;" class="filter-item"/>
       <el-input :placeholder="'手机号'" v-model="listQuery.mobile" style="width: 200px;" class="filter-item"/>
-      <el-input :placeholder="'订单号'" v-model="listQuery.orderId" style="width: 200px;" class="filter-item"/>
+      <el-input :placeholder="'充值单号'" v-model="listQuery.orderId" style="width: 200px;" class="filter-item"/>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
 
+    </div>
+
+    <div styele=''>
+      <el-form :inline="true" class="demo-form-inline">
+      <el-form-item label="本数据表充值总金额：">
+      <el-input disabled="" value="10000元，数据未接入"/>
+      </el-form-item>
+      </el-form>
     </div>
 
     <el-table
@@ -28,33 +36,45 @@
       style="width: 100%;"
       @sort-change="sortChange">
 
-      <el-table-column :label="'订单ID'" prop="id" align="center" width="65">
+      <el-table-column :label="'充值单号'" prop="id" align="center" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderId }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="'用户名'" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.jfUser }}</span>
+          <span>{{ scope.row.jfUser.name }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="'手机号'" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderCount }}</span>
+          <span>{{ scope.row.jfUser.mobile }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'订单创建时间'" width="150px">
+      <el-table-column :label="'订单创建时间'" width="160px">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderCount }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'订单金额'" width="150px">
+      <el-table-column :label="'充值金额（元）'" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderCount }}</span>
+          <span>{{ scope.row.rechargeAmount }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'充值流水号'" width="250px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.rechargeNum }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'支付方式'" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.payType }}</span>
         </template>
       </el-table-column>
 
@@ -124,6 +144,8 @@ export default {
 
       let fd = new FormData();
 
+      fd.append("isSplit", 1);
+
       if (this.listQuery.page) {
         fd.append("pageInfo.pageNum", this.listQuery.page);
       }
@@ -145,7 +167,7 @@ export default {
         fd.append("orderId", this.listQuery.orderId);
       }
 
-      getBussinessOrder(fd).then(response => {
+      getBussinessInput(fd).then(response => {
         this.list = response.data.body ? response.data.body.infos : [];
         this.total = response.data.body
           ? response.data.body.pageInfo.total

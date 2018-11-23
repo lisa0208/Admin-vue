@@ -62,6 +62,7 @@ import {
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 import axios from "axios";
 import env from "../../../config/sit.env";
+import Cookies from "js-cookie";
 
 export default {
   name: "CarList",
@@ -342,8 +343,7 @@ export default {
       axios
         .post(env.BASE_API + "/file/upload", fd, {
           headers: {
-            jf_token:
-              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+            jf_token: Cookies.get("jf_token")
           }
         })
         .then(function(response) {
@@ -365,8 +365,7 @@ export default {
       axios
         .post(env.BASE_API + "/file/upload", fd, {
           headers: {
-            jf_token:
-              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+            jf_token: Cookies.get("jf_token")
           }
         })
         .then(function(response) {
@@ -388,8 +387,7 @@ export default {
       axios
         .post(env.BASE_API + "/file/upload", fd, {
           headers: {
-            jf_token:
-              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+            jf_token: Cookies.get("jf_token")
           }
         })
         .then(function(response) {
@@ -411,8 +409,7 @@ export default {
       axios
         .post(env.BASE_API + "/file/upload", fd, {
           headers: {
-            jf_token:
-              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+            jf_token: Cookies.get("jf_token")
           }
         })
         .then(function(response) {
@@ -434,8 +431,7 @@ export default {
       axios
         .post(env.BASE_API + "/file/upload", fd, {
           headers: {
-            jf_token:
-              "r3IIy2il3mhaOgXvnsN4P2vunUNbgZIWEltP1RBuvz9n5ue2mMgyx/NavsDhw6WE2nQFoIss63nQJtWAwtrTWg=="
+            jf_token: Cookies.get("jf_token")
           }
         })
         .then(function(response) {

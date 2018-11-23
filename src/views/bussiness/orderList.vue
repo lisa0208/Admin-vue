@@ -19,6 +19,14 @@
 
     </div>
 
+    <div styele=''>
+      <el-form :inline="true" class="demo-form-inline">
+      <el-form-item label="本数据表订单总金额：">
+      <el-input disabled="" value="10000元，数据未接入"/>
+      </el-form-item>
+      </el-form>
+    </div>
+
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -28,7 +36,7 @@
       style="width: 100%;"
       @sort-change="sortChange">
 
-      <el-table-column :label="'订单ID'" prop="id" align="center" width="65">
+      <el-table-column :label="'订单号'" prop="id" align="center" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.orderId }}</span>
         </template>
@@ -36,25 +44,73 @@
 
       <el-table-column :label="'用户名'" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.jfUser }}</span>
+          <span>{{ scope.row.jfUser.name }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="'手机号'" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderCount }}</span>
+          <span>{{ scope.row.jfUser.mobile }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'订单创建时间'" width="150px">
+      <el-table-column :label="'订单创建时间'" width="160px">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderCount }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'订单金额'" width="150px">
+      <el-table-column :label="'订单实际金额（元）'" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderCount }}</span>
+          <span>{{ scope.row.actualFee }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'订单时长'" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderDays }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'车辆租金'" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderDays }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'车辆押金'" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.carDeposit }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'车辆扣费'" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.cutCarFee }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'保险费'" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderDays }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'服务费'" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderDays }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'违章押金'" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderDays }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="'违章扣费'" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderDays }}</span>
         </template>
       </el-table-column>
 
@@ -123,6 +179,8 @@ export default {
       }
 
       let fd = new FormData();
+
+      fd.append("isSplit", 1);
 
       if (this.listQuery.page) {
         fd.append("pageInfo.pageNum", this.listQuery.page);
