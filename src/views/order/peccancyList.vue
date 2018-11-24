@@ -19,7 +19,6 @@
       </el-select>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">添加</el-button>
 
     </div>
 
@@ -58,13 +57,13 @@
 
       <el-table-column :label="'用户信息'" width="110px" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleShowOwnerInfo(scope.row.jfUser)">查看</el-button>
+          <el-button type="primary" size="mini" @click="handleShowUserInfo(scope.row.userId)" :disabled="!scope.row.orderId">查看</el-button>
         </template>
       </el-table-column>
 
       <el-table-column :label="'车辆信息'" width="110px" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleShowCarInfo(scope.row.jfCar)">查看</el-button>
+          <el-button type="primary" size="mini" @click="handleShowCarInfo(scope.row.userId)" :disabled="!scope.row.orderId">查看</el-button>
         </template>
       </el-table-column>
 
@@ -88,52 +87,52 @@
 
       <el-table-column :label="'操作'" align="center" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="handleOrder1(scope.row)" v-if="scope.row.peccancyStatus==0">扣除费用</el-button>
+          <el-button type="danger" size="mini" @click="handleShowCutPeccancy(scope.row)" v-if="scope.row.peccancyStatus==0">扣除违章押金</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-    <el-dialog :title="'车主信息查看'" :visible.sync="dialogShowOwnerInfo">
+    <el-dialog :title="'用户信息查看'" :visible.sync="dialogShowUserInfo">
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item :label="'姓名'" prop="type">
-          <el-input v-model="ownerInfo.name" readonly/>
+          <el-input v-model="userInfo.name" readonly/>
         </el-form-item>
         <el-form-item :label="'手机号'" prop="type">
-          <el-input v-model="ownerInfo.mobile" readonly/>
+          <el-input v-model="userInfo.mobile" readonly/>
         </el-form-item>
         <el-form-item :label="'身份证'" prop="type">
-          <el-input v-model="ownerInfo.idcard" readonly/>
+          <el-input v-model="userInfo.idcard" readonly/>
         </el-form-item>
 
         <el-form-item :label="'身份证正面'" prop="type">
-          <img :src="ownerInfo.idcardFront" style="width:100px; height:100px;">
+          <img :src="userInfo.idcardFront" style="width:100px; height:100px;">
         </el-form-item>
 
         <el-form-item :label="'身份证反面'" prop="type">
-          <img :src="ownerInfo.idcardBack" style="width:100px; height:100px;">
+          <img :src="userInfo.idcardBack" style="width:100px; height:100px;">
         </el-form-item>
 
         <el-form-item :label="'驾照'" prop="type">
-          <el-input v-model="ownerInfo.drivingNum"/>
+          <el-input v-model="userInfo.drivingNum"/>
         </el-form-item>
 
         <el-form-item :label="'驾照类型'" prop="type">
-          <el-input v-model="drivingMap[ownerInfo.drivingType]"/>
+          <el-input v-model="drivingMap[userInfo.drivingType]"/>
         </el-form-item>
 
         <el-form-item :label="'驾照正面'" prop="type">
-          <img :src="ownerInfo.drivingFront" style="width:100px; height:100px;">
+          <img :src="userInfo.drivingFront" style="width:100px; height:100px;">
         </el-form-item>
 
         <el-form-item :label="'驾照反面'" prop="type">
-          <img :src="ownerInfo.drivingBack" style="width:100px; height:100px;">
+          <img :src="userInfo.drivingBack" style="width:100px; height:100px;">
         </el-form-item>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+        <el-button @click="dialogShowUserInfo = false">关闭</el-button>
       </div>
     </el-dialog>
 
@@ -169,7 +168,22 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+        <el-button @click="dialogShowUserInfo = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="'扣除违章费用'" :visible.sync="dialogShowCutPeccancy">
+      <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+
+        <el-form-item :label="'请输入费用'" prop="type">
+           <el-input-number v-model="cutPeccancy" :step="1" :min="1" :max="carInfo.peccancyDeposit"></el-input-number>
+        </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleCutPeccancy">提交</el-button>
+        <el-button @click="dialogShowCutPeccancy = false">关闭</el-button>
       </div>
     </el-dialog>
 
@@ -177,7 +191,11 @@
 </template>
 
 <script>
-import { getEndorsementList} from "@/api/order";
+import { getEndorsementList, updateEndorsement} from "@/api/order";
+import { getUserById } from "@/api/user";
+
+import { getCarById } from "@/api/car";
+
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 
 export default {
@@ -239,17 +257,22 @@ export default {
         "8": "已过期"
       },
 
-      dialogShowOwnerInfo: false,
-      ownerInfo: {
+      dialogShowUserInfo: false,
+      userInfo: {
+        address: undefined,
         balance: undefined,
         bankCardCount: undefined,
+        couponCount: undefined,
         createTime: undefined,
         drivingBack: undefined,
         drivingFront: undefined,
         drivingNum: undefined,
         drivingType: undefined,
+        email: undefined,
+        endorsementCount: undefined,
+        hasNewMessage: undefined,
         headImg: undefined,
-        id: 1,
+        id: undefined,
         idcard: undefined,
         idcardBack: undefined,
         idcardFront: undefined,
@@ -266,6 +289,7 @@ export default {
       },
 
       dialogShowCarInfo: false,
+
       carInfo: {
         brand: undefined,
         carDesc: undefined,
@@ -285,7 +309,7 @@ export default {
         oilNumber: undefined,
         output: undefined,
         ownerId: undefined,
-        peccancyDeposit: undefined,
+        peccancyDeposit: 0,
         plateNumber: undefined,
         rent: undefined,
         safeMoney: undefined,
@@ -295,7 +319,12 @@ export default {
         unavailableTimeStop: undefined,
         updateTime: undefined,
         wantRent: undefined
-      }
+      },
+
+      dialogShowCutPeccancy: false,
+
+      cutPeccancy: undefined,
+      peccancyId: undefined
     };
   },
 
@@ -304,6 +333,22 @@ export default {
   },
 
   methods: {
+    formatDate(time) {
+      var date = new Date(time);
+
+      var year = date.getFullYear(),
+        month = date.getMonth() + 1, //月份是从0开始的
+        day = date.getDate(),
+        hour = date.getHours() > 9 ? date.getHours() : "0" + date.getHours(),
+        min =
+          date.getMinutes() > 9 ? date.getMinutes() : "0" + date.getMinutes(),
+        sec =
+          date.getSeconds() > 9 ? date.getSeconds() : "0" + date.getSeconds();
+      var newTime =
+        year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+      return newTime;
+    },
+
     getList(data) {
       this.listLoading = true;
 
@@ -314,7 +359,8 @@ export default {
       }
 
       if (this.listQuery.date) {
-        fd.append("date", this.listQuery.date);
+        fd.append("startTime", this.formatDate(this.listQuery.date[0]));
+        fd.append("endTime", this.formatDate(this.listQuery.date[1]));
       }
 
       if (this.listQuery.plateNum) {
@@ -326,7 +372,7 @@ export default {
       }
 
       if (this.listQuery.nickName) {
-        fd.append("nickName", this.listQuery.nickName);
+        fd.append("nameStr", this.listQuery.nickName);
       }
 
       if (this.listQuery.mobile) {
@@ -338,14 +384,14 @@ export default {
       }
 
       if (this.statusValue) {
-        fd.append("orderType", this.statusValue);
+        fd.append("peccancyStatus", this.statusValue);
       }
 
       if (this.listQuery.sortKey) {
         fd.append("sortKey", this.listQuery.sortKey);
       }
 
-      getEndorsementList().then(response => {
+      getEndorsementList(fd).then(response => {
         this.list = response.data.body.infos;
         this.total = response.data.body.pageInfo.total;
         this.listLoading = false;
@@ -365,16 +411,60 @@ export default {
       this.getList();
     },
 
-    handleShowOwnerInfo(user) {
-      this.dialogShowOwnerInfo = true;
-      this.ownerInfo = user;
+    handleShowUserInfo(userId) {
+      let fd = new FormData();
+      fd.append("userId", userId);
+
+      getUserById(fd).then(response => {
+        this.userInfo = response.data.body
+        console.log("response", response);
+      });
+
+      this.dialogShowUserInfo = true;
     },
 
-    handleShowCarInfo(car) {
+    handleShowCarInfo(carId) {
+
+      console.log('show car id', carId);
+      
+      let fd = new FormData();
+      fd.append("id", carId);
+
+      getCarById(fd).then(response => {
+        if(response.data.body){
+          this.carInfo = response.data.body
+        }
+        console.log("response", response);
+      });
+
       this.dialogShowCarInfo = true;
-      this.carInfo = car;
     },
 
+    handleShowCutPeccancy(row) {
+      // 扣除违章费用
+      this.dialogShowCutPeccancy = true;
+      this.peccancyId = row.id;
+    },
+
+    handleCutPeccancy() {
+      // 扣除违章费用
+      let fd = new FormData();
+      fd.append("id", this.peccancyId);
+      fd.append("actFine", this.cutPeccancy);
+
+      updateEndorsement(fd).then(response => {
+         console.log("response", response);
+        if(response.data.header.code == 200){
+          this.$alert('扣除违章押金成功！');
+          this.dialogShowCutPeccancy = false;
+        } else {
+          this.$alert(response.data.heade.desc);
+        }
+       
+      });
+    }
+
+    // 
   }
 };
 </script>

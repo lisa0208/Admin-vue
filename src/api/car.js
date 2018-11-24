@@ -119,3 +119,11 @@ export function deleteCarModel(data) {
     data
   })
 }
+
+export function getCarById(data) {
+  return request({
+    url: '/car/searchCarById',
+    method: 'post',
+    data
+  })
+}

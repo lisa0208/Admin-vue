@@ -32,6 +32,14 @@ export function getEndorsementList(data) {
   })
 }
 
+export function updateEndorsement(data) {
+  return request({
+    url: '/endorsement/update',
+    method: 'post',
+    data
+  })
+}
+
 export function getCouponList(data) {
   return request({
     url: '/coupon/cmsSearch',

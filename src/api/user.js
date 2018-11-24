@@ -23,3 +23,11 @@ export function loginAdmin(data) {
     data
   })
 }
+
+export function getUserById(data) {
+  return request({
+    url: '/user/get',
+    method: 'post',
+    data
+  })
+}
