@@ -488,7 +488,7 @@ export default {
       fd.append("JfCar.brand", this.carInfo.brandName);
       fd.append("JfCar.model", this.carInfo.model);
       fd.append("JfCar.color", this.carInfo.color);
-      fd.append("JfCar.output", this.carInfo.output);
+      fd.append("JfCar.output", this.carInfo.output + 'L');
       fd.append("JfCar.gearbox", this.carInfo.gearbox);
       fd.append("JfCar.seatNum", this.carInfo.seatNum);
       fd.append("JfCar.engineNum", this.carInfo.engineNum);
