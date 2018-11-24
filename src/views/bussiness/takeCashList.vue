@@ -55,7 +55,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'提现金额(元)'" width="100px">
+      <el-table-column :label="'提现金额(元)'" width="120px">
         <template slot-scope="scope">
           <span>{{ scope.row.putForwardAmount }}</span>
         </template>

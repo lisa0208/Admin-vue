@@ -38,11 +38,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'更新时间'" width="160px" align="center">
+      <!-- <el-table-column :label="'更新时间'" width="160px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.updateTime }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">

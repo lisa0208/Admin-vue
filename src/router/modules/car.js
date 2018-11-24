@@ -29,16 +29,16 @@ const tableRouter = {
       meta: { title: '车辆品牌管理' }
     },
     {
-      path: 'car-color',
-      component: () => import('@/views/car/colorList'),
-      name: 'carColor',
-      meta: { title: '车辆颜色管理' }
-    },
-    {
       path: 'car-model',
       component: () => import('@/views/car/modelList'),
       name: 'carModel',
       meta: { title: '车辆型号管理' }
+    },
+    {
+      path: 'car-color',
+      component: () => import('@/views/car/colorList'),
+      name: 'carColor',
+      meta: { title: '车辆颜色管理' }
     },
     {
       path: 'car-add/:id',
