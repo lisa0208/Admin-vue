@@ -180,8 +180,11 @@ export default {
         fd.append("overdueTime", this.formatDate(this.date[1]));
       }
 
-      fd.append("discount", this.discount / 100);
-      fd.append("fastMinusAccount", this.fastMinusAccount);
+      if (this.couponType == 1) {
+        fd.append("discount", this.discount / 100);
+      } else {
+        fd.append("fastMinusAccount", this.fastMinusAccount);
+      }
 
       addCoupon(fd).then(response => {
         console.log(response);

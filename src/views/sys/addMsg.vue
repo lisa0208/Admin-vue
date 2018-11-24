@@ -40,11 +40,11 @@
             </el-form-item>
 
             <el-form-item label="消息标题">
-              <el-input ></el-input>
+              <el-input v-model="title"></el-input>
             </el-form-item>
 
             <el-form-item label="消息内容">
-              <el-input type='textarea' ></el-input>
+              <el-input v-model="sendContent" type='textarea' ></el-input>
             </el-form-item>
 
           </el-form>
@@ -77,7 +77,9 @@ export default {
       mobileLst: undefined,
 
       msgType: 0, // 0立即发布，1定时发布
-      msgTime: undefined
+      msgTime: undefined,
+      title: undefined,
+      sendContent: undefined
     };
   },
 
@@ -85,16 +87,34 @@ export default {
 
   methods: {
     sendMsg() {
+      if (!this.title || !this.sendContent) {
+        this.$alert("请完整填写内容");
+        return;
+      }
+
       let fd = new FormData();
 
+      if (this.userScopeType == 1) {
+        fd.append("tel", this.mobileLst);
+      }
+
       fd.append("adminId", 1);
-      fd.append("title", 1);
-      fd.append("author", 1);
-      fd.append("sendContent", 1);
-      fd.append("tel", 1);
+
+      fd.append("title", this.title);
+
+      fd.append("author", "管理员");
+      fd.append("sendContent", this.sendContent);
 
       addMsg(fd).then(response => {
-        console.log(response);
+        if (response.data.header.code == 200) {
+          this.$alert("消息发送成功");
+
+          this.title = undefined;
+          this.sendContent = undefined;
+
+        } else {
+          this.$alert(response.data.header.desc);
+        }
       });
     }
   }

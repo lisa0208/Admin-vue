@@ -29,11 +29,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'跳转链接'" width="300px" align="center">
+      <!-- <el-table-column :label="'跳转链接'" width="300px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.jumpUrl }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column :label="'图片'" width="110px" align="center">
         <template slot-scope="scope">
@@ -43,9 +43,9 @@
 
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="handleDeleteBrand(scope.row)">上线</el-button>
-          <el-button type="danger" size="mini" @click="handleDeleteBrand(scope.row)">下线</el-button>
-          <el-button type="danger" size="mini" @click="handleDeleteBrand(scope.row)">删除</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdateBanner(scope.row, 1)" v-if="scope.row.status==0">上线</el-button>
+          <el-button type="info" size="mini" @click="handleUpdateBanner(scope.row, 0)" v-if="scope.row.status==1">下线</el-button>
+          <el-button type="danger" size="mini" @click="handleDeleteBanner(scope.row)">删除</el-button>
         </template>
       </el-table-column>
 
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { getBannerList } from "@/api/sys";
+import { getBannerList, updateBanner, deleteBanner } from "@/api/sys";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 import env from "../../../config/sit.env";
 import axios from "axios";
@@ -100,7 +100,7 @@ export default {
 
       getBannerList().then(response => {
         this.list = response.data.body.infos;
-        this.total = response.data.body.length;
+        // this.total = response.data.body.length;
         this.listLoading = false;
       });
     },
@@ -112,70 +112,38 @@ export default {
 
     sortChange(data) {
       const { prop, order } = data;
-      if (prop === "id") {
-        this.sortByID(order);
-      }
     },
 
-    handleShowBrand(user) {
-      this.dialogShowAddBrand = true;
-    },
-
-    handleAddBrand(user) {
-      this.dialogShowbrandInfo = true;
-
+    handleUpdateBanner(row, status) {
       let fd = new FormData();
-      fd.append("brand", this.brandInfo.brand);
-      fd.append("hotBrand", this.brandInfo.hotBrand);
-      fd.append("brandImg", this.brandInfo.brandImg);
-      addBrand(fd).then(response => {
-        this.dialogShowAddBrand = false;
+      fd.append("id", row.id);
+      fd.append("position", row.position);
+      fd.append("status", status);
+
+      updateBanner(fd).then(response => {
         this.getList();
+        this.$message({
+          type: "success",
+          message: "更新 Banner 状态成功!"
+        });
       });
     },
 
-    handleUploadSuccess() {},
-
-    beforeUpload(data) {
-      let fd = new FormData();
-      fd.append("uploadFile", data.file);
-
-      let self = this;
-
-      // 自己上传文件 想加什么都可以
-      axios
-        .post(env.BASE_API + "/file/upload", fd, {
-          // 加这里
-          headers: {
-            jf_token: Cookies.get("jf_token")
-          }
-        })
-        .then(function(response) {
-          console.log(response.data.body);
-          self.brandInfo.brandImg = response.data.body;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-
-      return false; // 返回false不会自动上传
-    },
-
-    handleDeleteBrand(row) {
-      this.$confirm("确认删除品牌?请确保该品牌下无型号和车辆", "提示", {
+    handleDeleteBanner(row) {
+      this.$confirm("确认删除该 Banner?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
           let fd = new FormData();
-          fd.append("id", row.id);
+          fd.append("bannerId", row.id);
 
-          deleteCarBrand(fd).then(response => {
+          deleteBanner(fd).then(response => {
             this.getList();
             this.$message({
               type: "success",
-              message: "删除品牌成功!"
+              message: "删除Banner成功!"
             });
           });
         })

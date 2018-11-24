@@ -140,6 +140,13 @@
               <el-input-number v-model="carInfo.seatNum" :step="1"  :min="1" :max="100"></el-input-number>
             </el-form-item>
 
+            <el-form-item label="发动机类型">
+              <el-select  placeholder="请选择" v-model="carInfo.engineType">
+                <el-option label="涡轮增压" value="涡轮增压"></el-option>
+                <el-option label="自然吸气" value="自然吸气"></el-option>
+              </el-select>
+            </el-form-item>
+
             <el-form-item label="发动机号">
               <el-input v-model="carInfo.engineNum"></el-input>
             </el-form-item>
@@ -255,7 +262,7 @@ export default {
 
   data() {
     return {
-      id: this.$route.params.id ==':id' ? false : this.$route.params.id,
+      id: this.$route.params.id == ":id" ? false : this.$route.params.id,
 
       uploadUrl: "",
 
@@ -291,7 +298,8 @@ export default {
         output: undefined,
         plateNumber: undefined,
         seatNum: undefined,
-        wantRent: undefined
+        wantRent: undefined,
+        engineType: undefined
       },
 
       feeInfo: {
@@ -307,7 +315,7 @@ export default {
   },
 
   created() {
-    console.log('this.id', this.id);
+    console.log("this.id", this.id);
     // 拉取车辆信息
     if (this.id) {
       let fd = new FormData();
@@ -336,6 +344,8 @@ export default {
         this.carInfo.city = response.data.body.city;
         this.carInfo.color = response.data.body.color;
         this.carInfo.engineNum = response.data.body.engineNum;
+        this.carInfo.engineType = response.data.body.engineType;
+
         this.carInfo.frameNum = response.data.body.frameNum;
         this.carInfo.gearbox = response.data.body.gearbox;
         this.carInfo.model = response.data.body.model;
@@ -365,7 +375,6 @@ export default {
         }
         this.fileList = tempArr;
       });
-
     }
 
     // 获取颜色列表
@@ -420,7 +429,6 @@ export default {
     },
 
     handleSubmit() {
-
       for (let j in this.carInfo) {
         console.log(this.carInfo);
 
@@ -476,7 +484,7 @@ export default {
       fd.append("jfUser.drivingBack", this.ownerInfo.drivingBack);
 
       fd.append("JfCar.city", this.carInfo.city);
-      fd.append("JfCar.plateNumber", '沪' + this.carInfo.plateNumber);
+      fd.append("JfCar.plateNumber", "沪" + this.carInfo.plateNumber);
       fd.append("JfCar.brand", this.carInfo.brandName);
       fd.append("JfCar.model", this.carInfo.model);
       fd.append("JfCar.color", this.carInfo.color);
@@ -484,6 +492,8 @@ export default {
       fd.append("JfCar.gearbox", this.carInfo.gearbox);
       fd.append("JfCar.seatNum", this.carInfo.seatNum);
       fd.append("JfCar.engineNum", this.carInfo.engineNum);
+      fd.append("JfCar.engineType", this.carInfo.engineType);
+
       fd.append("JfCar.frameNum", this.carInfo.frameNum);
       fd.append("JfCar.enterModel", this.carInfo.enterModel);
       fd.append("JfCar.wantRent", this.carInfo.wantRent);
@@ -518,7 +528,6 @@ export default {
           window.location.reload();
         });
       } else {
-      
         addCar(fd).then(response => {
           this.listLoading = false;
           window.location.reload();

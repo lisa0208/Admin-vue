@@ -63,7 +63,7 @@
 
       <el-table-column :label="'车辆信息'" width="110px" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleShowCarInfo(scope.row.userId)" :disabled="!scope.row.orderId">查看</el-button>
+          <el-button type="primary" size="mini" @click="handleShowCarInfo(scope.row.carId)" :disabled="!scope.row.orderId">查看</el-button>
         </template>
       </el-table-column>
 
