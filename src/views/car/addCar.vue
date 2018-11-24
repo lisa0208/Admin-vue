@@ -251,7 +251,7 @@ export default {
 
   data() {
     return {
-      id: this.$route.params.id ? this.$route.params.id : false,
+      id: this.$route.params.id ==':id' ? false : this.$route.params.id,
 
       uploadUrl: "",
 
@@ -303,7 +303,7 @@ export default {
   },
 
   created() {
-    console.log(this.id);
+    console.log('this.id', this.id);
     // 拉取车辆信息
     if (this.id) {
       let fd = new FormData();
@@ -362,12 +362,13 @@ export default {
         this.fileList = tempArr;
       });
 
-      // 获取颜色列表
-      fetchColorList().then(response => {
-        this.colorOption = response.data.body;
-        console.log("this.colorOption", this.colorOption);
-      });
     }
+
+    // 获取颜色列表
+    fetchColorList().then(response => {
+      this.colorOption = response.data.body;
+      console.log("this.colorOption", this.colorOption);
+    });
 
     // 获取品牌列表
     fetchBrandList().then(response => {
@@ -415,6 +416,7 @@ export default {
     },
 
     handleSubmit() {
+
       for (let j in this.carInfo) {
         console.log(this.carInfo);
 

@@ -171,7 +171,7 @@ export default {
       }
 
       if (this.listQuery.orderId) {
-        fd.append("orderId", this.listQuery.orderId);
+        fd.append("rechargeNum", this.listQuery.orderId);
       }
 
       getBussinessInput(fd).then(response => {

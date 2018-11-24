@@ -13,7 +13,8 @@
       
       <el-input :placeholder="'用户名'" v-model="listQuery.userName" style="width: 200px;" class="filter-item"/>
       <el-input :placeholder="'手机号'" v-model="listQuery.mobile" style="width: 200px;" class="filter-item"/>
-      <el-input :placeholder="'提现单号'" v-model="listQuery.orderId" style="width: 200px;" class="filter-item"/>
+      <el-input :placeholder="'提现流水号'" v-model="listQuery.orderId" style="width: 200px;" class="filter-item"/>
+      <el-input :placeholder="'提现银行卡号'" v-model="listQuery.cardNo" style="width: 200px;" class="filter-item"/>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
 
@@ -118,7 +119,8 @@ export default {
 
         userName: undefined,
         mobile: undefined,
-        orderId: undefined
+        orderId: undefined,
+        cardNo: undefined
       },
       sums: {
         putForwardAmountSum: 0,
@@ -177,7 +179,11 @@ export default {
       }
 
       if (this.listQuery.orderId) {
-        fd.append("orderId", this.listQuery.orderId);
+        fd.append("putForwardSerialNum", this.listQuery.orderId);
+      }
+
+      if (this.listQuery.cardNo) {
+        fd.append("putForwardCardNum", this.listQuery.cardNo);
       }
 
       getBussinessOupt(fd).then(response => {
