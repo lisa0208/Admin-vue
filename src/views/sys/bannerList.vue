@@ -98,7 +98,6 @@ export default {
     getList(data) {
       this.listLoading = true;
 
-
       getBannerList().then(response => {
         this.list = response.data.body.infos;
         this.total = response.data.body.length;
@@ -180,7 +179,7 @@ export default {
             });
           });
         })
-        .catch((err) => {
+        .catch(err => {
           console.log("取消", err);
         });
     }

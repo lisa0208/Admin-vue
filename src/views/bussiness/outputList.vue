@@ -13,7 +13,7 @@
       
       <el-input :placeholder="'用户名'" v-model="listQuery.userName" style="width: 200px;" class="filter-item"/>
       <el-input :placeholder="'手机号'" v-model="listQuery.mobile" style="width: 200px;" class="filter-item"/>
-      <el-input :placeholder="'充值单号'" v-model="listQuery.orderId" style="width: 200px;" class="filter-item"/>
+      <el-input :placeholder="'提现单号'" v-model="listQuery.orderId" style="width: 200px;" class="filter-item"/>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
 
@@ -21,9 +21,12 @@
 
     <div styele=''>
       <el-form :inline="true" class="demo-form-inline">
-      <el-form-item label="本数据表充值总金额：">
-      <el-input disabled="" value="10000元，数据未接入"/>
-      </el-form-item>
+        <el-form-item label="提现总金额：">
+          <el-input disabled="" v-model="sums.putForwardAmountSum"/>
+        </el-form-item>
+        <el-form-item label="提现总人数：">
+          <el-input disabled="" v-model="sums.takeCashCountSum"/>
+        </el-form-item>
       </el-form>
     </div>
 
@@ -116,6 +119,10 @@ export default {
         userName: undefined,
         mobile: undefined,
         orderId: undefined
+      },
+      sums: {
+        putForwardAmountSum: 0,
+        takeCashCountSum: 0
       }
     };
   },
@@ -174,10 +181,11 @@ export default {
       }
 
       getBussinessOupt(fd).then(response => {
-        this.list = response.data.body ? response.data.body.infos : [];
+        this.list = response.data.body ? response.data.body.pages.infos : [];
         this.total = response.data.body
-          ? response.data.body.pageInfo.total
+          ? response.data.body.pages.pageInfo.total
           : this.total;
+        this.sums = response.data.body.sums;
         this.listLoading = false;
       });
     },

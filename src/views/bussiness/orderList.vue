@@ -21,9 +21,24 @@
 
     <div styele=''>
       <el-form :inline="true" class="demo-form-inline">
-      <el-form-item label="本数据表订单总金额：">
-      <el-input disabled="" value="10000元，数据未接入"/>
-      </el-form-item>
+        <el-form-item label="订单应付总额：">
+        <el-input disabled="" v-model="sums.shouldFeeSum"/>
+        </el-form-item>
+        <el-form-item label="车辆减免总额：">
+        <el-input disabled="" v-model="sums.cutCarFeeSum"/>
+        </el-form-item>
+        <el-form-item label="优惠券减免总额：">
+        <el-input disabled="" v-model="sums.couponCutFeeSum"/>
+        </el-form-item>
+        <el-form-item label="押金总总额：">
+        <el-input disabled="" v-model="sums.carDepositSum"/>
+        </el-form-item>
+        <el-form-item label="车辆押金总总额：">
+        <el-input disabled="" v-model="sums.carDepositSum"/>
+        </el-form-item>
+        <el-form-item label="违章押金总总额：">
+        <el-input disabled="" v-model="sums.peccancyDepositSum"/>
+        </el-form-item>
       </el-form>
     </div>
 
@@ -146,6 +161,17 @@ export default {
         userName: undefined,
         mobile: undefined,
         orderId: undefined
+      },
+
+      sums: {
+        carDepositSum: 0,
+        couponCutFeeSum: 0.14,
+        cutCarFeeSum: 126,
+        cutFeeSum: 0,
+        cutPeccancyFeeSum: 0,
+        peccancyDepositSum: 0,
+        rechargeAmountSum: 0,
+        shouldFeeSum: 0.36
       }
     };
   },
@@ -204,11 +230,12 @@ export default {
       }
 
       getBussinessOrder(fd).then(response => {
-        this.list = response.data.body ? response.data.body.infos : [];
+        this.list = response.data.body ? response.data.body.pages.infos : [];
         this.total = response.data.body
-          ? response.data.body.pageInfo.total
+          ? response.data.body.pages.pageInfo.total
           : this.total;
         this.listLoading = false;
+        this.sums = response.data.body.sums
       });
     },
 

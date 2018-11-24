@@ -21,9 +21,12 @@
 
     <div styele=''>
       <el-form :inline="true" class="demo-form-inline">
-      <el-form-item label="本数据表充值总金额：">
-      <el-input disabled="" value="10000元，数据未接入"/>
-      </el-form-item>
+        <el-form-item label="充值总金额：">
+          <el-input disabled="" v-model="sums.rechargeAmountSum"/>
+        </el-form-item>
+        <el-form-item label="充值总人数：">
+          <el-input disabled="" v-model="sums.rechargeCountSum"/>
+        </el-form-item>
       </el-form>
     </div>
 
@@ -110,6 +113,10 @@ export default {
         userName: undefined,
         mobile: undefined,
         orderId: undefined
+      },
+      sums: {
+        rechargeAmountSum: 0,
+        rechargeCountSum: 0
       }
     };
   },
@@ -168,10 +175,11 @@ export default {
       }
 
       getBussinessInput(fd).then(response => {
-        this.list = response.data.body ? response.data.body.infos : [];
+        this.list = response.data.body ? response.data.body.pages.infos : [];
         this.total = response.data.body
-          ? response.data.body.pageInfo.total
+          ? response.data.body.pages.pageInfo.total
           : this.total;
+        this.sums = response.data.body.sums;
         this.listLoading = false;
       });
     },
