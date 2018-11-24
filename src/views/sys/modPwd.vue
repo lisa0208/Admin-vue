@@ -72,7 +72,7 @@ export default {
 
   data() {
     return {
-      username: undefined,
+      username: Cookies.get("userName"),
       mobile: undefined,
       code: undefined,
       pwd: undefined,

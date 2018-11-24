@@ -172,11 +172,11 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="'扣除违章费用'" :visible.sync="dialogShowCutPeccancy">
+    <el-dialog :title="'设置本条违章金额'" :visible.sync="dialogShowCutPeccancy">
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
 
         <el-form-item :label="'请输入费用'" prop="type">
-           <el-input-number v-model="cutPeccancy" :step="1" :min="1" :max="carInfo.peccancyDeposit"></el-input-number>
+           <el-input-number v-model="cutPeccancy" :step="1"></el-input-number>
         </el-form-item>
 
       </el-form>
@@ -416,7 +416,9 @@ export default {
       fd.append("userId", userId);
 
       getUserById(fd).then(response => {
-        this.userInfo = response.data.body
+        if(response.data.body){
+           this.userInfo = response.data.body
+        }
         console.log("response", response);
       });
 
@@ -455,7 +457,7 @@ export default {
       updateEndorsement(fd).then(response => {
          console.log("response", response);
         if(response.data.header.code == 200){
-          this.$alert('扣除违章押金成功！');
+          this.$alert('设置本条违章金额成功！用户的违章费用将由多条（若有）违章金额累加！');
           this.dialogShowCutPeccancy = false;
         } else {
           this.$alert(response.data.heade.desc);

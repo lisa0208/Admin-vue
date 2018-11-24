@@ -43,7 +43,7 @@
 
       <el-table-column :label="'优惠券车辆类型'" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.modelNameLst }}</span>
+          <span>{{ scope.row.modelNameLst  ? scope.row.modelNameLst : '全部车型' }}</span>
         </template>
       </el-table-column>
 
@@ -55,13 +55,13 @@
 
       <el-table-column :label="'优惠额度（元）'" width="120px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.fastMinusAccount }}</span>
+          <span>{{ scope.row.fastMinusAccount ? scope.row.fastMinusAccount : '-' }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="'折扣'" width="60px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.discount }}</span>
+          <span>{{ scope.row.discount ? scope.row.discount : '-' }}</span>
         </template>
       </el-table-column>
 

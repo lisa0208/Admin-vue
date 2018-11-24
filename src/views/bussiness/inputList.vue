@@ -47,7 +47,7 @@
 
       <el-table-column :label="'用户名'" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.jfUser.name }}</span>
+          <span>{{ scope.row.jfUser.nickname }}</span>
         </template>
       </el-table-column>
 
@@ -77,7 +77,7 @@
 
       <el-table-column :label="'支付方式'" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.payType }}</span>
+          <span>{{ scope.row.payTypeStatusDesc }}</span>
         </template>
       </el-table-column>
 

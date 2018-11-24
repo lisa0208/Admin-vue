@@ -93,6 +93,7 @@ export default {
         if (response.data.body) {
           let token = response.data.body.token;
           Cookies.set("jf_token", token);
+          Cookies.set("userName", response.data.body.nickName);
           window.location.replace("/#/dashboard");
         } else {
           this.$alert(response.data.header.desc);

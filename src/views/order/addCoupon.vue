@@ -43,7 +43,7 @@
               
               <el-select  placeholder="请选择类型" v-model="couponType">
                 <el-option :label="'立减券'" :value="0"/>
-                <el-option :label="'新用户优惠券'" :value="2"/>
+                <el-option :label="'新用户优惠券'" :value="2" v-if="userScopeType==0"/>
                 <el-option :label="'折扣券'" :value="1"/>
               </el-select>
 
@@ -61,6 +61,7 @@
                   type="datetimerange"
                   range-separator="至"
                   start-placeholder="开始日期"
+                  @change="checkTime"
                   end-placeholder="结束日期"/>
 
               </el-form-item>
@@ -134,6 +135,17 @@ export default {
   },
 
   methods: {
+
+    checkTime(date){
+      console.log(date);
+
+      if(date[0] < new Date()){
+        this.$alert('优惠券有效期开始时间不能早于当前时间！');
+        this.date = undefined;
+      }
+    },
+
+
     formatDate(time) {
       var date = new Date(time);
 

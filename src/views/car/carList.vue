@@ -97,6 +97,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="'车辆信息'" width="110px" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="handleShowCarInfo(scope.row.jfCar)">查看</el-button>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="'车辆照片'" width="110px" align="center">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleShowCarPhoto(scope.row.carPhoto)">查看</el-button>
@@ -200,6 +206,42 @@
       </div>
     </el-dialog>
 
+    <el-dialog :title="'车辆信息查看'" :visible.sync="dialogShowCarInfo">
+      <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+
+        <el-form-item :label="'车辆 ID'" prop="type">
+          <el-input v-model="carInfo.id" readonly/>
+        </el-form-item>
+
+        <el-form-item :label="'车牌号'" prop="type">
+          <el-input v-model="carInfo.plateNumber" readonly/>
+        </el-form-item>
+        <el-form-item :label="'品牌'" prop="type">
+          <el-input v-model="carInfo.brand" readonly/>
+        </el-form-item>
+        <el-form-item :label="'型号'" prop="type">
+          <el-input v-model="carInfo.model" readonly/>
+        </el-form-item>
+
+        <el-form-item :label="'城市'" prop="type">
+          <el-input v-model="carInfo.city" readonly/>
+        </el-form-item>
+
+        <el-form-item :label="'颜色'" prop="type">
+          <el-input v-model="carInfo.color" readonly/>
+        </el-form-item>
+
+        <el-form-item :label="'齿轮箱'" prop="type">
+          <el-input v-model="carInfo.gearbox" readonly/>
+        </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -293,7 +335,39 @@ export default {
       carPhoto: [],
 
       showViewPhoto: false,
-      viewPhotoURL: undefined
+      viewPhotoURL: undefined,
+
+      dialogShowCarInfo: false,
+      carInfo: {
+        brand: undefined,
+        carDesc: undefined,
+        carPhoto: undefined,
+        carStatus: undefined,
+        city: undefined,
+        color: undefined,
+        createTime: undefined,
+        deposit: undefined,
+        engineNum: undefined,
+        enterModel: undefined,
+        frameNum: undefined,
+        gearbox: undefined,
+        id: undefined,
+        jfUser: undefined,
+        model: undefined,
+        oilNumber: undefined,
+        output: undefined,
+        ownerId: undefined,
+        peccancyDeposit: undefined,
+        plateNumber: undefined,
+        rent: undefined,
+        safeMoney: undefined,
+        seatNum: undefined,
+        serviceMoney: undefined,
+        unavailableTimeStart: undefined,
+        unavailableTimeStop: undefined,
+        updateTime: undefined,
+        wantRent: undefined
+      }
     };
   },
 
@@ -302,6 +376,12 @@ export default {
   },
 
   methods: {
+
+    handleShowCarInfo(car) {
+      this.dialogShowCarInfo = true;
+      this.carInfo = car;
+    },
+
     getList(data) {
       this.listLoading = true;
 

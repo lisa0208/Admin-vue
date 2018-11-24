@@ -24,19 +24,15 @@
         <el-form-item label="订单应付总额：">
         <el-input disabled="" v-model="sums.shouldFeeSum"/>
         </el-form-item>
-        <el-form-item label="车辆减免总额：">
-        <el-input disabled="" v-model="sums.cutCarFeeSum"/>
-        </el-form-item>
+
         <el-form-item label="优惠券减免总额：">
         <el-input disabled="" v-model="sums.couponCutFeeSum"/>
         </el-form-item>
-        <el-form-item label="押金总总额：">
+
+        <el-form-item label="车辆押金总额：">
         <el-input disabled="" v-model="sums.carDepositSum"/>
         </el-form-item>
-        <el-form-item label="车辆押金总总额：">
-        <el-input disabled="" v-model="sums.carDepositSum"/>
-        </el-form-item>
-        <el-form-item label="违章押金总总额：">
+        <el-form-item label="违章押金总额：">
         <el-input disabled="" v-model="sums.peccancyDepositSum"/>
         </el-form-item>
       </el-form>
@@ -59,7 +55,7 @@
 
       <el-table-column :label="'用户名'" width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.jfUser.name }}</span>
+          <span>{{ scope.row.jfUser.nickname }}</span>
         </template>
       </el-table-column>
 
@@ -77,7 +73,7 @@
 
       <el-table-column :label="'订单实际金额（元）'" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.actualFee }}</span>
+          <span>{{ scope.row.shouldFee }}</span>
         </template>
       </el-table-column>
 
@@ -87,45 +83,47 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'车辆租金'" width="150px">
+      <el-table-column :label="'车辆租金（元）'" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderDays }}</span>
+          <span>{{ scope.row.rentFee }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'车辆押金'" width="150px">
+
+      <el-table-column :label="'车辆押金（元）'" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.carDeposit }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'车辆扣费'" width="150px">
+      <el-table-column :label="'违章押金（元）'" width="150px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.peccancyDeposit }}</span>
+        </template>
+      </el-table-column>
+
+
+      <el-table-column :label="'车辆扣费（元）'" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.cutCarFee }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'保险费'" width="150px">
+      <el-table-column :label="'保险费（元）'" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderDays }}</span>
+          <span>{{ scope.row.saveFee }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'服务费'" width="150px">
+      <el-table-column :label="'服务费（元）'" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderDays }}</span>
+          <span>{{ scope.row.serviceFee }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'违章押金'" width="150px">
+      <el-table-column :label="'违章扣费（元）'" width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderDays }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="'违章扣费'" width="150px">
-        <template slot-scope="scope">
-          <span>{{ scope.row.orderDays }}</span>
+          <span>{{ scope.row.cutPeccancyFee }}</span>
         </template>
       </el-table-column>
 

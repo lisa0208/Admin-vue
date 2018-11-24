@@ -174,7 +174,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="'车辆信息查看'" :visible.sync="dialogShowCarInfo">
+  <el-dialog :title="'车辆信息查看'" :visible.sync="dialogShowCarInfo">
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
 
         <el-form-item :label="'车辆 ID'" prop="type">

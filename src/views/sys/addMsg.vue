@@ -35,6 +35,7 @@
                 type="datetime"
                 :disabled="msgType==0"
                 v-model="msgTime"
+                @change="checkTime"
                 />
 
             </el-form-item>
@@ -86,6 +87,16 @@ export default {
   created() {},
 
   methods: {
+    
+    checkTime(date){
+      console.log(date);
+
+      if(date < new Date()){
+        this.$alert('消息发送时间不能早于当前时间！');
+        this.msgTime = undefined;
+      }
+    },
+
     sendMsg() {
       if (!this.title || !this.sendContent) {
         this.$alert("请完整填写内容");
