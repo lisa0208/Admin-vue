@@ -33,8 +33,8 @@
               </el-radio-group>
 
               
-              <el-select  placeholder="请选择车辆型号" v-model="model" :disabled="modelType==0">
-                <el-option v-for="item in modelOption" :key="item.id" :label="item.model" :value="item.model"/>
+              <el-select  placeholder="请选择车辆型号" v-model="modelIdLst" :disabled="modelType==0">
+                <el-option v-for="item in modelOption" :key="item.id" :label="item.model"/>
               </el-select>
 
             </el-form-item>
@@ -118,8 +118,8 @@ export default {
       couponType: undefined,
       userScopeType: 0, // 0所有用户，1特定用户
       modelType: 0, // 0所有车型，1特定车型
-      modelIdLst: undefined, // 用户手机号
-      mobileLst: undefined,
+      modelIdLst: undefined, // 车型列表
+      mobileLst: undefined,// 用户手机号
       coupon_desc: undefined,
       startdueTime: undefined,
       overdueTime: undefined,
@@ -129,21 +129,20 @@ export default {
   },
 
   created() {
-    console.log(this.id);
-    // 拉取车辆信息
-
     this.getModelList(null);
   },
 
   methods: {
 
     getModelList() {
-
       fetchModelList().then(response => {
         this.modelOption = response.data.body;
         console.log("this.modelOption", this.modelOption);
       });
-    }
+    },
+
+
+
 
   }
 };

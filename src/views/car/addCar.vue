@@ -505,7 +505,7 @@ export default {
 
       // 所有从后来来的车辆，无论是不全资料补填后的更新，还是直接主动新增，车辆状态都是2，下线状态
       // 来自端上的车辆状态，在点击通过按钮的时候，就已经变为审核通过了，就不会出现在车辆待审核列表了
-      fd.append("JjfCar.carStatus", 2);
+      fd.append("JfCar.carStatus", 2);
 
       this.listLoading = true;
 
