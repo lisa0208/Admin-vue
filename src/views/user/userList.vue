@@ -23,7 +23,7 @@
       style="width: 100%;"
       @sort-change="sortChange">
 
-      <el-table-column :label="'ID'" prop="id" align="center" width="65">
+      <el-table-column :label="'ID'" prop="id" align="center" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -61,7 +61,7 @@
 
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)" v-if="scope.row.userStatus==0">通过</el-button>
+          <el-button type="primary" size="mini" @click="handleShowPass(scope.row)" v-if="scope.row.userStatus==0">通过</el-button>
           <el-button type="danger" size="mini" @click="handlePass(scope.row, 2)" v-if="scope.row.userStatus==0">拒绝</el-button>
           <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)" v-if="scope.row.userStatus==1">拉黑</el-button>
         </template>
@@ -113,15 +113,61 @@
       </div>
     </el-dialog>
 
+    <el-dialog :title="'用户信息审核补全'" :visible.sync="dialogShowFullUserInfo">
+      <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+        <el-form-item :label="'姓名'" prop="type">
+          <el-input v-model="userInfo.name" disabled/>
+        </el-form-item>
+        <el-form-item :label="'手机号'" prop="type">
+          <el-input v-model="userInfo.mobile" disabled/>
+        </el-form-item>
+        <el-form-item :label="'身份证'" prop="type">
+          <el-input v-model="idcard"/>
+        </el-form-item>
+
+        <el-form-item :label="'身份证正面'" prop="type">
+          <img :src="userInfo.idcardFront" style='width:150px; height:150px'>
+        </el-form-item>
+
+        <el-form-item :label="'身份证反面'" prop="type">
+          <img :src="userInfo.idcardBack" style='width:150px; height:150px'>
+        </el-form-item>
+
+        <el-form-item :label="'驾照'" prop="type">
+          <el-input v-model="userInfo.drivingNum"/>
+        </el-form-item>
+
+        <el-form-item :label="'驾照类型'" prop="type">
+          <el-select v-model="drivingValue" :placeholder="'请选择驾照类型'" clearable style="width: 220px" class="filter-item">
+        <el-option v-for="item in drivingOptions" :key="item.key" :label="item.label" :value="item.key"/>
+      </el-select>
+        </el-form-item>
+
+        <el-form-item :label="'驾照正面'" prop="type">
+          <img :src="userInfo.drivingFront" style='width:150px; height:150px'>
+        </el-form-item>
+
+        <el-form-item :label="'驾照反面'" prop="type">
+          <img :src="userInfo.drivingBack" style='width:150px; height:150px'>
+        </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="submitFullUserInfo">提交</el-button>
+        <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { fetchUserList, updateUser } from '@/api/user'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { fetchUserList, updateUser } from "@/api/user";
+import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 
 export default {
-  name: 'CarList',
+  name: "CarList",
   components: { Pagination },
 
   data() {
@@ -138,32 +184,41 @@ export default {
         status: undefined
       },
 
-      cityOptions: [{ label: '上海', key: '上海' }],
+      cityOptions: [{ label: "上海", key: "上海" }],
 
       statusOptions: [
-        { label: '未审核', key: '0' },
-        { label: '已审核', key: '1' },
-        { label: '未通过', key: '2' },
-        { label: '已拉黑', key: '3' }
+        { label: "未审核", key: "0" },
+        { label: "已审核", key: "1" },
+        { label: "未通过", key: "2" },
+        { label: "已拉黑", key: "3" }
       ],
-      
+
       statusMap: {
-        '0': '未审核',
-        '1': '已审核',
-        '2': '未通过',
-        '3': '已拉黑',
+        "0": "未审核",
+        "1": "已审核",
+        "2": "未通过",
+        "3": "已拉黑"
       },
 
       drivingMap: {
-        '0': 'A1驾照',
-        '1': 'A2驾照',
-        '2': 'A3驾照',
-        '3': 'B1驾照',
-        '4': 'B2驾照',
-        '5': 'C1驾照',
-        '6': 'C2驾照'
+        "0": "A1驾照",
+        "1": "A2驾照",
+        "2": "A3驾照",
+        "3": "B1驾照",
+        "4": "B2驾照",
+        "5": "C1驾照",
+        "6": "C2驾照"
       },
 
+      drivingOptions: [
+        { label: "A1驾照", key: "0" },
+        { label: "A2驾照", key: "1" },
+        { label: "A3驾照", key: "2" },
+        { label: "B1驾照", key: "3" },
+        { label: "B2驾照", key: "4" },
+        { label: "C1驾照", key: "5" },
+        { label: "C2驾照", key: "6" }
+      ],
       dialogShowOwnerInfo: false,
       ownerInfo: {
         balance: undefined,
@@ -188,21 +243,48 @@ export default {
         userOpenId: undefined,
         userStatus: undefined,
         userType: undefined
+      },
+
+      dialogShowFullUserInfo: false,
+
+      drivingValue: undefined,
+      idcard: undefined,
+      userInfo: {
+        balance: undefined,
+        bankCardCount: undefined,
+        createTime: undefined,
+        drivingBack: undefined,
+        drivingFront: undefined,
+        drivingNum: undefined,
+        drivingType: undefined,
+        headImg: undefined,
+        id: undefined,
+        idcard: undefined,
+        idcardBack: undefined,
+        idcardFront: undefined,
+        loginChannel: undefined,
+        mobile: undefined,
+        name: undefined,
+        nickname: undefined,
+        password: undefined,
+        qualityType: undefined,
+        updateTime: undefined,
+        userOpenId: undefined,
+        userStatus: undefined,
+        userType: undefined
       }
-    }
+    };
   },
 
   created() {
-    this.getList()
+    this.getList();
   },
 
   methods: {
-
     getList(data) {
-
       this.listLoading = true;
 
-      if(data && data.page){
+      if (data && data.page) {
         this.listQuery.page = data.page;
       }
 
@@ -212,56 +294,81 @@ export default {
         fd.append("pageInfo.pageNum", this.listQuery.page);
       }
 
-      if(this.listQuery.nameStr){
-        fd.append('nameStr', this.listQuery.nameStr);
+      if (this.listQuery.nameStr) {
+        fd.append("nameStr", this.listQuery.nameStr);
       }
 
-      if(this.listQuery.mobile){
-        fd.append('mobile', this.listQuery.mobile);
+      if (this.listQuery.mobile) {
+        fd.append("mobile", this.listQuery.mobile);
       }
 
-      if(this.listQuery.status){
-        fd.append('userStatus', this.listQuery.status);
+      if (this.listQuery.status) {
+        fd.append("userStatus", this.listQuery.status);
       }
-
 
       fetchUserList(fd).then(response => {
-        this.list = response.data.body.infos
-        this.total = response.data.body.pageInfo.total
-        this.listLoading = false
-      })
+        this.list = response.data.body.infos;
+        this.total = response.data.body.pageInfo.total;
+        this.listLoading = false;
+      });
     },
 
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
 
     sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
+      const { prop, order } = data;
+      if (prop === "id") {
+        this.sortByID(order);
       }
     },
 
     handleViewUserInfo(user) {
-      this.dialogShowOwnerInfo = true
-      this.ownerInfo = user
+      this.dialogShowOwnerInfo = true;
+      this.ownerInfo = user;
+    },
+
+    submitFullUserInfo() {
+      if (this.drivingValue && this.idcard) {
+
+        let fd = new FormData();
+        fd.append("id", this.userInfo.id);
+        fd.append("userStatus", 1);
+        fd.append("idcard", this.idcard);
+        fd.append("drivingNum", this.drivingValue);
+        fd.append("drivingType", this.drivingValue);
+
+        updateUser(fd).then(response => {
+          this.listLoading = false;
+          this.getList();
+          this.dialogShowFullUserInfo = false;
+        });
+      } else {
+        this.$alert("请完善用户信息");
+      }
+    },
+
+    handleShowPass(row, status) {
+      console.log(row);
+
+      this.dialogShowFullUserInfo = true;
+      this.userInfo = row;
     },
 
     handlePass(row, status) {
-
       let fd = new FormData();
-      fd.append('id', row.id);
-      fd.append('userStatus', status);
+      fd.append("id", row.id);
+      fd.append("userStatus", status);
 
       updateUser(fd).then(response => {
         this.listLoading = false;
         this.getList();
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>
