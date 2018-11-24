@@ -97,7 +97,9 @@
                       <el-form ref="form" label-width="100px">
             
             <el-form-item label="车牌号">
-              <el-input v-model="carInfo.plateNumber"></el-input>
+              <el-input v-model="carInfo.plateNumber">
+                <template slot="prepend">沪</template>
+              </el-input>
             </el-form-item>
 
             <el-form-item label="车辆品牌">
@@ -124,8 +126,9 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="排量">
-              <el-input v-model="carInfo.output"></el-input>
+            <el-form-item label="排量（L）">
+              <!-- <el-input v-model="carInfo.output"></el-input> -->
+              <el-input-number v-model="carInfo.output" :precision="1" :step="0.1"  :min="0.1" :max="100"></el-input-number>
             </el-form-item>
 
             <el-form-item label="变速箱">
@@ -133,7 +136,8 @@
             </el-form-item>
 
             <el-form-item label="座位数">
-              <el-input v-model="carInfo.seatNum"></el-input>
+              <!-- <el-input v-model="carInfo.seatNum"></el-input> -->
+              <el-input-number v-model="carInfo.seatNum" :step="1"  :min="1" :max="100"></el-input-number>
             </el-form-item>
 
             <el-form-item label="发动机号">
@@ -150,7 +154,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="预期租金">
+            <el-form-item label="预期租金（元/天）">
               <el-input v-model="carInfo.wantRent"></el-input>
             </el-form-item>
 
@@ -472,7 +476,7 @@ export default {
       fd.append("jfUser.drivingBack", this.ownerInfo.drivingBack);
 
       fd.append("JfCar.city", this.carInfo.city);
-      fd.append("JfCar.plateNumber", this.carInfo.plateNumber);
+      fd.append("JfCar.plateNumber", '沪' + this.carInfo.plateNumber);
       fd.append("JfCar.brand", this.carInfo.brandName);
       fd.append("JfCar.model", this.carInfo.model);
       fd.append("JfCar.color", this.carInfo.color);
@@ -499,6 +503,10 @@ export default {
       fd.append("JfCar.peccancyDeposit", this.feeInfo.peccancyDeposit);
       fd.append("JfCar.serviceMoney", this.feeInfo.serviceMoney);
 
+      // 所有从后来来的车辆，无论是不全资料补填后的更新，还是直接主动新增，车辆状态都是2，下线状态
+      // 来自端上的车辆状态，在点击通过按钮的时候，就已经变为审核通过了，就不会出现在车辆待审核列表了
+      fd.append("JjfCar.carStatus", 2);
+
       this.listLoading = true;
 
       // 如果有 id，则是更新。否则就是添加
@@ -510,6 +518,7 @@ export default {
           window.location.reload();
         });
       } else {
+      
         addCar(fd).then(response => {
           this.listLoading = false;
           window.location.reload();
