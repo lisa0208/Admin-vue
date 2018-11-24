@@ -39,3 +39,11 @@ export function getCouponList(data) {
     data
   })
 }
+
+export function addCoupon(data) {
+  return request({
+    url: '/coupon/add',
+    method: 'post',
+    data
+  })
+}

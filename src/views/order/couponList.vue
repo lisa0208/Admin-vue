@@ -47,13 +47,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'优惠券用户类型'" width="100px" align="center">
+      <el-table-column :label="'优惠券用户类型'" width="240px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.userScopeType }}</span>
+          <span>{{ scope.row.userScopeType == 0 ? userScopeTypeMap[scope.row.userScopeType] : '特定用户手机号：' + scope.row.mobileLst}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column :label="'优惠额度'" width="100px" align="center">
+      <el-table-column :label="'优惠额度（元）'" width="120px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.fastMinusAccount }}</span>
         </template>
@@ -132,6 +132,11 @@ export default {
         '0': '立减券',
         '1': '折扣券',
         '2': '新用户优惠券'
+      },
+
+      userScopeTypeMap: {
+        '0': '全部用户',
+        '1': '特定用户'
       },
 
     };
