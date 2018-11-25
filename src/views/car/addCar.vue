@@ -744,7 +744,7 @@ export default {
         fd.append("jfUser.idcard", this.ownerInfo.idcard);
       }
 
-      if (this.ownerInfo.drivingNumd) {
+      if (this.ownerInfo.drivingNum) {
         fd.append("jfUser.drivingNum", this.ownerInfo.drivingNum);
       }
 
