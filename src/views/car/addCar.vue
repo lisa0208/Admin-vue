@@ -352,7 +352,7 @@ export default {
         this.carInfo.oilNumber = response.data.body.oilNumber;
         this.carInfo.wantRent = response.data.body.wantRent;
         this.carInfo.seatNum = response.data.body.seatNum;
-        this.carInfo.output = response.data.body.output;
+        this.carInfo.output = response.data.body.output.replace('L','');;
         this.carInfo.enterModel = response.data.body.enterModel;
 
         this.feeInfo.rent = response.data.body.rent;
