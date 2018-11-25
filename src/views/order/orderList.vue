@@ -83,9 +83,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'车辆押金扣费(元)'" width="110px" align="center">
+      <el-table-column :label="'车辆押金扣费(元)'" width="250px" align="center">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.cutCarFee"/>
+          <el-input-number v-model="scope.row.cutCarFee" :precision="2" :step="100"  :min="0"></el-input-number>
         </template>
       </el-table-column>
 

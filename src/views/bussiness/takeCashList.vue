@@ -95,7 +95,7 @@
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleStatus(scope.row, 2)" v-if="scope.row.status==1 || scope.row.status==4">通过</el-button>
           <el-button type="danger" size="mini" @click="handleStatus(scope.row, 3)" v-if="scope.row.status==1  || scope.row.status==4">驳回</el-button>
-          <el-button type="primary" size="mini" @click="handleStatus(scope.row, 4)" v-if="scope.row.status==1 || scope.row.status==4">暂存</el-button>
+          <el-button type="warning" size="mini" @click="handleStatus(scope.row, 4)" v-if="scope.row.status==1 || scope.row.status==4">暂存</el-button>
         </template>
       </el-table-column>
     </el-table>

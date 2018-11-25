@@ -338,7 +338,7 @@ export default {
         this.ownerInfo.drivingType = response.data.body.jfUser.drivingType;
         this.ownerInfo.headImg = response.data.body.jfUser.headImg;
 
-        this.carInfo.plateNumber = response.data.body.plateNumber;
+        this.carInfo.plateNumber = response.data.body.plateNumber.replace('沪','');
         this.carInfo.brand = response.data.body.brand;
         this.carInfo.carDesc = response.data.body.carDesc;
         this.carInfo.city = response.data.body.city;
@@ -485,7 +485,7 @@ export default {
 
       fd.append("JfCar.city", this.carInfo.city);
       fd.append("JfCar.plateNumber", "沪" + this.carInfo.plateNumber);
-      fd.append("JfCar.brand", this.carInfo.brandName);
+      fd.append("JfCar.brand", this.carInfo.brand);
       fd.append("JfCar.model", this.carInfo.model);
       fd.append("JfCar.color", this.carInfo.color);
       fd.append("JfCar.output", this.carInfo.output + 'L');
@@ -525,12 +525,12 @@ export default {
         fd.append("jfCar.id", this.id);
         updateCar(fd).then(response => {
           this.listLoading = false;
-          window.location.reload();
+          window.location.href='/#/car/car-list';
         });
       } else {
         addCar(fd).then(response => {
           this.listLoading = false;
-          window.location.reload();
+          window.location.href='/#/car/car-list';
         });
       }
     },

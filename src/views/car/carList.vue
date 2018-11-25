@@ -112,6 +112,7 @@
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handlePass(scope.row, 1)" v-if="scope.row.carStatus==2">上线</el-button>
+          <el-button type="warning" size="mini" @click="handlePass(scope.row, -1)" v-if="scope.row.carStatus==2">编辑</el-button>
           <el-button type="danger" size="mini" @click="handlePass(scope.row, 2)" v-if="scope.row.carStatus==1">下线</el-button>
           <el-button type="danger" size="mini" @click="setUnavaluableDays(scope.row)" v-if="scope.row.carStatus==1">设置不可用日期</el-button>
         </template>
@@ -462,6 +463,13 @@ export default {
     },
 
     handlePass(row, status) {
+
+      // 去编辑车辆
+      if(status == -1){
+        window.location.href = '/#/car/car-add/' + row.id;
+        return;
+      }
+
       let fd = new FormData();
       fd.append("jfCar.id", row.id);
       fd.append("jfUser.id", row.jfUser.id);
