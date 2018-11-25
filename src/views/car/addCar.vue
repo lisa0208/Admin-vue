@@ -142,7 +142,7 @@
 
             <el-form-item label="发动机类型">
               <el-select  placeholder="请选择" v-model="carInfo.engineType">
-                <el-option label="涡轮增压1" value="涡轮增压"></el-option>
+                <el-option label="涡轮增压" value="涡轮增压"></el-option>
                 <el-option label="自然吸气" value="自然吸气"></el-option>
               </el-select>
             </el-form-item>
