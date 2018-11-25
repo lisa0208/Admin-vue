@@ -135,16 +135,14 @@ export default {
   },
 
   methods: {
-
-    checkTime(date){
+    checkTime(date) {
       console.log(date);
 
-      if(date[0] < new Date()){
-        this.$alert('优惠券有效期开始时间不能早于当前时间！');
+      if (date[0] < new Date()) {
+        this.$alert("优惠券有效期开始时间不能早于当前时间！");
         this.date = undefined;
       }
     },
-
 
     formatDate(time) {
       var date = new Date(time);
@@ -175,6 +173,14 @@ export default {
       // 根据两种scope类型的不同，配置参数
       if (this.userScopeType == 1) {
         fd.append("mobileLst", this.mobileLst);
+        let mobileNameList = null;
+        for (let i in this.modelOption) {
+          if (this.modelOption[i].id == this.modelIdLst) {
+            mobileNameList = this.modelOption[i].model;
+            console.log('等于');
+          }
+        }
+        fd.append("modelNameLst", mobileNameList);
       }
 
       if (this.modelType == 1) {
