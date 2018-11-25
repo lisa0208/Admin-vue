@@ -172,7 +172,7 @@
       </el-carousel>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+        <el-button @click="dialogShowCarPhoto = false">关闭</el-button>
       </div>
     </el-dialog>
 
@@ -238,7 +238,7 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+        <el-button @click="dialogShowCarInfo = false">关闭</el-button>
       </div>
     </el-dialog>
 

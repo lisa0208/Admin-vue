@@ -62,7 +62,7 @@
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleShowPass(scope.row)" v-if="scope.row.userStatus==0">通过</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 2)" v-if="scope.row.userStatus==0">拒绝</el-button>
+          <el-button type="danger" size="mini" @click="handleNoPass(scope.row, 2)" v-if="scope.row.userStatus==0">拒绝</el-button>
           <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)" v-if="scope.row.userStatus==1">拉黑</el-button>
         </template>
       </el-table-column>
@@ -116,7 +116,7 @@
     <el-dialog :title="'用户信息审核补全'" :visible.sync="dialogShowFullUserInfo">
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item :label="'姓名'" prop="type">
-          <el-input v-model="userInfo.name" disabled/>
+          <el-input v-model="userInfo.name"/>
         </el-form-item>
         <el-form-item :label="'手机号'" prop="type">
           <el-input v-model="userInfo.mobile" disabled/>
@@ -154,8 +154,22 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="submitFullUserInfo">提交</el-button>
+        <el-button type='primary' @click="submitFullUserInfo">提交</el-button>
         <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="'请输入审核不通过原因'" :visible.sync="dialogShowInputNoPass">
+
+      <el-form label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+        <el-form-item :label="'拒绝原因'" prop="type">
+          <el-input v-model="noPassReason" />
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleSubmitNoPass">提交</el-button>
+        <el-button @click="dialogShowInputNoPass = false">关闭</el-button>
       </div>
     </el-dialog>
 
@@ -272,7 +286,11 @@ export default {
         userOpenId: undefined,
         userStatus: undefined,
         userType: undefined
-      }
+      },
+
+      dialogShowInputNoPass: false,
+      noPassUserId: undefined,
+      noPassReason: undefined
     };
   },
 
@@ -331,14 +349,14 @@ export default {
     },
 
     submitFullUserInfo() {
-      if (this.drivingValue && this.idcard) {
-
+      if (this.drivingValue && this.idcard && this.userInfo.name) {
         let fd = new FormData();
         fd.append("id", this.userInfo.id);
         fd.append("userStatus", 1);
         fd.append("idcard", this.idcard);
         fd.append("drivingNum", this.drivingValue);
         fd.append("drivingType", this.drivingValue);
+        fd.append("name", this.userInfo.name);
 
         updateUser(fd).then(response => {
           this.listLoading = false;
@@ -358,12 +376,42 @@ export default {
     },
 
     handlePass(row, status) {
+      this.$confirm("确定拉黑用户?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let fd = new FormData();
+          fd.append("id", row.id);
+          fd.append("userStatus", status);
+
+          updateUser(fd).then(response => {
+            this.listLoading = false;
+            this.getList();
+          });
+        })
+        .catch(() => {
+
+        });
+    },
+
+    // 拒绝逻辑
+    handleNoPass(row, status) {
+      this.noPassUserId = row.id;
+
+      this.dialogShowInputNoPass = true;
+    },
+
+    handleSubmitNoPass() {
       let fd = new FormData();
-      fd.append("id", row.id);
-      fd.append("userStatus", status);
+      fd.append("id", this.noPassUserId);
+      fd.append("userStatus", 2);
+      fd.append("failedReason", this.noPassReason);
 
       updateUser(fd).then(response => {
         this.listLoading = false;
+        this.dialogShowInputNoPass = false;
         this.getList();
       });
     }

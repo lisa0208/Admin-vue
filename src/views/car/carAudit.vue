@@ -112,7 +112,7 @@
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)" v-if="scope.row.carStatus==0">通过</el-button>
-          <el-button type="danger" size="mini" @click="handlePass(scope.row, 4)" v-if="scope.row.carStatus==0">不通过</el-button>
+          <el-button type="danger" size="mini" @click="handleNoPass(scope.row, 4)" v-if="scope.row.carStatus==0">不通过</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -180,6 +180,20 @@
       <img :src='viewPhotoURL'>
       <div slot="footer" class="dialog-footer">
         <el-button @click="showViewPhoto = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="'请输入审核不通过原因'" :visible.sync="dialogShowInputNoPass">
+
+      <el-form label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+        <el-form-item :label="'拒绝原因'" prop="type">
+          <el-input v-model="noPassReason" />
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleSubmitNoPass">提交</el-button>
+        <el-button @click="dialogShowInputNoPass = false">关闭</el-button>
       </div>
     </el-dialog>
 
@@ -272,7 +286,14 @@ export default {
       carPhoto: [],
 
       showViewPhoto: false,
-      viewPhotoURL: undefined
+      viewPhotoURL: undefined,
+
+      dialogShowInputNoPass: false,
+
+      noPassReason: undefined,
+      noPassCarId: undefined,
+      noPassUserId: undefined
+
 
     };
   },
@@ -384,6 +405,30 @@ export default {
           window.location.hash = "/car/car-add/" + row.id;
         }
       });
+    },
+
+    handleSubmitNoPass(){
+      let fd = new FormData();
+      fd.append("jfCar.carStatus", 4);
+      fd.append("jfCar.id", this.noPassCarId);
+      fd.append("jfUser.id", this.noPassUserId);
+      fd.append("jfCar.failedReason", this.noPassReason);
+
+      updateCar(fd).then(response => {
+        this.getList();
+        this.dialogShowInputNoPass = false;
+        window.location.reload();
+      });
+    },
+
+
+
+    handleNoPass(row, status) {
+
+      this.noPassCarId = row.id;
+      this.noPassUserId = row.jfUser.id;
+
+      this.dialogShowInputNoPass = true;
     }
   }
 };

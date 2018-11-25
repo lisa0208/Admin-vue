@@ -89,11 +89,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'违章押金扣费(元)'" width="110px" align="center">
+      <!-- <el-table-column :label="'违章押金扣费(元)'" width="110px" align="center">
         <template slot-scope="scope">
           <el-input v-model="scope.row.cutPeccancyFee"/>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column :label="'订单开始时间'" width="160px" align="center">
         <template slot-scope="scope">
@@ -206,7 +206,7 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogShowOwnerInfo = false">关闭</el-button>
+        <el-button @click="dialogShowCarInfo = false">关闭</el-button>
       </div>
     </el-dialog>
 
@@ -551,9 +551,7 @@ export default {
           this.$alert(response.data.header.desc);
         } else {
           this.$confirm(
-            "确认扣除违章押金" +
-              row.cutPeccancyFee +
-              "元?请确保车已归还、违章结果已审核！",
+            "确认扣除违章押金?请确保车已归还、违章结果已审核！",
             "提示",
             {
               confirmButtonText: "确定",
