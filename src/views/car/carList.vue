@@ -99,7 +99,7 @@
 
       <el-table-column :label="'车辆信息'" width="110px" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleShowCarInfo(scope.row.jfCar)">查看</el-button>
+          <el-button type="primary" size="mini" @click="handleShowCarInfo(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
 
@@ -247,6 +247,7 @@
 
 <script>
 import { fetchCarList, updateCar } from "@/api/car";
+import { getCarById } from "@/api/car";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 
 export default {
@@ -377,9 +378,22 @@ export default {
 
   methods: {
 
-    handleShowCarInfo(car) {
+
+    handleShowCarInfo(carId) {
+
+      console.log('show car id', carId);
+      
+      let fd = new FormData();
+      fd.append("id", carId);
+
+      getCarById(fd).then(response => {
+        if(response.data.body){
+          this.carInfo = response.data.body
+        }
+        console.log("response", response);
+      });
+
       this.dialogShowCarInfo = true;
-      this.carInfo = car;
     },
 
     getList(data) {
