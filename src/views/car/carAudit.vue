@@ -98,7 +98,7 @@
 
       <el-table-column :label="'车主信息'" width="110px" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleShowOwnerInfo(scope.row.jfUser)">查看</el-button>
+          <el-button type="primary" size="mini" @click="handleShowOwnerInfo(scope.row.jfUser)" >查看</el-button>
         </template>
       </el-table-column>
 
@@ -111,7 +111,7 @@
 
       <el-table-column :label="'操作'" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handlePass(scope.row, 3)" v-if="scope.row.carStatus==0">通过</el-button>
+          <el-button style='width:auto;' type="primary" size="mini" @click="handleFullInfo(scope.row, 3)" v-if="scope.row.carStatus==0">审核并补全信息</el-button>
           <el-button type="danger" size="mini" @click="handleNoPass(scope.row, 4)" v-if="scope.row.carStatus==0">不通过</el-button>
         </template>
       </el-table-column>
@@ -393,18 +393,20 @@ export default {
       this.viewPhotoURL = URL;
     },
 
-    handlePass(row, status) {
-      let fd = new FormData();
-      fd.append("jfCar.carStatus", status);
-      fd.append("jfCar.id", row.id);
-      fd.append("jfUser.id", row.jfUser.id);
+    handleFullInfo(row, status) {
+      // let fd = new FormData();
+      // fd.append("jfCar.carStatus", status);
+      // fd.append("jfCar.id", row.id);
+      // fd.append("jfUser.id", row.jfUser.id);
 
-      updateCar(fd).then(response => {
-        this.getList();
-        if (status == 3) {
-          window.location.hash = "/car/car-add/" + row.id;
-        }
-      });
+      // updateCar(fd).then(response => {
+      //   this.getList();
+      //   if (status == 3) {
+         
+      //   }
+      // });
+       window.location.hash = "/car/car-add/" + row.id;
+       window.addFlag = 'audit'
     },
 
     handleSubmitNoPass(){

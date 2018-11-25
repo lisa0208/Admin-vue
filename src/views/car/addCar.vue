@@ -88,13 +88,13 @@
         </el-card>
       </el-col>
 
-      <el-col :span="8">
+      <el-col :span="10">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>车辆基本信息</span>
           </div>
           <div class="text">
-                      <el-form ref="form" label-width="100px">
+                      <el-form ref="form" label-width="140px">
             
             <el-form-item label="车牌号">
               <el-input v-model="carInfo.plateNumber">
@@ -142,7 +142,7 @@
 
             <el-form-item label="发动机类型">
               <el-select  placeholder="请选择" v-model="carInfo.engineType">
-                <el-option label="涡轮增压" value="涡轮增压"></el-option>
+                <el-option label="涡轮增压1" value="涡轮增压"></el-option>
                 <el-option label="自然吸气" value="自然吸气"></el-option>
               </el-select>
             </el-form-item>
@@ -165,7 +165,69 @@
               <el-input v-model="carInfo.wantRent"></el-input>
             </el-form-item>
 
-            <el-form-item label="车辆照片">
+
+            <el-form-item label="车辆照片（前）">
+              <el-upload
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadCarPic1"
+                class="avatar-uploader">
+                <img v-if="carPic['1']" :src="carPic['1']" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>           
+            </el-form-item>
+            <el-form-item label="车辆照片（左前）">
+              <el-upload
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadCarPic2"
+                class="avatar-uploader">
+                <img v-if="carPic['2']" :src="carPic['2']" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>         
+            </el-form-item>
+            <el-form-item label="车辆照片（左）">
+              <el-upload
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadCarPic3"
+                class="avatar-uploader">
+                <img v-if="carPic['3']" :src="carPic['3']" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>           
+            </el-form-item>
+            <el-form-item label="车辆照片（左后）">
+                <el-upload
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadCarPic4"
+                class="avatar-uploader">
+                <img v-if="carPic['4']" :src="carPic['4']" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>           
+            </el-form-item>
+            <el-form-item label="车辆照片（后）">
+              <el-upload
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadCarPic5"
+                class="avatar-uploader">
+                <img v-if="carPic['5']" :src="carPic['5']" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>              
+            </el-form-item>
+            <el-form-item label="车辆照片（内）">
+              <el-upload
+                :action="uploadUrl"
+                :show-file-list="false"
+                :http-request = "beforeUploadCarPic6"
+                class="avatar-uploader">
+                <img v-if="carPic['6']" :src="carPic['6']" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"/>
+              </el-upload>        
+            </el-form-item>
+
+            <!-- <el-form-item label="车辆照片">
              
               <el-upload
               action="uploadUrl"
@@ -178,7 +240,7 @@
               :on-change="handlecarPhotoListChange">
               <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="车辆描述">
               <el-input v-model="carInfo.carDesc"></el-input>
@@ -197,7 +259,7 @@
         </el-card>
       </el-col>
 
-      <el-col :span="8">
+      <el-col :span="6">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>车辆费用信息</span>
@@ -235,7 +297,8 @@
     </el-row>
 
 
-    <el-button class="filter-item" style="margin-top: 10px;" type="primary" icon="el-icon-upload2" @click="handleSubmit">提交</el-button>
+    <el-button class="filter-item" style="margin-top: 10px;" type="primary" icon="el-icon-upload" @click="handleSubmit">提交</el-button>
+    <el-button class="filter-item" style="margin-top: 10px;" type="info" icon="el-icon-upload2" @click="handleSaveDruft">暂存</el-button>
 
 
   </div>
@@ -310,7 +373,16 @@ export default {
         serviceMoney: undefined
       },
       carPhotoList: [],
-      fileList: []
+      fileList: [],
+
+      carPic: {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": "",
+        "6": ""
+      }
     };
   },
 
@@ -335,10 +407,12 @@ export default {
         this.ownerInfo.drivingBack = response.data.body.jfUser.drivingBack;
         this.ownerInfo.drivingFront = response.data.body.jfUser.drivingFront;
         this.ownerInfo.drivingNum = response.data.body.jfUser.drivingNum;
-        this.ownerInfo.drivingType = response.data.body.jfUser.drivingType;
-        this.ownerInfo.headImg = response.data.body.jfUser.headImg;
+        this.ownerInfo.drivingType = '' + response.data.body.jfUser.drivingType;
 
-        this.carInfo.plateNumber = response.data.body.plateNumber.replace('沪','');
+        this.carInfo.plateNumber = response.data.body.plateNumber.replace(
+          "沪",
+          ""
+        );
         this.carInfo.brand = response.data.body.brand;
         this.carInfo.carDesc = response.data.body.carDesc;
         this.carInfo.city = response.data.body.city;
@@ -352,8 +426,9 @@ export default {
         this.carInfo.oilNumber = response.data.body.oilNumber;
         this.carInfo.wantRent = response.data.body.wantRent;
         this.carInfo.seatNum = response.data.body.seatNum;
-        this.carInfo.output = response.data.body.output.replace('L','');;
-        this.carInfo.enterModel = response.data.body.enterModel;
+        this.carInfo.output = response.data.body.output.replace("L", "");
+        this.carInfo.enterModel = '' +response.data.body.enterModel;
+        // this.carInfo.enterModel = '0';
 
         this.feeInfo.rent = response.data.body.rent;
         this.feeInfo.safeMoney = response.data.body.safeMoney;
@@ -364,16 +439,9 @@ export default {
         // 处理照片回显
 
         let arr = response.data.body.carPhoto.split(",");
-        let tempArr = [];
         for (let i = 0; i < arr.length; i++) {
-          let json = {};
-          json.url = arr[i];
-          json.name = arr[i];
-
-          tempArr.push(json);
-          console.log("tempArr", tempArr);
+          this.carPic[i] = arr[i];
         }
-        this.fileList = tempArr;
       });
     }
 
@@ -393,6 +461,115 @@ export default {
   },
 
   methods: {
+    beforeUploadCarPic1(data) {
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+      let self = this;
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token: Cookies.get("jf_token")
+          }
+        })
+        .then(function(response) {
+          self.carPic["1"] = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      return false;
+    },
+    beforeUploadCarPic2(data) {
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+      let self = this;
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token: Cookies.get("jf_token")
+          }
+        })
+        .then(function(response) {
+          self.carPic["2"] = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      return false;
+    },
+    beforeUploadCarPic3(data) {
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+      let self = this;
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token: Cookies.get("jf_token")
+          }
+        })
+        .then(function(response) {
+          self.carPic["3"] = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      return false;
+    },
+    beforeUploadCarPic4(data) {
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+      let self = this;
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token: Cookies.get("jf_token")
+          }
+        })
+        .then(function(response) {
+          self.carPic["4"] = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      return false;
+    },
+    beforeUploadCarPic5(data) {
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+      let self = this;
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token: Cookies.get("jf_token")
+          }
+        })
+        .then(function(response) {
+          self.carPic["5"] = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      return false;
+    },
+    beforeUploadCarPic6(data) {
+      let fd = new FormData();
+      fd.append("uploadFile", data.file);
+      let self = this;
+      axios
+        .post(env.BASE_API + "/file/upload", fd, {
+          headers: {
+            jf_token: Cookies.get("jf_token")
+          }
+        })
+        .then(function(response) {
+          self.carPic["6"] = response.data.body;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      return false;
+    },
+
     handlecarPhotoListChange(file, fileList) {
       // this.carPhotoList.push(file);
       console.log(file, fileList);
@@ -428,20 +605,15 @@ export default {
       });
     },
 
+    // 提交车辆信息，并且更新车辆的状态为3
     handleSubmit() {
-      for (let j in this.carInfo) {
-        console.log(this.carInfo);
 
-        for (let x in this.brandOption) {
-          if (this.brandOption[x].id == this.carInfo.brand) {
-            this.carInfo.brandName = this.brandOption[x].brand;
-            console.log("this.carInfo.brand", this.carInfo.brandName);
-          }
-        }
+      console.log(this.carInfo);
+      for (let j in this.carInfo) {
 
         if (
           typeof this.carInfo[j] == "undefined" ||
-          this.carInfo[j] == "undefined"
+          !this.carInfo[j]
         ) {
           console.log(this.carInfo[j]);
           alert("请完善车辆信息");
@@ -449,11 +621,12 @@ export default {
         }
       }
 
+      console.log(this.ownerInfo);
       for (let i in this.ownerInfo) {
         console.log(i);
         if (
           typeof this.ownerInfo[i] == "undefined" ||
-          this.ownerInfo[i] == "undefined"
+          !this.ownerInfo[i]
         ) {
           console.log(this.ownerInfo[i]);
           alert("请完善车主信息");
@@ -461,10 +634,11 @@ export default {
         }
       }
 
+      console.log(this.feeInfo);
       for (let k in this.feeInfo) {
         if (
           typeof this.feeInfo[k] == "undefined" ||
-          this.feeInfo[k] == "undefined"
+          !this.feeInfo[k]
         ) {
           alert("请完善费用信息");
           return false;
@@ -483,39 +657,40 @@ export default {
       fd.append("jfUser.drivingFront", this.ownerInfo.drivingFront);
       fd.append("jfUser.drivingBack", this.ownerInfo.drivingBack);
 
-      fd.append("JfCar.city", this.carInfo.city);
-      fd.append("JfCar.plateNumber", "沪" + this.carInfo.plateNumber);
-      fd.append("JfCar.brand", this.carInfo.brand);
-      fd.append("JfCar.model", this.carInfo.model);
-      fd.append("JfCar.color", this.carInfo.color);
-      fd.append("JfCar.output", this.carInfo.output + 'L');
-      fd.append("JfCar.gearbox", this.carInfo.gearbox);
-      fd.append("JfCar.seatNum", this.carInfo.seatNum);
-      fd.append("JfCar.engineNum", this.carInfo.engineNum);
-      fd.append("JfCar.engineType", this.carInfo.engineType);
+      fd.append("jfCar.city", this.carInfo.city);
+      fd.append("jfCar.plateNumber", "沪" + this.carInfo.plateNumber);
+      fd.append("jfCar.brand", this.carInfo.brand);
+      fd.append("jfCar.model", this.carInfo.model);
+      fd.append("jfCar.color", this.carInfo.color);
+      fd.append("jfCar.output", this.carInfo.output + "L");
+      fd.append("jfCar.gearbox", this.carInfo.gearbox);
+      fd.append("jfCar.seatNum", this.carInfo.seatNum);
+      fd.append("jfCar.engineNum", this.carInfo.engineNum);
+      fd.append("jfCar.engineType", this.carInfo.engineType);
 
-      fd.append("JfCar.frameNum", this.carInfo.frameNum);
-      fd.append("JfCar.enterModel", this.carInfo.enterModel);
-      fd.append("JfCar.wantRent", this.carInfo.wantRent);
+      fd.append("jfCar.frameNum", this.carInfo.frameNum);
+      fd.append("jfCar.enterModel", this.carInfo.enterModel);
+      fd.append("jfCar.wantRent", this.carInfo.wantRent);
 
-      let tempArr = new Array();
-      for (let i = 0; i < this.fileList.length; i++) {
-        tempArr.push(this.fileList[i].url);
+      // 车辆照片
+      let picArr = [];
+      for (let i in this.carPic) {
+        picArr.push(this.carPic[i]);
       }
-      fd.append("JfCar.carPhoto", tempArr.join(","));
+      fd.append("jfCar.carPhoto", picArr.join(","));
 
-      fd.append("JfCar.carDesc", this.carInfo.carDesc);
-      fd.append("JfCar.oilNumber", this.carInfo.oilNumber);
+      fd.append("jfCar.carDesc", this.carInfo.carDesc);
+      fd.append("jfCar.oilNumber", this.carInfo.oilNumber);
 
-      fd.append("JfCar.rent", this.feeInfo.rent);
-      fd.append("JfCar.safeMoney", this.feeInfo.safeMoney);
-      fd.append("JfCar.deposit", this.feeInfo.deposit);
-      fd.append("JfCar.peccancyDeposit", this.feeInfo.peccancyDeposit);
-      fd.append("JfCar.serviceMoney", this.feeInfo.serviceMoney);
+      fd.append("jfCar.rent", this.feeInfo.rent);
+      fd.append("jfCar.safeMoney", this.feeInfo.safeMoney);
+      fd.append("jfCar.deposit", this.feeInfo.deposit);
+      fd.append("jfCar.peccancyDeposit", this.feeInfo.peccancyDeposit);
+      fd.append("jfCar.serviceMoney", this.feeInfo.serviceMoney);
 
       // 所有从后来来的车辆，无论是不全资料补填后的更新，还是直接主动新增，车辆状态都是2，下线状态
       // 来自端上的车辆状态，在点击通过按钮的时候，就已经变为审核通过了，就不会出现在车辆待审核列表了
-      fd.append("JfCar.carStatus", 2);
+      fd.append("jfCar.carStatus", 2);
 
       this.listLoading = true;
 
@@ -524,13 +699,184 @@ export default {
       if (this.id) {
         fd.append("jfCar.id", this.id);
         updateCar(fd).then(response => {
-          this.listLoading = false;
-          window.location.href='/#/car/car-list';
+          if (response.data.header.code == 200) {
+            this.listLoading = false;
+            window.location.href = "/#/car/car-list";
+          } else {
+            this.$alert(response.data.header.desc);
+          }
         });
       } else {
         addCar(fd).then(response => {
-          this.listLoading = false;
-          window.location.href='/#/car/car-list';
+          if (response.data.header.code == 200) {
+            this.listLoading = false;
+            window.location.href = "/#/car/car-list";
+          } else {
+            this.$alert(response.data.header.desc);
+          }
+        });
+      }
+    },
+
+    // 不变更车辆状态
+    handleSaveDruft() {
+      console.log(this.carInfo);
+      
+      // for (let x in this.brandOption) {
+      //   console.log(this.brandOption[x].id, this.carInfo.brand);
+      //     if (this.brandOption[x].id == this.carInfo.brand) {
+      //       this.carInfo.brandName = this.brandOption[x].brand;
+      //       console.log("this.carInfo.brand", this.carInfo.brandName);
+      //     }
+      // }
+
+      let fd = new FormData();
+
+      if (this.ownerInfo.mobile) {
+        fd.append("jfUser.mobile", this.ownerInfo.mobile);
+      }
+
+      if (this.ownerInfo.name) {
+        fd.append("jfUser.name", this.ownerInfo.name);
+      }
+
+      if (this.ownerInfo.idcard) {
+        fd.append("jfUser.idcard", this.ownerInfo.idcard);
+      }
+
+      if (this.ownerInfo.drivingNumd) {
+        fd.append("jfUser.drivingNum", this.ownerInfo.drivingNum);
+      }
+
+      if (this.ownerInfo.drivingType) {
+        fd.append("jfUser.drivingType", this.ownerInfo.drivingType);
+      }
+
+      if (this.ownerInfo.idcardFront) {
+        fd.append("jfUser.idcardFront", this.ownerInfo.idcardFront);
+      }
+
+      if (this.ownerInfo.idcardBack) {
+        fd.append("jfUser.idcardBack", this.ownerInfo.idcardBack);
+      }
+
+      if (this.ownerInfo.drivingFront) {
+        fd.append("jfUser.drivingFront", this.ownerInfo.drivingFront);
+      }
+
+      if (this.ownerInfo.drivingBack) {
+        fd.append("jfUser.drivingBack", this.ownerInfo.drivingBack);
+      }
+
+      if (this.carInfo.city) {
+        fd.append("jfCar.city", this.carInfo.city);
+      }
+
+      if (this.carInfo.plateNumbery) {
+        fd.append("jfCar.plateNumber", "沪" + this.carInfo.plateNumber);
+      }
+
+      if (this.carInfo.brand) {
+        fd.append("jfCar.brand", this.carInfo.brand);
+      }
+
+      if (this.carInfo.model) {
+        fd.append("jfCar.model", this.carInfo.model);
+      }
+
+      if (this.carInfo.color) {
+        fd.append("jfCar.color", this.carInfo.color);
+      }
+
+      if (this.carInfo.output) {
+        fd.append("jfCar.output", this.carInfo.output + "L");
+      }
+
+      if (this.carInfo.gearbox) {
+        fd.append("jfCar.gearbox", this.carInfo.gearbox);
+      }
+
+      if (this.carInfo.seatNum) {
+        fd.append("jfCar.seatNum", this.carInfo.seatNum);
+      }
+
+      if (this.carInfo.engineNum) {
+        fd.append("jfCar.engineNum", this.carInfo.engineNum);
+      }
+
+      if (this.carInfo.engineType) {
+        fd.append("jfCar.engineType", this.carInfo.engineType);
+      }
+
+      if (this.carInfo.frameNum) {
+        fd.append("jfCar.frameNum", this.carInfo.frameNum);
+      }
+
+      if (this.carInfo.enterModel) {
+        fd.append("jfCar.enterModel", this.carInfo.enterModel);
+      }
+
+      if (this.carInfo.wantRent) {
+        fd.append("jfCar.wantRent", this.carInfo.wantRent);
+      }
+
+      // 车辆照片
+      let picArr = [];
+      for (let i in this.carPic) {
+        picArr.push(this.carPic[i]);
+      }
+      fd.append("jfCar.carPhoto", picArr.join(","));
+
+      if (this.carInfo.carDesc) {
+        fd.append("jfCar.carDesc", this.carInfo.carDesc);
+      }
+
+      if (this.carInfo.oilNumber) {
+        fd.append("jfCar.oilNumber", this.carInfo.oilNumber);
+      }
+
+      if (this.feeInfo.rent) {
+        fd.append("jfCar.rent", this.feeInfo.rent);
+      }
+
+      if (this.feeInfo.deposit) {
+        fd.append("jfCar.deposit", this.feeInfo.deposit);
+      }
+
+      if (this.feeInfo.safeMoney) {
+        fd.append("jfCar.safeMoney", this.feeInfo.safeMoney);
+      }
+
+      if (this.feeInfo.peccancyDeposit) {
+        fd.append("jfCar.peccancyDeposit", this.feeInfo.peccancyDeposit);
+      }
+
+      if (this.feeInfo.serviceMoney) {
+        fd.append("jfCar.serviceMoney", this.feeInfo.serviceMoney);
+      }
+
+      this.listLoading = true;
+
+      // 如果有 id，则是更新。否则就是添加
+
+      if (this.id) {
+        fd.append("jfCar.id", this.id);
+        updateCar(fd).then(response => {
+          if (response.data.header.code == 200) {
+            this.listLoading = false;
+            window.location.href = "/#/car/car-list";
+          } else {
+            this.$alert(response.data.header.desc);
+          }
+        });
+      } else {
+        addCar(fd).then(response => {
+          if (response.data.header.code == 200) {
+            this.listLoading = false;
+            window.location.href = "/#/car/car-list";
+          } else {
+            this.$alert(response.data.header.desc);
+          }
         });
       }
     },
