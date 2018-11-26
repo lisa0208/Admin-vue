@@ -199,6 +199,7 @@
             class="filter-item"
             type="datetimerange"
             range-separator="至"
+            @change="checkTime"
             start-placeholder="开始日期时间"
             end-placeholder="结束日期时间"/>
           </el-form-item>
@@ -382,6 +383,15 @@ export default {
   },
 
   methods: {
+
+    checkTime(date) {
+      console.log(date);
+
+      if (date[0] < new Date()) {
+        this.$alert("不可用日期开始时间不能早于当前时间！");
+        this.date = undefined;
+      }
+    },
 
 
     handleShowCarInfo(carId) {
