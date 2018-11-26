@@ -232,7 +232,7 @@
           <el-input v-model="carInfo.color" readonly/>
         </el-form-item>
 
-        <el-form-item :label="'齿轮箱'" prop="type">
+        <el-form-item :label="'变速箱'" prop="type">
           <el-input v-model="carInfo.gearbox" readonly/>
         </el-form-item>
 

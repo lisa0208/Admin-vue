@@ -88,7 +88,7 @@
         </el-card>
       </el-col>
 
-      <el-col :span="10">
+      <el-col :span="9">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>车辆基本信息</span>
@@ -259,7 +259,7 @@
         </el-card>
       </el-col>
 
-      <el-col :span="6">
+      <el-col :span="7">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>车辆费用信息</span>
@@ -268,23 +268,23 @@
             <el-form ref="form" label-width="120px">
             
             <el-form-item label="车辆租金(元/天)">
-              <el-input v-model="feeInfo.rent"></el-input>
+            <el-input-number style='width:150px;' v-model="feeInfo.rent" :precision="2" :step="100"  :min="0.01" :max="1000000"></el-input-number>
             </el-form-item>
 
             <el-form-item label="车辆保险费(元)">
-              <el-input v-model="feeInfo.safeMoney"></el-input>
+              <el-input-number style='width:150px;' v-model="feeInfo.safeMoney" :precision="2" :step="100"  :min="0.01" :max="1000000"></el-input-number>
             </el-form-item>
 
             <el-form-item label="车辆押金(元)">
-              <el-input v-model="feeInfo.deposit"></el-input>
+              <el-input-number style='width:150px;' v-model="feeInfo.deposit" :precision="2" :step="100"  :min="0.01" :max="1000000"></el-input-number>
             </el-form-item>
 
             <el-form-item label="违章押金(元)">
-              <el-input v-model="feeInfo.peccancyDeposit"></el-input>
+              <el-input-number style='width:150px;' v-model="feeInfo.peccancyDeposit" :precision="2" :step="100"  :min="0.01" :max="1000000"></el-input-number>
             </el-form-item>
 
             <el-form-item label="服务费(元)">
-              <el-input v-model="feeInfo.serviceMoney"></el-input>
+              <el-input-number style='width:150px;' v-model="feeInfo.serviceMoney" :precision="2" :step="100"  :min="0.01" :max="1000000"></el-input-number>
             </el-form-item>
 
 
