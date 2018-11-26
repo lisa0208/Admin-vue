@@ -98,7 +98,7 @@
 
       <el-table-column :label="'车主信息'" width="110px" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleShowOwnerInfo(scope.row.jfUser)" >查看</el-button>
+          <el-button type="primary" size="mini" @click="handleShowOwnerInfo(scope.row.jfUser, scope.row.carLicense)" >查看</el-button>
         </template>
       </el-table-column>
 
@@ -139,21 +139,21 @@
           <img :src="ownerInfo.idcardBack" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.idcardBack)'>
         </el-form-item>
 
-        <el-form-item :label="'驾照'" prop="type">
+        <!-- <el-form-item :label="'驾照'" prop="type">
           <el-input v-model="ownerInfo.drivingNum" readonly/>
-        </el-form-item>
+        </el-form-item> -->
 
-        <el-form-item :label="'驾照类型'" prop="type">
+        <!-- <el-form-item :label="'驾照类型'" prop="type">
           <el-input v-model="drivingMap[ownerInfo.drivingType]" readonly/>
         </el-form-item>
 
         <el-form-item :label="'驾照正面'" prop="type" >
           <img :src="ownerInfo.drivingFront" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingFront)'>
-        </el-form-item>
+        </el-form-item> -->
 
-        <el-form-item :label="'驾照反面'" prop="type">
-          <img :src="ownerInfo.drivingBack" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingBack)'>
-        </el-form-item>
+        <!-- <el-form-item :label="'行驶证'" prop="type">
+          <img :src="ownerInfo.carLicense" style='width:150px; height:150px' @click='handleShowViewPhoto(ownerInfo.drivingBack)'>
+        </el-form-item> -->
 
       </el-form>
 
@@ -377,9 +377,10 @@ export default {
       }
     },
 
-    handleShowOwnerInfo(user) {
+    handleShowOwnerInfo(user, carLicense) {
       this.dialogShowOwnerInfo = true;
       this.ownerInfo = user;
+      this.ownerInfo.carLicense = carLicense
     },
 
     handleShowCarPhoto(carPhoto) {
