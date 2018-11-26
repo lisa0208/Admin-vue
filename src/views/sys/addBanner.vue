@@ -17,9 +17,9 @@
                 </el-input-number>
             </el-form-item>
 
-            <el-form-item label="文案">
+            <!-- <el-form-item label="文案">
               <el-input v-model="bannerDesc"></el-input>
-            </el-form-item>
+            </el-form-item> -->
 
             <!-- <el-form-item label="跳转链接">
               <el-input v-model="jumpUrl"></el-input>
@@ -94,7 +94,7 @@ export default {
     handleSubmit() {
       let fd = new FormData();
 
-      fd.append("bannerDesc", this.bannerDesc);
+      // fd.append("bannerDesc", this.bannerDesc);
       fd.append("carBannerImg", this.carBannerImg);
       fd.append("position", this.position);
 

@@ -23,11 +23,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column :label="'文案'" width="160px" align="center">
+      <!-- <el-table-column :label="'文案'" width="160px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.bannerDesc }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <!-- <el-table-column :label="'跳转链接'" width="300px" align="center">
         <template slot-scope="scope">

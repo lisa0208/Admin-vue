@@ -176,13 +176,13 @@
       <el-form ref="dataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
 
         <el-form-item :label="'请输入费用'" prop="type">
-           <el-input-number v-model="cutPeccancy" :step="1"></el-input-number>
+          <el-input-number v-model="cutPeccancy" :precision="2" :step="100"  :min="0.01" :max="100000"></el-input-number>
         </el-form-item>
 
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="handleCutPeccancy">提交</el-button>
+        <el-button type='primary' @click="handleCutPeccancy">提交</el-button>
         <el-button @click="dialogShowCutPeccancy = false">关闭</el-button>
       </div>
     </el-dialog>
@@ -191,7 +191,7 @@
 </template>
 
 <script>
-import { getEndorsementList, updateEndorsement} from "@/api/order";
+import { getEndorsementList, updateEndorsement } from "@/api/order";
 import { getUserById } from "@/api/user";
 
 import { getCarById } from "@/api/car";
@@ -416,8 +416,8 @@ export default {
       fd.append("userId", userId);
 
       getUserById(fd).then(response => {
-        if(response.data.body){
-           this.userInfo = response.data.body
+        if (response.data.body) {
+          this.userInfo = response.data.body;
         }
         console.log("response", response);
       });
@@ -426,15 +426,14 @@ export default {
     },
 
     handleShowCarInfo(carId) {
+      console.log("show car id", carId);
 
-      console.log('show car id', carId);
-      
       let fd = new FormData();
       fd.append("id", carId);
 
       getCarById(fd).then(response => {
-        if(response.data.body){
-          this.carInfo = response.data.body
+        if (response.data.body) {
+          this.carInfo = response.data.body;
         }
         console.log("response", response);
       });
@@ -449,24 +448,30 @@ export default {
     },
 
     handleCutPeccancy() {
-      // 扣除违章费用
-      let fd = new FormData();
-      fd.append("id", this.peccancyId);
-      fd.append("actFine", this.cutPeccancy);
 
-      updateEndorsement(fd).then(response => {
-         console.log("response", response);
-        if(response.data.header.code == 200){
-          this.$alert('设置本条违章金额成功！用户的违章费用将由多条（若有）违章金额累加！');
-          this.dialogShowCutPeccancy = false;
-        } else {
-          this.$alert(response.data.heade.desc);
-        }
-       
-      });
+      if (this.cutPeccancy) {
+        // 扣除违章费用
+        let fd = new FormData();
+        fd.append("id", this.peccancyId);
+        fd.append("actFine", this.cutPeccancy);
+
+        updateEndorsement(fd).then(response => {
+          console.log("response", response);
+          if (response.data.header.code == 200) {
+            this.$alert(
+              "设置本条违章金额成功！用户的违章费用将由多条（若有）违章金额累加！"
+            );
+            this.dialogShowCutPeccancy = false;
+          } else {
+            this.$alert(response.data.heade.desc);
+          }
+        });
+      } else {
+        this.$alert('请输入本条违章扣除金额');
+      }
     }
 
-    // 
+    //
   }
 };
 </script>

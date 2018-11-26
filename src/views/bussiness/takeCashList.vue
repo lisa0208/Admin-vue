@@ -95,7 +95,7 @@
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleStatus(scope.row, 2)" v-if="scope.row.status==1 || scope.row.status==4">通过</el-button>
           <el-button type="danger" size="mini" @click="handleStatus(scope.row, 3)" v-if="scope.row.status==1  || scope.row.status==4">驳回</el-button>
-          <el-button type="warning" size="mini" @click="handleStatus(scope.row, 4)" v-if="scope.row.status==1 || scope.row.status==4">暂存</el-button>
+          <!-- <el-button type="warning" size="mini" @click="handleStatus(scope.row, 4)" v-if="scope.row.status==1 || scope.row.status==4">暂存</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -106,7 +106,11 @@
 </template>
 
 <script>
-import { fetchTakeCashList, fetchBankList, updateTakeCash } from "@/api/bussiness";
+import {
+  fetchTakeCashList,
+  fetchBankList,
+  updateTakeCash
+} from "@/api/bussiness";
 import Pagination from "@/components/Pagination"; // Secondary package based on el-pagination
 
 export default {
@@ -133,8 +137,8 @@ export default {
       takechasStatusOptions: [
         { label: "提现待审核", key: "1" },
         { label: "已提现", key: "2" },
-        { label: "已驳回", key: "3" },
-        { label: "暂存", key: "4" }
+        { label: "已驳回", key: "3" }
+        // { label: "暂存", key: "4" }
       ],
 
       takeCashMap: {
@@ -146,7 +150,6 @@ export default {
 
       bankValue: undefined,
       bankList: []
-
     };
   },
 
@@ -156,12 +159,11 @@ export default {
   },
 
   methods: {
-
-    getBankList(){
+    getBankList() {
       fetchBankList().then(response => {
-        console.log(response)
-        
-        for(let i in response.data.body){
+        console.log(response);
+
+        for (let i in response.data.body) {
           let json = {};
           json.key = i;
           json.label = response.data.body[i];
@@ -206,14 +208,16 @@ export default {
       if (this.listQuery.putForwardSerialNum) {
         fd.append("putForwardSerialNum", this.listQuery.putForwardSerialNum);
       }
-      
+
       if (this.takecashValue) {
         fd.append("putForwardStatus", this.takecashValue);
       }
 
       fetchTakeCashList(fd).then(response => {
         this.list = response.data.body ? response.data.body.infos : [];
-        this.total = response.data.body ? response.data.body.pageInfo.total: this.total;
+        this.total = response.data.body
+          ? response.data.body.pageInfo.total
+          : this.total;
         this.listLoading = false;
       });
     },
@@ -236,18 +240,30 @@ export default {
     },
 
     handleStatus(row, status) {
-      let fd = new FormData();
-      fd.append("id", row.id);
-      fd.append("status", status);
+      let str = status == 2 ? "通过" : "拒绝";
 
-      updateTakeCash(fd).then(response => {
-        if(response.data.header.code != 200){
-          this.$alert(response.data.header.desc);
-        } else {
-          this.listLoading = false;
-          this.getList();
-        }
-      });
+      this.$confirm("确认" + str + "该提现请求？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let fd = new FormData();
+          fd.append("id", row.id);
+          fd.append("status", status);
+
+          updateTakeCash(fd).then(response => {
+            if (response.data.header.code != 200) {
+              this.$alert(response.data.header.desc);
+            } else {
+              this.listLoading = false;
+              this.getList();
+            }
+          });
+        })
+        .catch(err => {
+          console.log("取消", err);
+        });
     }
   }
 };
