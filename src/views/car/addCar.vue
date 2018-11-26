@@ -24,22 +24,6 @@
               <el-input v-model="ownerInfo.idcard"></el-input>
             </el-form-item>
 
-            <el-form-item label="驾照号">
-              <el-input v-model="ownerInfo.drivingNum"></el-input>
-            </el-form-item>
-
-            <el-form-item label="驾照类型" >
-              <el-select  placeholder="请选择驾照类型" v-model="ownerInfo.drivingType">
-                <el-option label="A1驾照" value="0"></el-option>
-                <el-option label="A2驾照" value="1"></el-option>
-                <el-option label="A3驾照" value="2"></el-option>
-                <el-option label="B1驾照" value="3"></el-option>
-                <el-option label="B2驾照" value="4"></el-option>
-                <el-option label="C1驾照" value="5"></el-option>
-                <el-option label="C2驾照" value="6"></el-option>
-              </el-select>
-            </el-form-item>
-
             <el-form-item label="身份证正面">
               <el-upload
                 :action="uploadUrl"
@@ -62,27 +46,17 @@
               </el-upload>           
             </el-form-item>
 
-            <el-form-item label="驾照正页">
+            <el-form-item label="行驶证">
               <el-upload
                 :action="uploadUrl"
                 :show-file-list="false"
-                :http-request = "beforeUploadDrivingFront"
+                :http-request = "beforeUploadLicense"
                 class="avatar-uploader">
-                <img v-if="ownerInfo.drivingFront" :src="ownerInfo.drivingFront" class="avatar">
+                <img v-if="ownerInfo.carLicense" :src="ownerInfo.carLicense" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"/>
               </el-upload>           
             </el-form-item>
-            <el-form-item label="驾照副页">
-              <el-upload
-                :action="uploadUrl"
-                :show-file-list="false"
-                :http-request = "beforeUploadDrivingBack"
-                class="avatar-uploader">
-                <img v-if="ownerInfo.drivingBack" :src="ownerInfo.drivingBack" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"/>
-              </el-upload>             
-            </el-form-item>
-
+            
           </el-form>
           </div>
         </el-card>
@@ -94,13 +68,13 @@
             <span>车辆基本信息</span>
           </div>
           <div class="text">
-                      <el-form ref="form" label-width="140px">
+            <el-form ref="form" label-width="120px">
             
-            <el-form-item label="车牌号">
-              <el-input v-model="carInfo.plateNumber">
-                <template slot="prepend">沪</template>
-              </el-input>
-            </el-form-item>
+              <el-form-item label="车牌号">
+                  <el-input placeholder="请输入车牌号" v-model="carInfo.plateNumber">
+                  </el-input>
+
+              </el-form-item>
 
             <el-form-item label="车辆品牌">
               <el-select  placeholder="请选择车辆品牌" v-model="carInfo.brand" @change="getModelList">
@@ -159,10 +133,6 @@
               <el-select  placeholder="请选择" v-model="carInfo.enterModel">
                 <el-option label="个人" value="0"></el-option>
               </el-select>
-            </el-form-item>
-
-            <el-form-item label="预期租金（元/天）">
-              <el-input v-model="carInfo.wantRent"></el-input>
             </el-form-item>
 
 
@@ -226,21 +196,6 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"/>
               </el-upload>        
             </el-form-item>
-
-            <!-- <el-form-item label="车辆照片">
-             
-              <el-upload
-              action="uploadUrl"
-              :limit="5"
-              list-type="picture"
-              :http-request = "beforeUploadCarPhoto"
-              :on-exceed="handleExceed"
-              :on-remove="handleRemove"
-              :file-list="fileList"
-              :on-change="handlecarPhotoListChange">
-              <el-button size="small" type="primary">点击上传</el-button>
-              </el-upload>
-            </el-form-item> -->
 
             <el-form-item label="车辆描述">
               <el-input v-model="carInfo.carDesc"></el-input>
@@ -336,10 +291,7 @@ export default {
       modelOption: [],
 
       ownerInfo: {
-        drivingBack: undefined,
-        drivingFront: undefined,
-        drivingNum: undefined,
-        drivingType: undefined,
+        carLicense: undefined,
         idcardBack: undefined,
         idcardFront: undefined,
         mobile: undefined,
@@ -361,7 +313,7 @@ export default {
         output: undefined,
         plateNumber: undefined,
         seatNum: undefined,
-        wantRent: undefined,
+        // wantRent: undefined,
         engineType: undefined
       },
 
@@ -382,7 +334,8 @@ export default {
         "4": "",
         "5": "",
         "6": ""
-      }
+      },
+      plateNumberPrefix: undefined
     };
   },
 
@@ -404,15 +357,10 @@ export default {
         this.ownerInfo.idcard = response.data.body.jfUser.idcard;
         this.ownerInfo.idcardBack = response.data.body.jfUser.idcardBack;
         this.ownerInfo.idcardFront = response.data.body.jfUser.idcardFront;
-        this.ownerInfo.drivingBack = response.data.body.jfUser.drivingBack;
-        this.ownerInfo.drivingFront = response.data.body.jfUser.drivingFront;
-        this.ownerInfo.drivingNum = response.data.body.jfUser.drivingNum;
-        this.ownerInfo.drivingType = '' + response.data.body.jfUser.drivingType;
 
-        this.carInfo.plateNumber = response.data.body.plateNumber.replace(
-          "沪",
-          ""
-        );
+        this.ownerInfo.carLicense = response.data.body.carLicense;
+
+        this.carInfo.plateNumber = response.data.body.plateNumber;
         this.carInfo.brand = response.data.body.brand;
         this.carInfo.carDesc = response.data.body.carDesc;
         this.carInfo.city = response.data.body.city;
@@ -424,11 +372,10 @@ export default {
         this.carInfo.gearbox = response.data.body.gearbox;
         this.carInfo.model = response.data.body.model;
         this.carInfo.oilNumber = response.data.body.oilNumber;
-        this.carInfo.wantRent = response.data.body.wantRent;
+        // this.carInfo.wantRent = response.data.body.wantRent;
         this.carInfo.seatNum = response.data.body.seatNum;
         this.carInfo.output = response.data.body.output.replace("L", "");
-        this.carInfo.enterModel = '' +response.data.body.enterModel;
-        // this.carInfo.enterModel = '0';
+        this.carInfo.enterModel = "" + response.data.body.enterModel;
 
         this.feeInfo.rent = response.data.body.rent;
         this.feeInfo.safeMoney = response.data.body.safeMoney;
@@ -607,14 +554,22 @@ export default {
 
     // 提交车辆信息，并且更新车辆的状态为3
     handleSubmit() {
+      // 如果不是是数字，直接用，否则需要改写值
+      if (isNaN(parseInt(this.carInfo.brand))) {
+        this.carInfo.brandName = this.carInfo.brand;
+      } else {
+        for (let x in this.brandOption) {
+          console.log(this.brandOption[x].id, this.carInfo.brand);
+          if (this.brandOption[x].id == this.carInfo.brand) {
+            this.carInfo.brandName = this.brandOption[x].brand;
+            console.log("this.carInfo.brand", this.carInfo.brandName);
+          }
+        }
+      }
 
       console.log(this.carInfo);
       for (let j in this.carInfo) {
-
-        if (
-          typeof this.carInfo[j] == "undefined" ||
-          !this.carInfo[j]
-        ) {
+        if (typeof this.carInfo[j] == "undefined" || !this.carInfo[j]) {
           console.log(this.carInfo[j]);
           alert("请完善车辆信息");
           return false;
@@ -624,10 +579,7 @@ export default {
       console.log(this.ownerInfo);
       for (let i in this.ownerInfo) {
         console.log(i);
-        if (
-          typeof this.ownerInfo[i] == "undefined" ||
-          !this.ownerInfo[i]
-        ) {
+        if (typeof this.ownerInfo[i] == "undefined" || !this.ownerInfo[i]) {
           console.log(this.ownerInfo[i]);
           alert("请完善车主信息");
           return false;
@@ -636,10 +588,7 @@ export default {
 
       console.log(this.feeInfo);
       for (let k in this.feeInfo) {
-        if (
-          typeof this.feeInfo[k] == "undefined" ||
-          !this.feeInfo[k]
-        ) {
+        if (typeof this.feeInfo[k] == "undefined" || !this.feeInfo[k]) {
           alert("请完善费用信息");
           return false;
         }
@@ -650,16 +599,13 @@ export default {
       fd.append("jfUser.mobile", this.ownerInfo.mobile);
       fd.append("jfUser.name", this.ownerInfo.name);
       fd.append("jfUser.idcard", this.ownerInfo.idcard);
-      fd.append("jfUser.drivingNum", this.ownerInfo.drivingNum);
-      fd.append("jfUser.drivingType", this.ownerInfo.drivingType);
       fd.append("jfUser.idcardFront", this.ownerInfo.idcardFront);
       fd.append("jfUser.idcardBack", this.ownerInfo.idcardBack);
-      fd.append("jfUser.drivingFront", this.ownerInfo.drivingFront);
-      fd.append("jfUser.drivingBack", this.ownerInfo.drivingBack);
+      fd.append("jfCar.carLicense", this.ownerInfo.carLicense);
 
       fd.append("jfCar.city", this.carInfo.city);
-      fd.append("jfCar.plateNumber", "沪" + this.carInfo.plateNumber);
-      fd.append("jfCar.brand", this.carInfo.brand);
+      fd.append("jfCar.plateNumber", this.carInfo.plateNumber);
+      fd.append("jfCar.brand", this.carInfo.brandName);
       fd.append("jfCar.model", this.carInfo.model);
       fd.append("jfCar.color", this.carInfo.color);
       fd.append("jfCar.output", this.carInfo.output + "L");
@@ -670,7 +616,7 @@ export default {
 
       fd.append("jfCar.frameNum", this.carInfo.frameNum);
       fd.append("jfCar.enterModel", this.carInfo.enterModel);
-      fd.append("jfCar.wantRent", this.carInfo.wantRent);
+      // fd.append("jfCar.wantRent", this.carInfo.wantRent);
 
       // 车辆照片
       let picArr = [];
@@ -721,14 +667,19 @@ export default {
     // 不变更车辆状态
     handleSaveDruft() {
       console.log(this.carInfo);
-      
-      // for (let x in this.brandOption) {
-      //   console.log(this.brandOption[x].id, this.carInfo.brand);
-      //     if (this.brandOption[x].id == this.carInfo.brand) {
-      //       this.carInfo.brandName = this.brandOption[x].brand;
-      //       console.log("this.carInfo.brand", this.carInfo.brandName);
-      //     }
-      // }
+
+      // 如果不是是数字，直接用，否则需要改写值
+      if (isNaN(parseInt(this.carInfo.brand))) {
+        this.carInfo.brandName = this.carInfo.brand;
+      } else {
+        for (let x in this.brandOption) {
+          console.log(this.brandOption[x].id, this.carInfo.brand);
+          if (this.brandOption[x].id == this.carInfo.brand) {
+            this.carInfo.brandName = this.brandOption[x].brand;
+            console.log("this.carInfo.brand", this.carInfo.brandName);
+          }
+        }
+      }
 
       let fd = new FormData();
 
@@ -744,14 +695,6 @@ export default {
         fd.append("jfUser.idcard", this.ownerInfo.idcard);
       }
 
-      if (this.ownerInfo.drivingNum) {
-        fd.append("jfUser.drivingNum", this.ownerInfo.drivingNum);
-      }
-
-      if (this.ownerInfo.drivingType) {
-        fd.append("jfUser.drivingType", this.ownerInfo.drivingType);
-      }
-
       if (this.ownerInfo.idcardFront) {
         fd.append("jfUser.idcardFront", this.ownerInfo.idcardFront);
       }
@@ -760,12 +703,8 @@ export default {
         fd.append("jfUser.idcardBack", this.ownerInfo.idcardBack);
       }
 
-      if (this.ownerInfo.drivingFront) {
-        fd.append("jfUser.drivingFront", this.ownerInfo.drivingFront);
-      }
-
-      if (this.ownerInfo.drivingBack) {
-        fd.append("jfUser.drivingBack", this.ownerInfo.drivingBack);
+      if (this.ownerInfo.carLicense) {
+        fd.append("jfCar.carLicense", this.ownerInfo.carLicense);
       }
 
       if (this.carInfo.city) {
@@ -773,11 +712,11 @@ export default {
       }
 
       if (this.carInfo.plateNumbery) {
-        fd.append("jfCar.plateNumber", "沪" + this.carInfo.plateNumber);
+        fd.append("jfCar.plateNumber", this.carInfo.plateNumber);
       }
 
       if (this.carInfo.brand) {
-        fd.append("jfCar.brand", this.carInfo.brand);
+        fd.append("jfCar.brand", this.carInfo.brandName);
       }
 
       if (this.carInfo.model) {
@@ -816,9 +755,9 @@ export default {
         fd.append("jfCar.enterModel", this.carInfo.enterModel);
       }
 
-      if (this.carInfo.wantRent) {
-        fd.append("jfCar.wantRent", this.carInfo.wantRent);
-      }
+      // if (this.carInfo.wantRent) {
+      //   fd.append("jfCar.wantRent", this.carInfo.wantRent);
+      // }
 
       // 车辆照片
       let picArr = [];
@@ -925,7 +864,7 @@ export default {
       return false;
     },
 
-    beforeUploadDrivingFront(data) {
+    beforeUploadLicense(data) {
       let fd = new FormData();
       fd.append("uploadFile", data.file);
 
@@ -938,57 +877,7 @@ export default {
           }
         })
         .then(function(response) {
-          self.ownerInfo.drivingFront = response.data.body;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-
-      return false;
-    },
-
-    beforeUploadDrivingBack(data) {
-      let fd = new FormData();
-      fd.append("uploadFile", data.file);
-
-      let self = this;
-
-      axios
-        .post(env.BASE_API + "/file/upload", fd, {
-          headers: {
-            jf_token: Cookies.get("jf_token")
-          }
-        })
-        .then(function(response) {
-          self.ownerInfo.drivingBack = response.data.body;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-
-      return false;
-    },
-
-    beforeUploadCarPhoto(data) {
-      let fd = new FormData();
-      fd.append("uploadFile", data.file);
-
-      let self = this;
-
-      axios
-        .post(env.BASE_API + "/file/upload", fd, {
-          headers: {
-            jf_token: Cookies.get("jf_token")
-          }
-        })
-        .then(function(response) {
-          let json = {};
-          json.name = response.data.body;
-          json.url = response.data.body;
-
-          self.fileList.push(json);
-
-          console.log("这里的 file list", self.fileList);
+          self.ownerInfo.carLicense = response.data.body;
         })
         .catch(function(error) {
           console.log(error);
